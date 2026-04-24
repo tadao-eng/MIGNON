@@ -25,13 +25,14 @@
             font-family: 'Inter', 'Noto Sans JP', sans-serif;
             background-color: var(--bg);
             color: var(--text);
+            min-height: 100vh;
+            width: 100%;
             display: flex;
             justify-content: center;
-            min-height: 100vh;
+            align-items: flex-start;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* 認証画面 */
         #auth-container {
             position: fixed;
             top: 0; left: 0;
@@ -55,11 +56,10 @@
             text-transform: uppercase;
         }
 
-        /* メインコンテンツ */
         .container {
             width: 100%;
             max-width: 500px;
-            padding: 40px 20px;
+            padding: 20px 15px;
             display: none;
         }
 
@@ -67,49 +67,50 @@
 
         header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 30px;
+            margin-top: 20px;
         }
 
         h1 {
             font-weight: 300;
             letter-spacing: 0.15em;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: var(--primary);
-            margin: 0;
             text-transform: uppercase;
         }
 
         .subtitle {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             letter-spacing: 0.1em;
             color: #999;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .form-card {
             background: white;
-            padding: 40px;
+            padding: 25px 20px;
             border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            gap: 32px;
+            gap: 25px;
+            width: 100%;
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 15px;
         }
 
         label {
-            font-size: 0.6rem;
-            letter-spacing: 0.1em;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
             color: #888;
             font-weight: 600;
             text-transform: uppercase;
@@ -118,40 +119,44 @@
         input {
             border: none;
             border-bottom: 1px solid var(--border);
-            padding: 10px 0;
-            font-size: 1.1rem;
+            padding: 12px 0;
+            font-size: 1.2rem;
             outline: none;
             transition: border-color 0.3s;
             background: transparent;
             border-radius: 0;
             font-weight: 300;
+            width: 100%;
         }
 
         input:focus { border-bottom-color: var(--primary); }
 
         .section-title {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 600;
             letter-spacing: 0.1em;
             color: var(--primary);
-            border-left: 2px solid var(--primary);
+            border-left: 3px solid var(--primary);
             padding-left: 10px;
-            margin-bottom: -15px;
+            margin-bottom: -10px;
+            margin-top: 5px;
         }
 
         .submit-btn {
-            margin-top: 20px;
+            margin-top: 15px;
             background: var(--primary);
             color: white;
             border: none;
-            padding: 18px;
-            font-size: 0.8rem;
+            padding: 20px;
+            font-size: 0.9rem;
             letter-spacing: 0.2em;
             cursor: pointer;
             transition: opacity 0.3s;
             font-weight: 600;
+            width: 100%;
         }
 
+        .submit-btn:active { opacity: 0.7; }
         .submit-btn:disabled { opacity: 0.5; }
 
         .overlay {
@@ -170,13 +175,12 @@
         .overlay.active { display: flex; }
 
         .loader {
-            width: 20px; height: 20px;
+            width: 24px; height: 24px;
             border: 2px solid #FFF;
             border-bottom-color: transparent;
             border-radius: 50%;
             display: inline-block;
             animation: rotation 1s linear infinite;
-            margin-right: 10px;
         }
 
         @keyframes rotation {
@@ -187,7 +191,6 @@
 </head>
 <body>
 
-    <!-- 認証レイヤー -->
     <div id="auth-container">
         <div class="auth-logo">MIGNON SALES</div>
         <div id="g_id_onload"
@@ -198,7 +201,6 @@
         <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left"></div>
     </div>
 
-    <!-- メイン画面 -->
     <div class="container" id="main-container">
         <header>
             <h1>売上入力</h1>
@@ -259,20 +261,43 @@
     <div id="overlay" class="overlay">
         <div>
             <div id="loader" class="loader"></div>
-            <span id="msgText">送信中...</span>
+            <p style="margin-top:15px; letter-spacing:0.2em; font-size:0.8rem;">送信中...</p>
         </div>
     </div>
 
     <script>
         const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwkB7TGV0crBg-74xof-Pcwe5GR4IO5hWimQ-r_CTdZBaLLizjMEutU2U1mZtGJDEFa8w/exec';
+        
+        const ALLOWED_USERS = [
+            "tadaowakahoi@gmail.com",
+            "meron87328732@gmail.com"
+        ];
+
         let ID_TOKEN = null;
 
         document.getElementById('date').valueAsDate = new Date();
 
+        function parseJwt(token) {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            return JSON.parse(decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join('')));
+        }
+
         function handleCredentialResponse(response) {
             ID_TOKEN = response.credential;
-            document.getElementById('auth-container').classList.add('hidden');
-            document.getElementById('main-container').classList.add('active');
+            const userData = parseJwt(ID_TOKEN);
+            const userEmail = userData.email;
+
+            if (ALLOWED_USERS.includes(userEmail)) {
+                document.getElementById('auth-container').classList.add('hidden');
+                document.getElementById('main-container').classList.add('active');
+            } else {
+                alert('アクセス権限がありません：' + userEmail);
+                google.accounts.id.disableAutoSelect();
+                location.reload();
+            }
         }
 
         async function submitForm() {
@@ -290,11 +315,9 @@
 
             const btn = document.getElementById('submitBtn');
             const overlay = document.getElementById('overlay');
-            const msgText = document.getElementById('msgText');
 
             btn.disabled = true;
             overlay.classList.add('active');
-            msgText.innerText = '送信中...';
 
             try {
                 const response = await fetch(GAS_API_URL, {
@@ -306,14 +329,14 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    msgText.innerText = '記録完了';
                     setTimeout(() => {
                         overlay.classList.remove('active');
                         btn.disabled = false;
                         ['cash10', 'cash8', 'air10', 'air8', 'pay10', 'pay8', 'memo'].forEach(id => {
                             document.getElementById(id).value = '';
                         });
-                    }, 2000);
+                        alert('記録完了しました');
+                    }, 1000);
                 } else {
                     throw new Error(result.message);
                 }
