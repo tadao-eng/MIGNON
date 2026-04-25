@@ -13,8 +13,7 @@
         header { text-align: center; padding: 120px 20px 40px; width: 100%; }
         h1 { font-weight: 300; letter-spacing: 0.35em; font-size: 1rem; color: var(--primary); text-transform: uppercase; }
         
-        /* ログインエリア：Googleボタンを確実に中央に寄せるための指定 */
-        #auth-section { padding: 80px 20px; width: 100%; text-align: center; }
+        #auth-section { padding: 80px 20px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
         .g_id_signin { display: inline-block; margin: 0 auto; }
 
         #main-section { width: 100%; max-width: 500px; padding: 0 15px 60px; display: none; }
@@ -40,7 +39,6 @@
 
     <div id="auth-section">
         <div id="g_id_onload" data-client_id="957188073085-nbfrt00q79l9htk641kmpqt9mm3u9jc3.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_select="true"></div>
-        <!-- 文字なしで中央寄せ -->
         <div class="g_id_signin" data-type="standard" data-size="medium" data-theme="outline" data-text="signin" data-shape="rectangular" data-logo_alignment="left"></div>
         <div class="sheet-link-container">
             <a href="https://docs.google.com/spreadsheets/d/1ATvjvDZnHracvfG5CnHocNo8rBY99Lky1bSgtP7X4G0/edit" target="_blank" class="sheet-link">VIEW SPREADSHEET</a>
@@ -92,18 +90,51 @@
             } catch (e) { alert('Auth Error'); }
         }
 
-        async function submitForm() {
+        async function submitForm(overwriteConfirmed = false) {
             if (!ID_TOKEN) { location.reload(); return; }
-            const data = { idToken: ID_TOKEN, date: document.getElementById('date').value, cash10: Number(document.getElementById('cash10').value || 0), cash8: Number(document.getElementById('cash8').value || 0), air10: Number(document.getElementById('air10').value || 0), air8: Number(document.getElementById('air8').value || 0), pay10: Number(document.getElementById('pay10').value || 0), pay8: Number(document.getElementById('pay8').value || 0), memo: document.getElementById('memo').value };
+
+            const cash10 = Number(document.getElementById('cash10').value || 0);
+            const cash8 = Number(document.getElementById('cash8').value || 0);
+            const air10 = Number(document.getElementById('air10').value || 0);
+            const air8 = Number(document.getElementById('air8').value || 0);
+            const pay10 = Number(document.getElementById('pay10').value || 0);
+            const pay8 = Number(document.getElementById('pay8').value || 0);
+            const memo = document.getElementById('memo').value;
+
+            // 1. バリデーション：すべて0の場合はエラー
+            if (cash10 === 0 && cash8 === 0 && air10 === 0 && air8 === 0 && pay10 === 0 && pay8 === 0 && !memo) {
+                alert('数値が入力されていません！');
+                return;
+            }
+
+            const data = { idToken: ID_TOKEN, date: document.getElementById('date').value, cash10, cash8, air10, air8, pay10, pay8, memo, overwriteConfirmed };
             const btn = document.getElementById('submitBtn');
             const overlay = document.getElementById('overlay');
             btn.disabled = true; overlay.classList.add('active');
+
             try {
                 const response = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'text/plain' } });
                 const result = await response.json();
-                if (result.success) { alert('Success'); document.querySelectorAll('.entry-field').forEach(field => field.value = ''); }
-                else { alert('Error: ' + result.message); }
-            } catch (error) { alert('Network Error'); } finally { overlay.classList.remove('active'); btn.disabled = false; }
+
+                // 2. 上書き確認が必要な場合
+                if (result.confirmRequired) {
+                    overlay.classList.remove('active');
+                    if (confirm(`${result.dateLabel}は入力済みですが更新しますか？`)) {
+                        submitForm(true); // 確認フラグを立てて再送
+                        return;
+                    }
+                } else if (result.success) {
+                    alert('Success');
+                    document.querySelectorAll('.entry-field').forEach(field => field.value = '');
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('Network Error');
+            } finally {
+                overlay.classList.remove('active');
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
