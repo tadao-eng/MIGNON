@@ -1,3 +1,4 @@
+<!-- [index.html] -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -10,25 +11,24 @@
         :root { --primary: #000033; --bg: #FFFFFF; --text: #333333; --border: #E5E5E5; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; }
-        header { text-align: center; padding: 100px 20px 40px; width: 100%; }
-        h1 { font-weight: 300; letter-spacing: 0.25em; font-size: 1.1rem; color: var(--primary); text-transform: uppercase; }
+        header { text-align: center; padding: 120px 20px 40px; width: 100%; }
+        h1 { font-weight: 300; letter-spacing: 0.3em; font-size: 1rem; color: var(--primary); text-transform: uppercase; }
         
-        /* ログインエリア：枠線を削除して最小限に */
-        #auth-section { padding: 40px 20px; text-align: center; }
-
+        #auth-section { padding: 20px; text-align: center; opacity: 0.8; }
         #main-section { width: 100%; max-width: 500px; padding: 0 15px 60px; display: none; }
         #main-section.active { display: block; }
+        
         .form-card { background: white; padding: 10px 20px; display: flex; flex-direction: column; gap: 30px; width: 100%; }
         .input-group { display: flex; flex-direction: column; gap: 8px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         label { font-size: 0.65rem; color: #AAA; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; }
-        input { border: none; border-bottom: 1px solid var(--border); padding: 10px 0; font-size: 1.2rem; outline: none; background: transparent; border-radius: 0; font-weight: 300; width: 100%; transition: border-color 0.3s; }
-        input:focus { border-bottom-color: var(--primary); }
+        input { border: none; border-bottom: 1px solid var(--border); padding: 10px 0; font-size: 1.2rem; outline: none; background: transparent; border-radius: 0; font-weight: 300; width: 100%; }
         .section-title { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em; color: var(--primary); border-left: 2px solid var(--primary); padding-left: 10px; margin-bottom: -15px; }
         .submit-btn { margin-top: 30px; background: var(--primary); color: white; border: none; padding: 22px; font-size: 0.85rem; letter-spacing: 0.3em; cursor: pointer; font-weight: 600; width: 100%; }
         
-        .sheet-btn-container { margin-top: 80px; text-align: center; }
-        .sheet-btn { display: inline-block; padding: 15px 30px; border: 1px solid #eee; color: #BBB; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.2em; border-radius: 2px; }
+        .sheet-link-container { margin-top: 100px; text-align: center; }
+        .sheet-link { display: inline-block; padding: 10px 20px; color: #CCC; text-decoration: none; font-size: 0.7rem; letter-spacing: 0.2em; border-bottom: 1px solid transparent; transition: all 0.3s; }
+        .sheet-link:hover { color: #999; border-bottom-color: #EEE; }
 
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; font-size: 0.8rem; color: var(--primary); letter-spacing: 0.2em; }
         .overlay.active { display: flex; }
@@ -38,8 +38,11 @@
     <header><h1>MIGNON SALES ENTRY</h1></header>
 
     <div id="auth-section">
-        <div id="g_id_onload" data-client_id="957188073085-nbfrt00q79l9htk641kmpqt9mm3u9jc3.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
-        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_blue" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left"></div>
+        <div id="g_id_onload" data-client_id="957188073085-nbfrt00q79l9htk641kmpqt9mm3u9jc3.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_select="true"></div>
+        <div class="g_id_signin" data-type="icon" data-shape="circle" data-theme="outline"></div>
+        <div class="sheet-link-container">
+            <a href="https://docs.google.com/spreadsheets/d/1ATvjvDZnHracvfG5CnHocNo8rBY99Lky1bSgtP7X4G0/edit" target="_blank" class="sheet-link">VIEW SPREADSHEET</a>
+        </div>
     </div>
 
     <div id="main-section">
@@ -63,8 +66,8 @@
             <div class="input-group"><label>Memo</label><input type="text" id="memo" placeholder="..."></div>
             <button id="submitBtn" class="submit-btn" onclick="submitForm()">RECORD SALES</button>
         </div>
-        <div class="sheet-btn-container">
-            <a href="https://docs.google.com/spreadsheets/d/1ATvjvDZnHracvfG5CnHocNo8rBY99Lky1bSgtP7X4G0/edit" target="_blank" class="sheet-btn">VIEW SPREADSHEET</a>
+        <div class="sheet-link-container">
+            <a href="https://docs.google.com/spreadsheets/d/1ATvjvDZnHracvfG5CnHocNo8rBY99Lky1bSgtP7X4G0/edit" target="_blank" class="sheet-link">VIEW SPREADSHEET</a>
         </div>
     </div>
 
@@ -83,7 +86,7 @@
                 if (ALLOWED_USERS.includes(userData.email)) {
                     document.getElementById('auth-section').style.display = 'none';
                     document.getElementById('main-section').classList.add('active');
-                } else { alert('Denied'); location.reload(); }
+                } else { alert('Access Denied'); location.reload(); }
             } catch (e) { alert('Auth Error'); }
         }
 
