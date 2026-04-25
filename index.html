@@ -10,13 +10,11 @@
         :root { --primary: #000033; --bg: #FFFFFF; --text: #333333; --border: #E5E5E5; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; }
-        
         header { text-align: center; padding: 120px 20px 40px; width: 100%; }
         h1 { font-weight: 300; letter-spacing: 0.35em; font-size: 1rem; color: var(--primary); text-transform: uppercase; }
         
-        /* ログインエリア：中央寄せを強化 */
-        #auth-section { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
-        .g_id_signin { display: flex; justify-content: center; }
+        #auth-section { padding: 40px 20px; text-align: center; }
+        .login-label { font-size: 0.7rem; letter-spacing: 0.4em; color: #999; margin-bottom: 25px; font-weight: 400; text-transform: uppercase; }
 
         #main-section { width: 100%; max-width: 500px; padding: 0 15px 60px; display: none; }
         #main-section.active { display: block; }
@@ -24,7 +22,11 @@
         .form-card { background: white; padding: 10px 20px; display: flex; flex-direction: column; gap: 30px; width: 100%; }
         .input-group { display: flex; flex-direction: column; gap: 8px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        label { font-size: 0.65rem; color: #AAA; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; }
+        
+        /* ラベルのスタイル調整：(店内飲食) などの補足を少し小さく */
+        label { font-size: 0.65rem; color: #AAA; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        label span { font-size: 0.55rem; font-weight: 400; opacity: 0.8; }
+
         input { border: none; border-bottom: 1px solid var(--border); padding: 10px 0; font-size: 1.2rem; outline: none; background: transparent; border-radius: 0; font-weight: 300; width: 100%; }
         .section-title { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em; color: var(--primary); border-left: 2px solid var(--primary); padding-left: 10px; margin-bottom: -15px; }
         .submit-btn { margin-top: 30px; background: var(--primary); color: white; border: none; padding: 22px; font-size: 0.85rem; letter-spacing: 0.3em; cursor: pointer; font-weight: 600; width: 100%; }
@@ -40,10 +42,9 @@
     <header><h1>MIGNON SALES ENTRY</h1></header>
 
     <div id="auth-section">
+        <div class="login-label">LOGIN</div>
         <div id="g_id_onload" data-client_id="957188073085-nbfrt00q79l9htk641kmpqt9mm3u9jc3.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_select="true"></div>
-        <!-- 文字付きのGoogleボタンを中央に配置 -->
         <div class="g_id_signin" data-type="standard" data-size="medium" data-theme="outline" data-text="signin" data-shape="rectangular" data-logo_alignment="left"></div>
-        
         <div class="sheet-link-container">
             <a href="https://docs.google.com/spreadsheets/d/1ATvjvDZnHracvfG5CnHocNo8rBY99Lky1bSgtP7X4G0/edit" target="_blank" class="sheet-link">VIEW SPREADSHEET</a>
         </div>
@@ -52,21 +53,25 @@
     <div id="main-section">
         <div class="form-card">
             <div class="input-group"><label>Date</label><input type="date" id="date" required></div>
+            
             <div class="section-title">CASH</div>
             <div class="grid-2">
-                <div class="input-group"><label>10%</label><input type="number" id="cash10" class="entry-field" placeholder="0" inputmode="numeric"></div>
-                <div class="input-group"><label>8%</label><input type="number" id="cash8" class="entry-field" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>10% <span>(店内飲食)</span></label><input type="number" id="cash10" class="entry-field" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>8% <span>(テイクアウト等)</span></label><input type="number" id="cash8" class="entry-field" placeholder="0" inputmode="numeric"></div>
             </div>
+
             <div class="section-title">AIRPAY</div>
             <div class="grid-2">
-                <div class="input-group"><label>10%</label><input type="number" id="air10" class="entry-field" placeholder="0" inputmode="numeric"></div>
-                <div class="input-group"><label>8%</label><input type="number" id="air8" class="entry-field" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>10% <span>(店内飲食)</span></label><input type="number" id="air10" class="entry-field" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>8% <span>(テイクアウト等)</span></label><input type="number" id="air8" class="entry-field" placeholder="0" inputmode="numeric"></div>
             </div>
+
             <div class="section-title">PAYPAY</div>
             <div class="grid-2">
-                <div class="input-group"><label>10%</label><input type="number" id="pay10" class="entry-field" placeholder="0" inputmode="numeric"></div>
-                <div class="input-group"><label>8%</label><input type="number" id="pay8" class="entry-field" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>10% <span>(店内飲食)</span></label><input type="number" id="pay10" class="entry-field" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>8% <span>(テイクアウト等)</span></label><input type="number" id="pay8" class="entry-field" placeholder="0" inputmode="numeric"></div>
             </div>
+
             <div class="input-group"><label>Memo</label><input type="text" id="memo" class="entry-field" placeholder="..."></div>
             <button id="submitBtn" class="submit-btn" onclick="submitForm()">RECORD SALES</button>
         </div>
