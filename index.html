@@ -1,160 +1,80 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MIGNON SALES ENTRY</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <style>
-        :root { --primary: #000033; --bg: #FFFFFF; --text: #333333; --border: #E5E5E5; }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; }
+const ALLOWED_USERS = ["tadaowakahoi@gmail.com", "meron87328732@gmail.com"];
+const CLIENT_ID = "957188073085-nbfrt00q79l9htk641kmpqt9mm3u9jc3.apps.googleusercontent.com";
 
-        /* ヘッダー：横線を消しました */
-        header { text-align: center; padding: 60px 20px 40px; width: 100%; }
-        h1 { font-weight: 300; letter-spacing: 0.2em; font-size: 1.2rem; color: var(--primary); text-transform: uppercase; }
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    const authResult = verifyIdToken(data.idToken);
+    if (!authResult.success) return createJsonResponse({ success: false, message: "認証エラー" }, 401);
+    if (ALLOWED_USERS.indexOf(authResult.email) === -1) return createJsonResponse({ success: false, message: "権限なし" }, 403);
+    
+    return createJsonResponse(recordToSheet(data));
+  } catch (error) {
+    return createJsonResponse({ success: false, message: error.toString() }, 500);
+  }
+}
 
-        /* ログインエリア */
-        #auth-section { padding: 40px 20px; text-align: center; }
-        .login-msg { font-size: 0.75rem; color: #999; margin-bottom: 30px; letter-spacing: 0.05em; }
+function verifyIdToken(idToken) {
+  try {
+    const url = "https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken;
+    const response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+    const content = JSON.parse(response.getContentText());
+    if (response.getResponseCode() !== 200) return { success: false, message: "Invalid Token" };
+    return { success: true, email: content.email };
+  } catch (e) { return { success: false, message: e.toString() }; }
+}
 
-        /* メイン入力エリア */
-        #main-section { width: 100%; max-width: 500px; padding: 0 15px 60px; display: none; }
-        #main-section.active { display: block; }
+function recordToSheet(data) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const targetDate = new Date(data.date);
+  
+  // 1. 月を判定してシートを選択 (例: 5月)
+  const month = targetDate.getMonth() + 1;
+  const sheetName = month + "月";
+  const sheet = ss.getSheetByName(sheetName) || ss.getSheetByName("0" + sheetName);
+  
+  if (!sheet) throw new Error(`${sheetName} のシートが見つかりません。`);
 
-        .form-card { background: white; padding: 10px 20px; display: flex; flex-direction: column; gap: 30px; width: 100%; }
-        .input-group { display: flex; flex-direction: column; gap: 8px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        label { font-size: 0.65rem; color: #AAA; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; }
-        input { border: none; border-bottom: 1px solid var(--border); padding: 10px 0; font-size: 1.2rem; outline: none; background: transparent; border-radius: 0; font-weight: 300; width: 100%; transition: border-color 0.3s; }
-        input:focus { border-bottom-color: var(--primary); }
-        
-        /* セクション見出しの横線も最小限に */
-        .section-title { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; color: var(--primary); border-left: 2px solid var(--primary); padding-left: 10px; margin-bottom: -15px; }
-        
-        .submit-btn { margin-top: 30px; background: var(--primary); color: white; border: none; padding: 22px; font-size: 0.85rem; letter-spacing: 0.3em; cursor: pointer; font-weight: 600; width: 100%; }
-        .submit-btn:disabled { opacity: 0.5; }
-        
-        .sheet-link-container { margin-top: 50px; text-align: center; }
-        .sheet-link { font-size: 0.65rem; color: #CCC; text-decoration: none; letter-spacing: 0.15em; }
+  // 2. 日付に対応する行を探す (B3列から下へ)
+  const values = sheet.getRange("B3:B35").getValues();
+  const displayValues = sheet.getRange("B3:B35").getDisplayValues();
+  let targetRow = -1;
 
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; }
-        .overlay.active { display: flex; }
-    </style>
-</head>
-<body>
+  for (let i = 0; i < values.length; i++) {
+    let cellVal = values[i][0];
+    let cellDisp = displayValues[i][0];
+    
+    // 日付オブジェクトとして「日」が一致するか
+    if (cellVal instanceof Date && cellVal.getDate() === targetDate.getDate()) {
+      targetRow = i + 3;
+      break;
+    }
+    
+    // 文字列として「日」の数字が一致するか (例: "1" や "01" や "5/1")
+    let d = targetDate.getDate().toString();
+    if (cellDisp == d || cellDisp == "0" + d || cellDisp.indexOf("/" + d) !== -1) {
+      targetRow = i + 3;
+      break;
+    }
+  }
 
-    <header>
-        <h1>MIGNON SALES ENTRY</h1>
-    </header>
+  if (targetRow === -1) {
+    throw new Error(`${month}月${targetDate.getDate()}日の行が見つかりません。B列の日付を確認してください。`);
+  }
 
-    <div id="auth-section">
-        <p class="login-msg">Please sign in to continue</p>
-        <div id="g_id_onload" data-client_id="957188073085-nbfrt00q79l9htk641kmpqt9mm3u9jc3.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
-        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left"></div>
-    </div>
+  // 3. 指定の列に書き込み (元の app_logic.gs の列番号を維持)
+  const r = targetRow;
+  sheet.getRange(r, 4).setValue(data.cash10 || 0);  // D列: 現金10%
+  sheet.getRange(r, 5).setValue(data.cash8 || 0);   // E列: 現金8%
+  sheet.getRange(r, 7).setValue(data.air10 || 0);   // G列: エアペイ10%
+  sheet.getRange(r, 8).setValue(data.air8 || 0);    // H列: エアペイ8%
+  sheet.getRange(r, 10).setValue(data.pay10 || 0);  // J列: ペイペイ10%
+  sheet.getRange(r, 11).setValue(data.pay8 || 0);   // K列: ペイペイ8%
+  sheet.getRange(r, 14).setValue(data.memo || "");  // N列: 備考
 
-    <div id="main-section">
-        <div class="form-card">
-            <div class="input-group"><label>Date</label><input type="date" id="date" required></div>
-            
-            <div class="section-title">CASH</div>
-            <div class="grid-2">
-                <div class="input-group"><label>10%</label><input type="number" id="cash10" placeholder="0" inputmode="numeric"></div>
-                <div class="input-group"><label>8%</label><input type="number" id="cash8" placeholder="0" inputmode="numeric"></div>
-            </div>
+  return { success: true, message: "記録完了" };
+}
 
-            <div class="section-title">AIRPAY</div>
-            <div class="grid-2">
-                <div class="input-group"><label>10%</label><input type="number" id="air10" placeholder="0" inputmode="numeric"></div>
-                <div class="input-group"><label>8%</label><input type="number" id="air8" placeholder="0" inputmode="numeric"></div>
-            </div>
-
-            <div class="section-title">PAYPAY</div>
-            <div class="grid-2">
-                <div class="input-group"><label>10%</label><input type="number" id="pay10" placeholder="0" inputmode="numeric"></div>
-                <div class="input-group"><label>8%</label><input type="number" id="pay8" placeholder="0" inputmode="numeric"></div>
-            </div>
-
-            <div class="input-group"><label>Memo</label><input type="text" id="memo" placeholder="..."></div>
-            
-            <button id="submitBtn" class="submit-btn" onclick="submitForm()">RECORD SALES</button>
-        </div>
-
-        <div class="sheet-link-container">
-            <a href="https://docs.google.com/spreadsheets/d/1ATvjvDZnHracvfG5CnHocNo8rBY99Lky1bSgtP7X4G0/edit" target="_blank" class="sheet-link">VIEW SPREADSHEET</a>
-        </div>
-    </div>
-
-    <div id="overlay" class="overlay">
-        <div style="text-align:center; color: var(--primary); font-size: 0.8rem; letter-spacing: 0.2em;">RECORDING...</div>
-    </div>
-
-    <script>
-        const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwkB7TGV0crBg-74xof-Pcwe5GR4IO5hWimQ-r_CTdZBaLLizjMEutU2U1mZtGJDEFa8w/exec';
-        const ALLOWED_USERS = ["tadaowakahoi@gmail.com", "meron87328732@gmail.com"];
-        let ID_TOKEN = null;
-
-        document.getElementById('date').valueAsDate = new Date();
-
-        function handleCredentialResponse(response) {
-            try {
-                ID_TOKEN = response.credential;
-                const userData = JSON.parse(decodeURIComponent(escape(window.atob(ID_TOKEN.split('.')[1]))));
-                if (ALLOWED_USERS.includes(userData.email)) {
-                    document.getElementById('auth-section').style.display = 'none';
-                    document.getElementById('main-section').classList.add('active');
-                } else {
-                    alert('Denied: ' + userData.email);
-                    location.reload();
-                }
-            } catch (e) {
-                alert('Auth Error');
-            }
-        }
-
-        async function submitForm() {
-            if (!ID_TOKEN) { location.reload(); return; }
-            const data = {
-                idToken: ID_TOKEN,
-                date: document.getElementById('date').value,
-                cash10: Number(document.getElementById('cash10').value || 0),
-                cash8: Number(document.getElementById('cash8').value || 0),
-                air10: Number(document.getElementById('air10').value || 0),
-                air8: Number(document.getElementById('air8').value || 0),
-                pay10: Number(document.getElementById('pay10').value || 0),
-                pay8: Number(document.getElementById('pay8').value || 0),
-                memo: document.getElementById('memo').value
-            };
-
-            const btn = document.getElementById('submitBtn');
-            const overlay = document.getElementById('overlay');
-            btn.disabled = true;
-            overlay.classList.add('active');
-
-            try {
-                const response = await fetch(GAS_API_URL, {
-                    method: 'POST',
-                    mode: 'cors',
-                    body: JSON.stringify(data),
-                    headers: { 'Content-Type': 'text/plain' }
-                });
-                const result = await response.json();
-                if (result.success) {
-                    alert('Success');
-                    location.reload();
-                } else {
-                    alert('Error: ' + result.message);
-                }
-            } catch (error) {
-                alert('Network Error');
-            } finally {
-                overlay.classList.remove('active');
-                btn.disabled = false;
-            }
-        }
-    </script>
-</body>
-</html>
+function createJsonResponse(data) {
+  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+}
