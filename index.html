@@ -1,3 +1,4 @@
+<!-- [index.html] -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -7,300 +8,91 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        :root {
-            --primary: #000033;
-            --bg: #FFFFFF;
-            --text: #333333;
-            --border: #E5E5E5;
-        }
+        :root { --primary: #000033; --bg: #FFFFFF; --text: #333333; --border: #E5E5E5; --blue: #1a73e8; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        header { text-align: center; padding: 60px 20px 40px; width: 100%; }
+        h1 { font-weight: 300; letter-spacing: 0.2em; font-size: 1.2rem; color: var(--primary); text-transform: uppercase; }
+        
+        #auth-section { padding: 40px 20px; text-align: center; width: 100%; max-width: 400px; }
+        .login-card { background: #f8f9fa; border-radius: 12px; padding: 40px 20px; border: 1px solid #eee; }
+        .login-msg { font-size: 0.85rem; color: #555; margin-bottom: 25px; font-weight: 600; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        #main-section { width: 100%; max-width: 500px; padding: 0 15px 60px; display: none; }
+        #main-section.active { display: block; }
+        .form-card { background: white; padding: 10px 20px; display: flex; flex-direction: column; gap: 30px; width: 100%; }
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        label { font-size: 0.65rem; color: #AAA; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; }
+        input { border: none; border-bottom: 1px solid var(--border); padding: 10px 0; font-size: 1.2rem; outline: none; background: transparent; border-radius: 0; font-weight: 300; width: 100%; }
+        .section-title { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; color: var(--primary); border-left: 2px solid var(--primary); padding-left: 10px; margin-bottom: -15px; }
+        .submit-btn { margin-top: 30px; background: var(--primary); color: white; border: none; padding: 22px; font-size: 0.85rem; letter-spacing: 0.3em; cursor: pointer; font-weight: 600; width: 100%; }
+        
+        .sheet-btn-container { margin-top: 60px; text-align: center; }
+        .sheet-btn { display: inline-block; padding: 15px 30px; border: 1px solid #ddd; color: #666; text-decoration: none; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; border-radius: 4px; }
 
-        body {
-            font-family: 'Inter', 'Noto Sans JP', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        #auth-container {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: white;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #auth-container.hidden { display: none; }
-
-        .auth-logo {
-            font-weight: 300;
-            letter-spacing: 0.3em;
-            font-size: 1.2rem;
-            color: var(--primary);
-            margin-bottom: 40px;
-            text-transform: uppercase;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 500px;
-            padding: 20px 15px;
-            display: none;
-        }
-
-        .container.active { display: block; }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            margin-top: 20px;
-        }
-
-        h1 {
-            font-weight: 300;
-            letter-spacing: 0.15em;
-            font-size: 1.2rem;
-            color: var(--primary);
-            text-transform: uppercase;
-        }
-
-        .subtitle {
-            font-size: 0.65rem;
-            letter-spacing: 0.1em;
-            color: #999;
-            margin-top: 8px;
-        }
-
-        .form-card {
-            background: white;
-            padding: 25px 20px;
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            width: 100%;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        label {
-            font-size: 0.7rem;
-            letter-spacing: 0.05em;
-            color: #888;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        input {
-            border: none;
-            border-bottom: 1px solid var(--border);
-            padding: 12px 0;
-            font-size: 1.2rem;
-            outline: none;
-            transition: border-color 0.3s;
-            background: transparent;
-            border-radius: 0;
-            font-weight: 300;
-            width: 100%;
-        }
-
-        input:focus { border-bottom-color: var(--primary); }
-
-        .section-title {
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            color: var(--primary);
-            border-left: 3px solid var(--primary);
-            padding-left: 10px;
-            margin-bottom: -10px;
-            margin-top: 5px;
-        }
-
-        .submit-btn {
-            margin-top: 15px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 20px;
-            font-size: 0.9rem;
-            letter-spacing: 0.2em;
-            cursor: pointer;
-            transition: opacity 0.3s;
-            font-weight: 600;
-            width: 100%;
-        }
-
-        .submit-btn:active { opacity: 0.7; }
-        .submit-btn:disabled { opacity: 0.5; }
-
-        .overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,51,0.95);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            z-index: 2000;
-            text-align: center;
-        }
-
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; font-size: 0.8rem; color: var(--primary); letter-spacing: 0.2em; }
         .overlay.active { display: flex; }
-
-        .loader {
-            width: 24px; height: 24px;
-            border: 2px solid #FFF;
-            border-bottom-color: transparent;
-            border-radius: 50%;
-            display: inline-block;
-            animation: rotation 1s linear infinite;
-        }
-
-        @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
+    <header><h1>MIGNON SALES ENTRY</h1></header>
 
-    <div id="auth-container">
-        <div class="auth-logo">MIGNON SALES</div>
-        <div id="g_id_onload"
-             data-client_id="957188073085-nbfrt00q79l9htk641kmpqt9mm3u9jc3.apps.googleusercontent.com"
-             data-callback="handleCredentialResponse"
-             data-auto_prompt="false">
+    <div id="auth-section">
+        <div class="login-card">
+            <p class="login-msg">サインインして開始</p>
+            <div id="g_id_onload" data-client_id="957188073085-nbfrt00q79l9htk641kmpqt9mm3u9jc3.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
+            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_blue" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left" style="display: inline-block;"></div>
         </div>
-        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left"></div>
     </div>
 
-    <div class="container" id="main-container">
-        <header>
-            <h1>売上入力</h1>
-            <div class="subtitle">PREMIUM SALES RECORD SYSTEM</div>
-        </header>
-
+    <div id="main-section">
         <div class="form-card">
-            <div class="input-group">
-                <label>日付 / DATE</label>
-                <input type="date" id="date" required>
-            </div>
-
-            <div class="section-title">現金 / CASH</div>
+            <div class="input-group"><label>Date</label><input type="date" id="date" required></div>
+            <div class="section-title">CASH</div>
             <div class="grid-2">
-                <div class="input-group">
-                    <label>10%</label>
-                    <input type="number" id="cash10" placeholder="0" inputmode="numeric">
-                </div>
-                <div class="input-group">
-                    <label>8%</label>
-                    <input type="number" id="cash8" placeholder="0" inputmode="numeric">
-                </div>
+                <div class="input-group"><label>10%</label><input type="number" id="cash10" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>8%</label><input type="number" id="cash8" placeholder="0" inputmode="numeric"></div>
             </div>
-
-            <div class="section-title">エアペイ / AIRPAY</div>
+            <div class="section-title">AIRPAY</div>
             <div class="grid-2">
-                <div class="input-group">
-                    <label>10%</label>
-                    <input type="number" id="air10" placeholder="0" inputmode="numeric">
-                </div>
-                <div class="input-group">
-                    <label>8%</label>
-                    <input type="number" id="air8" placeholder="0" inputmode="numeric">
-                </div>
+                <div class="input-group"><label>10%</label><input type="number" id="air10" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>8%</label><input type="number" id="air8" placeholder="0" inputmode="numeric"></div>
             </div>
-
-            <div class="section-title">ペイペイ / PAYPAY</div>
+            <div class="section-title">PAYPAY</div>
             <div class="grid-2">
-                <div class="input-group">
-                    <label>10%</label>
-                    <input type="number" id="pay10" placeholder="0" inputmode="numeric">
-                </div>
-                <div class="input-group">
-                    <label>8%</label>
-                    <input type="number" id="pay8" placeholder="0" inputmode="numeric">
-                </div>
+                <div class="input-group"><label>10%</label><input type="number" id="pay10" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>8%</label><input type="number" id="pay8" placeholder="0" inputmode="numeric"></div>
             </div>
-
-            <div class="input-group">
-                <label>備考 / MEMO</label>
-                <input type="text" id="memo" placeholder="...">
-            </div>
-
+            <div class="input-group"><label>Memo</label><input type="text" id="memo" placeholder="..."></div>
             <button id="submitBtn" class="submit-btn" onclick="submitForm()">RECORD SALES</button>
         </div>
-    </div>
-
-    <div id="overlay" class="overlay">
-        <div>
-            <div id="loader" class="loader"></div>
-            <p style="margin-top:15px; letter-spacing:0.2em; font-size:0.8rem;">送信中...</p>
+        <div class="sheet-btn-container">
+            <a href="https://docs.google.com/spreadsheets/d/1ATvjvDZnHracvfG5CnHocNo8rBY99Lky1bSgtP7X4G0/edit" target="_blank" class="sheet-btn">VIEW SPREADSHEET</a>
         </div>
     </div>
+
+    <div id="overlay" class="overlay">RECORDING...</div>
 
     <script>
         const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwkB7TGV0crBg-74xof-Pcwe5GR4IO5hWimQ-r_CTdZBaLLizjMEutU2U1mZtGJDEFa8w/exec';
-        
-        const ALLOWED_USERS = [
-            "tadaowakahoi@gmail.com",
-            "meron87328732@gmail.com"
-        ];
-
+        const ALLOWED_USERS = ["tadaowakahoi@gmail.com", "meron87328732@gmail.com"];
         let ID_TOKEN = null;
-
         document.getElementById('date').valueAsDate = new Date();
 
-        function parseJwt(token) {
-            var base64Url = token.split('.')[1];
-            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            return JSON.parse(decodeURIComponent(atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join('')));
-        }
-
         function handleCredentialResponse(response) {
-            ID_TOKEN = response.credential;
-            const userData = parseJwt(ID_TOKEN);
-            const userEmail = userData.email;
-
-            if (ALLOWED_USERS.includes(userEmail)) {
-                document.getElementById('auth-container').classList.add('hidden');
-                document.getElementById('main-container').classList.add('active');
-            } else {
-                alert('アクセス権限がありません：' + userEmail);
-                google.accounts.id.disableAutoSelect();
-                location.reload();
-            }
+            try {
+                ID_TOKEN = response.credential;
+                const userData = JSON.parse(decodeURIComponent(escape(window.atob(ID_TOKEN.split('.')[1]))));
+                if (ALLOWED_USERS.includes(userData.email)) {
+                    document.getElementById('auth-section').style.display = 'none';
+                    document.getElementById('main-section').classList.add('active');
+                } else { alert('Denied: ' + userData.email); location.reload(); }
+            } catch (e) { alert('Auth Error'); }
         }
 
         async function submitForm() {
+            if (!ID_TOKEN) { location.reload(); return; }
             const data = {
                 idToken: ID_TOKEN,
                 date: document.getElementById('date').value,
@@ -312,39 +104,14 @@
                 pay8: Number(document.getElementById('pay8').value || 0),
                 memo: document.getElementById('memo').value
             };
-
             const btn = document.getElementById('submitBtn');
             const overlay = document.getElementById('overlay');
-
-            btn.disabled = true;
-            overlay.classList.add('active');
-
+            btn.disabled = true; overlay.classList.add('active');
             try {
-                const response = await fetch(GAS_API_URL, {
-                    method: 'POST',
-                    mode: 'cors',
-                    body: JSON.stringify(data),
-                    headers: { 'Content-Type': 'text/plain' }
-                });
+                const response = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'text/plain' } });
                 const result = await response.json();
-                
-                if (result.success) {
-                    setTimeout(() => {
-                        overlay.classList.remove('active');
-                        btn.disabled = false;
-                        ['cash10', 'cash8', 'air10', 'air8', 'pay10', 'pay8', 'memo'].forEach(id => {
-                            document.getElementById(id).value = '';
-                        });
-                        alert('記録完了しました');
-                    }, 1000);
-                } else {
-                    throw new Error(result.message);
-                }
-            } catch (error) {
-                alert('エラー: ' + error.message);
-                overlay.classList.remove('active');
-                btn.disabled = false;
-            }
+                if (result.success) { alert('Success'); location.reload(); } else { alert('Error: ' + result.message); }
+            } catch (error) { alert('Network Error'); } finally { overlay.classList.remove('active'); btn.disabled = false; }
         }
     </script>
 </body>
