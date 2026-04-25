@@ -1,80 +1,351 @@
-const ALLOWED_USERS = ["tadaowakahoi@gmail.com", "meron87328732@gmail.com"];
-const CLIENT_ID = "957188073085-nbfrt00q79l9htk641kmpqt9mm3u9jc3.apps.googleusercontent.com";
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MIGNON SALES ENTRY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        :root {
+            --primary: #000033;
+            --bg: #FFFFFF;
+            --text: #333333;
+            --border: #E5E5E5;
+        }
 
-function doPost(e) {
-  try {
-    const data = JSON.parse(e.postData.contents);
-    const authResult = verifyIdToken(data.idToken);
-    if (!authResult.success) return createJsonResponse({ success: false, message: "認証エラー" }, 401);
-    if (ALLOWED_USERS.indexOf(authResult.email) === -1) return createJsonResponse({ success: false, message: "権限なし" }, 403);
-    
-    return createJsonResponse(recordToSheet(data));
-  } catch (error) {
-    return createJsonResponse({ success: false, message: error.toString() }, 500);
-  }
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-function verifyIdToken(idToken) {
-  try {
-    const url = "https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken;
-    const response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
-    const content = JSON.parse(response.getContentText());
-    if (response.getResponseCode() !== 200) return { success: false, message: "Invalid Token" };
-    return { success: true, email: content.email };
-  } catch (e) { return { success: false, message: e.toString() }; }
-}
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            -webkit-font-smoothing: antialiased;
+        }
 
-function recordToSheet(data) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const targetDate = new Date(data.date);
-  
-  // 1. 月を判定してシートを選択 (例: 5月)
-  const month = targetDate.getMonth() + 1;
-  const sheetName = month + "月";
-  const sheet = ss.getSheetByName(sheetName) || ss.getSheetByName("0" + sheetName);
-  
-  if (!sheet) throw new Error(`${sheetName} のシートが見つかりません。`);
+        #auth-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: white;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
 
-  // 2. 日付に対応する行を探す (B3列から下へ)
-  const values = sheet.getRange("B3:B35").getValues();
-  const displayValues = sheet.getRange("B3:B35").getDisplayValues();
-  let targetRow = -1;
+        #auth-container.hidden { display: none; }
 
-  for (let i = 0; i < values.length; i++) {
-    let cellVal = values[i][0];
-    let cellDisp = displayValues[i][0];
-    
-    // 日付オブジェクトとして「日」が一致するか
-    if (cellVal instanceof Date && cellVal.getDate() === targetDate.getDate()) {
-      targetRow = i + 3;
-      break;
-    }
-    
-    // 文字列として「日」の数字が一致するか (例: "1" や "01" や "5/1")
-    let d = targetDate.getDate().toString();
-    if (cellDisp == d || cellDisp == "0" + d || cellDisp.indexOf("/" + d) !== -1) {
-      targetRow = i + 3;
-      break;
-    }
-  }
+        .auth-logo {
+            font-weight: 300;
+            letter-spacing: 0.3em;
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
 
-  if (targetRow === -1) {
-    throw new Error(`${month}月${targetDate.getDate()}日の行が見つかりません。B列の日付を確認してください。`);
-  }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px 15px;
+            display: none;
+        }
 
-  // 3. 指定の列に書き込み (元の app_logic.gs の列番号を維持)
-  const r = targetRow;
-  sheet.getRange(r, 4).setValue(data.cash10 || 0);  // D列: 現金10%
-  sheet.getRange(r, 5).setValue(data.cash8 || 0);   // E列: 現金8%
-  sheet.getRange(r, 7).setValue(data.air10 || 0);   // G列: エアペイ10%
-  sheet.getRange(r, 8).setValue(data.air8 || 0);    // H列: エアペイ8%
-  sheet.getRange(r, 10).setValue(data.pay10 || 0);  // J列: ペイペイ10%
-  sheet.getRange(r, 11).setValue(data.pay8 || 0);   // K列: ペイペイ8%
-  sheet.getRange(r, 14).setValue(data.memo || "");  // N列: 備考
+        .container.active { display: block; }
 
-  return { success: true, message: "記録完了" };
-}
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            margin-top: 20px;
+        }
 
-function createJsonResponse(data) {
-  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
-}
+        h1 {
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            font-size: 1.2rem;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .form-card {
+            background: white;
+            padding: 25px 20px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            width: 100%;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            color: #888;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        input {
+            border: none;
+            border-bottom: 1px solid var(--border);
+            padding: 12px 0;
+            font-size: 1.2rem;
+            outline: none;
+            transition: border-color 0.3s;
+            background: transparent;
+            border-radius: 0;
+            font-weight: 300;
+            width: 100%;
+        }
+
+        input:focus { border-bottom-color: var(--primary); }
+
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+            padding-left: 10px;
+            margin-bottom: -10px;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            margin-top: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 20px;
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .submit-btn:active { opacity: 0.7; }
+        .submit-btn:disabled { opacity: 0.5; }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,51,0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 2000;
+            text-align: center;
+        }
+
+        .overlay.active { display: flex; }
+
+        .loader {
+            width: 24px; height: 24px;
+            border: 2px solid #FFF;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="auth-container">
+        <div class="auth-logo">MIGNON SALES</div>
+        <div id="g_id_onload"
+             data-client_id="957188073085-nbfrt00q79l9htk641kmpqt9mm3u9jc3.apps.googleusercontent.com"
+             data-callback="handleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left"></div>
+    </div>
+
+    <div class="container" id="main-container">
+        <header>
+            <h1>売上入力</h1>
+            <div class="subtitle">PREMIUM SALES RECORD SYSTEM</div>
+        </header>
+
+        <div class="form-card">
+            <div class="input-group">
+                <label>日付 / DATE</label>
+                <input type="date" id="date" required>
+            </div>
+
+            <div class="section-title">現金 / CASH</div>
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>10%</label>
+                    <input type="number" id="cash10" placeholder="0" inputmode="numeric">
+                </div>
+                <div class="input-group">
+                    <label>8%</label>
+                    <input type="number" id="cash8" placeholder="0" inputmode="numeric">
+                </div>
+            </div>
+
+            <div class="section-title">エアペイ / AIRPAY</div>
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>10%</label>
+                    <input type="number" id="air10" placeholder="0" inputmode="numeric">
+                </div>
+                <div class="input-group">
+                    <label>8%</label>
+                    <input type="number" id="air8" placeholder="0" inputmode="numeric">
+                </div>
+            </div>
+
+            <div class="section-title">ペイペイ / PAYPAY</div>
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>10%</label>
+                    <input type="number" id="pay10" placeholder="0" inputmode="numeric">
+                </div>
+                <div class="input-group">
+                    <label>8%</label>
+                    <input type="number" id="pay8" placeholder="0" inputmode="numeric">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>備考 / MEMO</label>
+                <input type="text" id="memo" placeholder="...">
+            </div>
+
+            <button id="submitBtn" class="submit-btn" onclick="submitForm()">RECORD SALES</button>
+        </div>
+    </div>
+
+    <div id="overlay" class="overlay">
+        <div>
+            <div id="loader" class="loader"></div>
+            <p style="margin-top:15px; letter-spacing:0.2em; font-size:0.8rem;">送信中...</p>
+        </div>
+    </div>
+
+    <script>
+        const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbwkB7TGV0crBg-74xof-Pcwe5GR4IO5hWimQ-r_CTdZBaLLizjMEutU2U1mZtGJDEFa8w/exec';
+        
+        const ALLOWED_USERS = [
+            "tadaowakahoi@gmail.com",
+            "meron87328732@gmail.com"
+        ];
+
+        let ID_TOKEN = null;
+
+        document.getElementById('date').valueAsDate = new Date();
+
+        function parseJwt(token) {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            return JSON.parse(decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join('')));
+        }
+
+        function handleCredentialResponse(response) {
+            ID_TOKEN = response.credential;
+            const userData = parseJwt(ID_TOKEN);
+            const userEmail = userData.email;
+
+            if (ALLOWED_USERS.includes(userEmail)) {
+                document.getElementById('auth-container').classList.add('hidden');
+                document.getElementById('main-container').classList.add('active');
+            } else {
+                alert('アクセス権限がありません：' + userEmail);
+                google.accounts.id.disableAutoSelect();
+                location.reload();
+            }
+        }
+
+        async function submitForm() {
+            const data = {
+                idToken: ID_TOKEN,
+                date: document.getElementById('date').value,
+                cash10: Number(document.getElementById('cash10').value || 0),
+                cash8: Number(document.getElementById('cash8').value || 0),
+                air10: Number(document.getElementById('air10').value || 0),
+                air8: Number(document.getElementById('air8').value || 0),
+                pay10: Number(document.getElementById('pay10').value || 0),
+                pay8: Number(document.getElementById('pay8').value || 0),
+                memo: document.getElementById('memo').value
+            };
+
+            const btn = document.getElementById('submitBtn');
+            const overlay = document.getElementById('overlay');
+
+            btn.disabled = true;
+            overlay.classList.add('active');
+
+            try {
+                const response = await fetch(GAS_API_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    body: JSON.stringify(data),
+                    headers: { 'Content-Type': 'text/plain' }
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    setTimeout(() => {
+                        overlay.classList.remove('active');
+                        btn.disabled = false;
+                        ['cash10', 'cash8', 'air10', 'air8', 'pay10', 'pay8', 'memo'].forEach(id => {
+                            document.getElementById(id).value = '';
+                        });
+                        alert('記録完了しました');
+                    }, 1000);
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                alert('エラー: ' + error.message);
+                overlay.classList.remove('active');
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
