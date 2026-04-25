@@ -14,9 +14,9 @@
         header { text-align: center; padding: 120px 20px 40px; width: 100%; }
         h1 { font-weight: 300; letter-spacing: 0.35em; font-size: 1rem; color: var(--primary); text-transform: uppercase; }
         
-        /* ログインエリア：LOGINテキスト */
-        #auth-section { padding: 40px 20px; text-align: center; }
-        .login-label { font-size: 0.7rem; letter-spacing: 0.4em; color: #999; margin-bottom: 25px; font-weight: 400; text-transform: uppercase; }
+        /* ログインエリア：中央寄せを強化 */
+        #auth-section { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
+        .g_id_signin { display: flex; justify-content: center; }
 
         #main-section { width: 100%; max-width: 500px; padding: 0 15px 60px; display: none; }
         #main-section.active { display: block; }
@@ -40,8 +40,8 @@
     <header><h1>MIGNON SALES ENTRY</h1></header>
 
     <div id="auth-section">
-        <div class="login-label">LOGIN</div>
         <div id="g_id_onload" data-client_id="957188073085-nbfrt00q79l9htk641kmpqt9mm3u9jc3.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_select="true"></div>
+        <!-- 文字付きのGoogleボタンを中央に配置 -->
         <div class="g_id_signin" data-type="standard" data-size="medium" data-theme="outline" data-text="signin" data-shape="rectangular" data-logo_alignment="left"></div>
         
         <div class="sheet-link-container">
