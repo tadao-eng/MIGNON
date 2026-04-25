@@ -1,4 +1,3 @@
-<!-- [index.html] -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -12,9 +11,11 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; }
         header { text-align: center; padding: 120px 20px 40px; width: 100%; }
-        h1 { font-weight: 300; letter-spacing: 0.3em; font-size: 1rem; color: var(--primary); text-transform: uppercase; }
+        h1 { font-weight: 300; letter-spacing: 0.35em; font-size: 1rem; color: var(--primary); text-transform: uppercase; }
         
-        #auth-section { padding: 20px; text-align: center; opacity: 0.8; }
+        #auth-section { padding: 40px 20px; text-align: center; }
+        .login-label { font-size: 0.6rem; letter-spacing: 0.3em; color: #BBB; margin-bottom: 20px; font-weight: 600; text-transform: uppercase; }
+
         #main-section { width: 100%; max-width: 500px; padding: 0 15px 60px; display: none; }
         #main-section.active { display: block; }
         
@@ -27,8 +28,7 @@
         .submit-btn { margin-top: 30px; background: var(--primary); color: white; border: none; padding: 22px; font-size: 0.85rem; letter-spacing: 0.3em; cursor: pointer; font-weight: 600; width: 100%; }
         
         .sheet-link-container { margin-top: 100px; text-align: center; }
-        .sheet-link { display: inline-block; padding: 10px 20px; color: #CCC; text-decoration: none; font-size: 0.7rem; letter-spacing: 0.2em; border-bottom: 1px solid transparent; transition: all 0.3s; }
-        .sheet-link:hover { color: #999; border-bottom-color: #EEE; }
+        .sheet-link { display: inline-block; padding: 10px 20px; color: #CCC; text-decoration: none; font-size: 0.7rem; letter-spacing: 0.2em; transition: all 0.3s; }
 
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; font-size: 0.8rem; color: var(--primary); letter-spacing: 0.2em; }
         .overlay.active { display: flex; }
@@ -38,8 +38,9 @@
     <header><h1>MIGNON SALES ENTRY</h1></header>
 
     <div id="auth-section">
+        <div class="login-label">GOOGLE LOGIN</div>
         <div id="g_id_onload" data-client_id="957188073085-nbfrt00q79l9htk641kmpqt9mm3u9jc3.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_select="true"></div>
-        <div class="g_id_signin" data-type="icon" data-shape="circle" data-theme="outline"></div>
+        <div class="g_id_signin" data-type="standard" data-size="medium" data-theme="outline" data-text="signin" data-shape="rectangular" data-logo_alignment="left"></div>
         <div class="sheet-link-container">
             <a href="https://docs.google.com/spreadsheets/d/1ATvjvDZnHracvfG5CnHocNo8rBY99Lky1bSgtP7X4G0/edit" target="_blank" class="sheet-link">VIEW SPREADSHEET</a>
         </div>
@@ -50,20 +51,20 @@
             <div class="input-group"><label>Date</label><input type="date" id="date" required></div>
             <div class="section-title">CASH</div>
             <div class="grid-2">
-                <div class="input-group"><label>10%</label><input type="number" id="cash10" placeholder="0" inputmode="numeric"></div>
-                <div class="input-group"><label>8%</label><input type="number" id="cash8" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>10%</label><input type="number" id="cash10" class="entry-field" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>8%</label><input type="number" id="cash8" class="entry-field" placeholder="0" inputmode="numeric"></div>
             </div>
             <div class="section-title">AIRPAY</div>
             <div class="grid-2">
-                <div class="input-group"><label>10%</label><input type="number" id="air10" placeholder="0" inputmode="numeric"></div>
-                <div class="input-group"><label>8%</label><input type="number" id="air8" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>10%</label><input type="number" id="air10" class="entry-field" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>8%</label><input type="number" id="air8" class="entry-field" placeholder="0" inputmode="numeric"></div>
             </div>
             <div class="section-title">PAYPAY</div>
             <div class="grid-2">
-                <div class="input-group"><label>10%</label><input type="number" id="pay10" placeholder="0" inputmode="numeric"></div>
-                <div class="input-group"><label>8%</label><input type="number" id="pay8" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>10%</label><input type="number" id="pay10" class="entry-field" placeholder="0" inputmode="numeric"></div>
+                <div class="input-group"><label>8%</label><input type="number" id="pay8" class="entry-field" placeholder="0" inputmode="numeric"></div>
             </div>
-            <div class="input-group"><label>Memo</label><input type="text" id="memo" placeholder="..."></div>
+            <div class="input-group"><label>Memo</label><input type="text" id="memo" class="entry-field" placeholder="..."></div>
             <button id="submitBtn" class="submit-btn" onclick="submitForm()">RECORD SALES</button>
         </div>
         <div class="sheet-link-container">
@@ -99,7 +100,11 @@
             try {
                 const response = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'text/plain' } });
                 const result = await response.json();
-                if (result.success) { alert('Success'); location.reload(); } else { alert('Error: ' + result.message); }
+                if (result.success) {
+                    alert('Success');
+                    // 修正：リロードせずに入力項目だけをリセット
+                    document.querySelectorAll('.entry-field').forEach(field => field.value = '');
+                } else { alert('Error: ' + result.message); }
             } catch (error) { alert('Network Error'); } finally { overlay.classList.remove('active'); btn.disabled = false; }
         }
     </script>
