@@ -12,13 +12,10 @@
         body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; }
         header { text-align: center; padding: 120px 20px 40px; width: 100%; }
         h1 { font-weight: 300; letter-spacing: 0.35em; font-size: 1rem; color: var(--primary); text-transform: uppercase; }
-        
         #auth-section { padding: 80px 20px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
         .g_id_signin { display: inline-block; margin: 0 auto; }
-
         #main-section { width: 100%; max-width: 500px; padding: 0 15px 60px; display: none; }
         #main-section.active { display: block; }
-        
         .form-card { background: white; padding: 10px 20px; display: flex; flex-direction: column; gap: 30px; width: 100%; }
         .input-group { display: flex; flex-direction: column; gap: 8px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -27,7 +24,6 @@
         input { border: none; border-bottom: 1px solid var(--border); padding: 10px 0; font-size: 1.2rem; outline: none; background: transparent; border-radius: 0; font-weight: 300; width: 100%; }
         .section-title { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em; color: var(--primary); border-left: 2px solid var(--primary); padding-left: 10px; margin-bottom: -15px; }
         .submit-btn { margin-top: 30px; background: var(--primary); color: white; border: none; padding: 22px; font-size: 0.85rem; letter-spacing: 0.3em; cursor: pointer; font-weight: 600; width: 100%; }
-        
         .sheet-link-container { margin-top: 100px; text-align: center; }
         .sheet-link { display: inline-block; padding: 10px 20px; color: #CCC; text-decoration: none; font-size: 0.7rem; letter-spacing: 0.2em; transition: all 0.3s; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; font-size: 0.8rem; color: var(--primary); letter-spacing: 0.2em; }
@@ -90,7 +86,7 @@
             } catch (e) { alert('Auth Error'); }
         }
 
-        async function submitForm(overwriteConfirmed = false) {
+        async function submitForm(overwriteConfirmed = false, zeroConfirmed = false) {
             if (!ID_TOKEN) { location.reload(); return; }
 
             const cash10 = Number(document.getElementById('cash10').value || 0);
@@ -101,26 +97,27 @@
             const pay8 = Number(document.getElementById('pay8').value || 0);
             const memo = document.getElementById('memo').value;
 
-            // 1. バリデーション：すべて0の場合はエラー
-            if (cash10 === 0 && cash8 === 0 && air10 === 0 && air8 === 0 && pay10 === 0 && pay8 === 0 && !memo) {
-                alert('数値が入力されていません！');
-                return;
+            // 全て0の時の確認処理
+            if (!zeroConfirmed && cash10 === 0 && cash8 === 0 && air10 === 0 && air8 === 0 && pay10 === 0 && pay8 === 0 && !memo) {
+                if (!confirm('数値が入力されていませんがよろしいですか？')) return;
+                zeroConfirmed = true; // 確認済みフラグを立てる
             }
 
             const data = { idToken: ID_TOKEN, date: document.getElementById('date').value, cash10, cash8, air10, air8, pay10, pay8, memo, overwriteConfirmed };
             const btn = document.getElementById('submitBtn');
             const overlay = document.getElementById('overlay');
-            btn.disabled = true; overlay.classList.add('active');
+            
+            btn.disabled = true; 
+            overlay.classList.add('active');
 
             try {
                 const response = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'text/plain' } });
                 const result = await response.json();
 
-                // 2. 上書き確認が必要な場合
                 if (result.confirmRequired) {
                     overlay.classList.remove('active');
                     if (confirm(`${result.dateLabel}は入力済みですが更新しますか？`)) {
-                        submitForm(true); // 確認フラグを立てて再送
+                        submitForm(true, true); // 両方のフラグを立てて再送
                         return;
                     }
                 } else if (result.success) {
