@@ -10,11 +10,13 @@
         :root { --primary: #000033; --bg: #FFFFFF; --text: #333333; --border: #E5E5E5; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', 'Noto Sans JP', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        
         header { text-align: center; padding: 120px 20px 40px; width: 100%; }
         h1 { font-weight: 300; letter-spacing: 0.35em; font-size: 1rem; color: var(--primary); text-transform: uppercase; }
         
+        /* ログインエリア：LOGINテキスト */
         #auth-section { padding: 40px 20px; text-align: center; }
-        .login-label { font-size: 0.6rem; letter-spacing: 0.3em; color: #BBB; margin-bottom: 20px; font-weight: 600; text-transform: uppercase; }
+        .login-label { font-size: 0.7rem; letter-spacing: 0.4em; color: #999; margin-bottom: 25px; font-weight: 400; text-transform: uppercase; }
 
         #main-section { width: 100%; max-width: 500px; padding: 0 15px 60px; display: none; }
         #main-section.active { display: block; }
@@ -38,9 +40,10 @@
     <header><h1>MIGNON SALES ENTRY</h1></header>
 
     <div id="auth-section">
-        <div class="login-label">GOOGLE LOGIN</div>
+        <div class="login-label">LOGIN</div>
         <div id="g_id_onload" data-client_id="957188073085-nbfrt00q79l9htk641kmpqt9mm3u9jc3.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_select="true"></div>
         <div class="g_id_signin" data-type="standard" data-size="medium" data-theme="outline" data-text="signin" data-shape="rectangular" data-logo_alignment="left"></div>
+        
         <div class="sheet-link-container">
             <a href="https://docs.google.com/spreadsheets/d/1ATvjvDZnHracvfG5CnHocNo8rBY99Lky1bSgtP7X4G0/edit" target="_blank" class="sheet-link">VIEW SPREADSHEET</a>
         </div>
@@ -102,7 +105,6 @@
                 const result = await response.json();
                 if (result.success) {
                     alert('Success');
-                    // 修正：リロードせずに入力項目だけをリセット
                     document.querySelectorAll('.entry-field').forEach(field => field.value = '');
                 } else { alert('Error: ' + result.message); }
             } catch (error) { alert('Network Error'); } finally { overlay.classList.remove('active'); btn.disabled = false; }
