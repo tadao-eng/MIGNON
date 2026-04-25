@@ -13,8 +13,9 @@
         header { text-align: center; padding: 120px 20px 40px; width: 100%; }
         h1 { font-weight: 300; letter-spacing: 0.35em; font-size: 1rem; color: var(--primary); text-transform: uppercase; }
         
-        #auth-section { padding: 40px 20px; text-align: center; }
-        .login-label { font-size: 0.7rem; letter-spacing: 0.4em; color: #999; margin-bottom: 25px; font-weight: 400; text-transform: uppercase; }
+        /* ログインエリア：中央寄せを強化し、文字を削除 */
+        #auth-section { padding: 80px 20px; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .g_id_signin { display: flex; justify-content: center; width: 100%; }
 
         #main-section { width: 100%; max-width: 500px; padding: 0 15px 60px; display: none; }
         #main-section.active { display: block; }
@@ -23,7 +24,6 @@
         .input-group { display: flex; flex-direction: column; gap: 8px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         
-        /* ラベルのスタイル調整：(店内飲食) などの補足を少し小さく */
         label { font-size: 0.65rem; color: #AAA; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
         label span { font-size: 0.55rem; font-weight: 400; opacity: 0.8; }
 
@@ -42,7 +42,6 @@
     <header><h1>MIGNON SALES ENTRY</h1></header>
 
     <div id="auth-section">
-        <div class="login-label">LOGIN</div>
         <div id="g_id_onload" data-client_id="957188073085-nbfrt00q79l9htk641kmpqt9mm3u9jc3.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_select="true"></div>
         <div class="g_id_signin" data-type="standard" data-size="medium" data-theme="outline" data-text="signin" data-shape="rectangular" data-logo_alignment="left"></div>
         <div class="sheet-link-container">
