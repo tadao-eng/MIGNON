@@ -97,18 +97,18 @@
             const pay8 = Number(document.getElementById('pay8').value || 0);
             const memo = document.getElementById('memo').value;
 
-            // 全て0の時の確認処理
             if (!zeroConfirmed && cash10 === 0 && cash8 === 0 && air10 === 0 && air8 === 0 && pay10 === 0 && pay8 === 0 && !memo) {
                 if (!confirm('数値が入力されていませんがよろしいですか？')) return;
-                zeroConfirmed = true; // 確認済みフラグを立てる
+                zeroConfirmed = true;
             }
 
-            const data = { idToken: ID_TOKEN, date: document.getElementById('date').value, cash10, cash8, air10, air8, pay10, pay8, memo, overwriteConfirmed };
             const btn = document.getElementById('submitBtn');
             const overlay = document.getElementById('overlay');
             
             btn.disabled = true; 
             overlay.classList.add('active');
+
+            const data = { idToken: ID_TOKEN, date: document.getElementById('date').value, cash10, cash8, air10, air8, pay10, pay8, memo, overwriteConfirmed };
 
             try {
                 const response = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'text/plain' } });
@@ -117,7 +117,8 @@
                 if (result.confirmRequired) {
                     overlay.classList.remove('active');
                     if (confirm(`${result.dateLabel}は入力済みですが更新しますか？`)) {
-                        submitForm(true, true); // 両方のフラグを立てて再送
+                        overlay.classList.add('active'); 
+                        submitForm(true, true);
                         return;
                     }
                 } else if (result.success) {
