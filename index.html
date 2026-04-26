@@ -118,7 +118,7 @@
                     overlay.classList.remove('active');
                     if (confirm(`${result.dateLabel}は入力済みですが更新しますか？`)) {
                         overlay.classList.add('active'); 
-                        submitForm(true, true);
+                        await submitForm(true, true);
                         return;
                     }
                 } else if (result.success) {
