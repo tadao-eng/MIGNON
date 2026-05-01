@@ -82,7 +82,10 @@
                 if (ALLOWED_USERS.includes(userData.email)) {
                     document.getElementById('auth-section').style.display = 'none';
                     document.getElementById('main-section').classList.add('active');
-                } else { alert('Access Denied'); location.reload(); }
+                } else { 
+                    alert('アクセス拒否: ' + userData.email + ' は許可されていません。'); 
+                    location.reload(); 
+                }
             } catch (e) { alert('Auth Error'); }
         }
 
