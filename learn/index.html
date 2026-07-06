@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MIGNON LINGO</title>
+<meta name="theme-color" content="#FFFFFF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="LINGO">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root { --primary: #000033; --bg: #FFFFFF; --text: #333333; --sub: #AAAAAA; --border: #E5E5E5; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'Inter','Noto Sans JP',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+#app { max-width: 500px; margin: 0 auto; padding: 0 20px 110px; }
+
+header { text-align: center; padding: 70px 0 10px; }
+header h1 { font-weight: 300; letter-spacing: 0.35em; font-size: 1rem; color: var(--primary); text-transform: uppercase; }
+header .tagline { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.25em; margin-top: 10px; text-transform: uppercase; }
+
+.view { display: none; }
+.view.active { display: block; animation: fadein .3s ease; }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+.section { padding: 36px 0; border-bottom: 1px solid var(--border); }
+.section:last-child { border-bottom: none; }
+.section-title { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.25em; color: var(--primary); text-transform: uppercase; margin-bottom: 22px; }
+
+/* ---- home ---- */
+.day-row { display: flex; justify-content: space-between; align-items: baseline; }
+.day-num { font-size: 2.2rem; font-weight: 300; color: var(--primary); letter-spacing: 0.05em; }
+.day-num small { font-size: 0.8rem; color: var(--sub); font-weight: 300; letter-spacing: 0.1em; }
+.streak-num { font-size: 0.7rem; color: var(--primary); letter-spacing: 0.15em; text-align: right; }
+.streak-num b { font-size: 1.2rem; font-weight: 400; }
+.hairbar { height: 1px; background: var(--border); margin-top: 24px; position: relative; }
+.hairbar > div { position: absolute; top: -1px; left: 0; height: 3px; background: var(--primary); transition: width .5s; }
+.note { font-size: 0.72rem; color: var(--sub); margin-top: 18px; line-height: 1.9; }
+.note b { color: var(--text); font-weight: 400; }
+
+.today-row { display: flex; justify-content: space-between; align-items: baseline; }
+.today-count { font-size: 1.6rem; font-weight: 300; color: var(--primary); }
+.today-count small { font-size: 0.75rem; color: var(--sub); }
+.today-msg { font-size: 0.7rem; color: var(--sub); letter-spacing: 0.05em; }
+.today-msg.done { color: var(--primary); }
+
+.lang-list { border-top: 1px solid var(--border); }
+.lang-row { display: flex; justify-content: space-between; align-items: center; width: 100%; background: none; border: none; border-bottom: 1px solid var(--border); padding: 22px 2px; cursor: pointer; font-family: inherit; text-align: left; }
+.lang-row:active { background: #FAFAFA; }
+.lang-row .nm { font-size: 0.9rem; color: var(--primary); font-weight: 400; letter-spacing: 0.05em; }
+.lang-row .nm small { display: block; font-size: 0.58rem; color: var(--sub); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 5px; }
+.lang-row .ct { font-size: 0.65rem; color: var(--sub); letter-spacing: 0.1em; text-align: right; line-height: 1.8; flex-shrink: 0; }
+
+.set-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; font-size: 0.78rem; color: var(--text); }
+.set-row select { border: none; border-bottom: 1px solid var(--border); padding: 6px 2px; font-family: inherit; background: transparent; font-size: 0.78rem; outline: none; color: var(--primary); border-radius: 0; }
+
+/* ---- study ---- */
+.study-top { display: flex; justify-content: space-between; align-items: center; padding-top: 26px; font-size: 0.65rem; color: var(--sub); letter-spacing: 0.15em; }
+.study-top button { background: none; border: none; color: var(--sub); font-size: 0.65rem; cursor: pointer; letter-spacing: 0.15em; font-family: inherit; padding: 4px; }
+.qline { height: 1px; background: var(--border); margin-top: 14px; position: relative; }
+.qline > div { position: absolute; top: 0; left: 0; height: 1px; background: var(--primary); transition: width .3s; }
+
+.flashcard { padding: 60px 10px 40px; text-align: center; min-height: 300px; display: flex; flex-direction: column; justify-content: center; }
+.flashcard .lang-tag { font-size: 0.58rem; color: var(--sub); letter-spacing: 0.3em; text-transform: uppercase; }
+.flashcard .catg { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.1em; margin-top: 8px; }
+.flashcard .newtag { font-size: 0.55rem; color: var(--primary); letter-spacing: 0.3em; margin-bottom: 14px; }
+.flashcard .word { font-size: 1.6rem; font-weight: 300; color: var(--primary); margin: 26px 0 4px; line-height: 1.5; word-break: break-word; letter-spacing: 0.02em; }
+.flashcard .word.q { font-size: 1.15rem; font-weight: 400; }
+.flashcard .meaning { font-size: 1rem; font-weight: 300; color: var(--text); margin-top: 26px; padding-top: 26px; border-top: 1px solid var(--border); line-height: 1.8; }
+.speak-btn { background: none; border: 1px solid var(--border); border-radius: 50%; width: 42px; height: 42px; font-size: 0.7rem; color: var(--primary); cursor: pointer; margin: 20px auto 0; display: block; font-family: inherit; }
+
+.btn-row { display: flex; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.abtn { flex: 1; border: none; padding: 18px 6px; font-size: 0.75rem; cursor: pointer; font-family: inherit; background: var(--bg); color: var(--text); font-weight: 400; letter-spacing: 0.1em; }
+.abtn:active { background: #FAFAFA; }
+.abtn small { display: block; font-size: 0.55rem; color: var(--sub); margin-top: 5px; letter-spacing: 0.05em; }
+.abtn.show { background: var(--primary); color: white; letter-spacing: 0.25em; padding: 20px; }
+.abtn.good { background: var(--primary); color: white; }
+.abtn.good small { color: rgba(255,255,255,0.6); }
+
+.choice-btn { display: block; width: 100%; background: var(--bg); border: none; border-bottom: 1px solid var(--border); padding: 18px 4px; font-size: 0.88rem; font-weight: 300; text-align: left; cursor: pointer; font-family: inherit; color: var(--text); }
+.choice-btn:first-of-type { border-top: 1px solid var(--border); }
+.choice-btn:active { background: #FAFAFA; }
+.choice-btn.correct { background: var(--primary); color: white; }
+.choice-btn.wrong { color: var(--sub); text-decoration: line-through; }
+
+.done-card { text-align: center; padding: 90px 20px 60px; }
+.done-card .ttl { font-size: 0.8rem; letter-spacing: 0.4em; color: var(--primary); text-transform: uppercase; }
+.done-card p { font-size: 0.72rem; color: var(--sub); line-height: 2.1; margin-top: 20px; }
+.done-card .xp-gain { font-size: 0.7rem; color: var(--primary); letter-spacing: 0.2em; margin-top: 14px; }
+.primary-btn { background: var(--primary); color: white; border: none; padding: 20px 50px; font-size: 0.7rem; letter-spacing: 0.3em; cursor: pointer; margin-top: 40px; font-family: inherit; font-weight: 600; }
+
+/* ---- words ---- */
+.filter-row { display: flex; gap: 20px; flex-wrap: wrap; padding-top: 26px; }
+.filter-row.sub { padding-top: 14px; gap: 16px; }
+.chip { border: none; background: none; padding: 4px 0; font-size: 0.68rem; cursor: pointer; font-family: inherit; color: var(--sub); letter-spacing: 0.1em; border-bottom: 1px solid transparent; }
+.chip.on { color: var(--primary); border-bottom-color: var(--primary); }
+.word-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 16px 2px; cursor: pointer; }
+.word-item .w { font-weight: 400; font-size: 0.88rem; color: var(--primary); }
+.word-item .w .lg { font-size: 0.55rem; color: var(--sub); letter-spacing: 0.2em; margin-right: 8px; }
+.word-item .m { font-size: 0.7rem; color: var(--sub); margin-top: 4px; font-weight: 300; }
+.word-item .lvl { font-size: 0.7rem; color: var(--primary); flex-shrink: 0; margin-left: 12px; }
+.legend { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.05em; padding: 22px 0 4px; }
+.add-form input, .add-form select { width: 100%; border: none; border-bottom: 1px solid var(--border); padding: 12px 0; font-size: 0.95rem; margin-top: 14px; font-family: inherit; background: transparent; outline: none; border-radius: 0; font-weight: 300; }
+.add-form .primary-btn { width: 100%; margin-top: 30px; }
+
+/* ---- record ---- */
+.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px 10px; }
+.stat { text-align: center; }
+.stat .v { font-size: 1.5rem; font-weight: 300; color: var(--primary); }
+.stat .k { font-size: 0.55rem; color: var(--sub); letter-spacing: 0.15em; margin-top: 6px; }
+.badge-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; }
+.badge { font-size: 0.72rem; color: var(--sub); letter-spacing: 0.05em; font-weight: 300; }
+.badge::before { content: '○'; margin-right: 10px; font-size: 0.6rem; }
+.badge.got { color: var(--primary); font-weight: 400; }
+.badge.got::before { content: '●'; }
+.roadmap-item { display: flex; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--border); font-size: 0.74rem; align-items: baseline; }
+.roadmap-item:last-child { border-bottom: none; }
+.roadmap-item .mo { color: var(--sub); flex-shrink: 0; width: 52px; font-size: 0.62rem; letter-spacing: 0.05em; }
+.roadmap-item .tx b { color: var(--text); font-weight: 400; }
+.roadmap-item .tx small { display: block; color: var(--sub); margin-top: 3px; font-weight: 300; }
+.roadmap-item.now .mo, .roadmap-item.now .tx b { color: var(--primary); font-weight: 700; }
+
+/* ---- nav ---- */
+nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); border-top: 1px solid var(--border); display: flex; justify-content: center; gap: 12vw; padding: 20px 0 max(22px, env(safe-area-inset-bottom)); z-index: 100; }
+nav button { background: none; border: none; font-family: inherit; font-size: 0.62rem; color: var(--sub); cursor: pointer; letter-spacing: 0.25em; text-transform: uppercase; padding: 4px 2px; border-bottom: 1px solid transparent; }
+nav button.on { color: var(--primary); border-bottom-color: var(--primary); }
+
+.toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 14px 26px; font-size: 0.68rem; letter-spacing: 0.15em; z-index: 500; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>MIGNON LINGO</h1>
+    <div class="tagline">English &times; Bahasa Indonesia &mdash; 365 days</div>
+  </header>
+
+  <div id="view-home" class="view active"></div>
+  <div id="view-study" class="view"></div>
+  <div id="view-words" class="view"></div>
+  <div id="view-record" class="view"></div>
+</div>
+
+<nav>
+  <button id="tab-home" onclick="showView('home')" class="on">Home</button>
+  <button id="tab-words" onclick="showView('words')">Words</button>
+  <button id="tab-record" onclick="showView('record')">Record</button>
+</nav>
+
+<div id="toast" class="toast"></div>
+
+<script>
+/* =====================================================
+   単語データ  [単語, 意味, カテゴリ]
+===================================================== */
+const EN_WORDS = [
+// あいさつ・基本
+["Good morning","おはようございます","あいさつ・基本"],
+["Good evening","こんばんは","あいさつ・基本"],
+["How are you?","元気ですか？","あいさつ・基本"],
+["I'm good, thanks.","元気です、ありがとう","あいさつ・基本"],
+["Nice to meet you.","はじめまして","あいさつ・基本"],
+["See you later.","またあとで","あいさつ・基本"],
+["Take care.","気をつけてね","あいさつ・基本"],
+["Long time no see.","久しぶり","あいさつ・基本"],
+["Thank you so much.","本当にありがとう","あいさつ・基本"],
+["You're welcome.","どういたしまして","あいさつ・基本"],
+["Excuse me.","すみません（呼びかけ）","あいさつ・基本"],
+["I'm sorry.","ごめんなさい","あいさつ・基本"],
+["No problem.","問題ないよ","あいさつ・基本"],
+["Of course.","もちろん","あいさつ・基本"],
+["Have a nice day.","よい一日を","あいさつ・基本"],
+["Welcome.","ようこそ","あいさつ・基本"],
+["Goodbye.","さようなら","あいさつ・基本"],
+["Good night.","おやすみなさい","あいさつ・基本"],
+// 日常動詞
+["wake up","起きる","日常動詞"],
+["eat","食べる","日常動詞"],
+["drink","飲む","日常動詞"],
+["cook","料理する","日常動詞"],
+["work","働く","日常動詞"],
+["walk","歩く","日常動詞"],
+["run","走る","日常動詞"],
+["buy","買う","日常動詞"],
+["sell","売る","日常動詞"],
+["read","読む","日常動詞"],
+["write","書く","日常動詞"],
+["listen","聞く","日常動詞"],
+["speak","話す","日常動詞"],
+["watch","（じっと）見る","日常動詞"],
+["sleep","眠る","日常動詞"],
+["clean","掃除する","日常動詞"],
+["wash","洗う","日常動詞"],
+["drive","運転する","日常動詞"],
+["meet","会う","日常動詞"],
+["help","手伝う","日常動詞"],
+// 気持ち・形容詞
+["happy","うれしい","気持ち・形容詞"],
+["sad","悲しい","気持ち・形容詞"],
+["tired","疲れた","気持ち・形容詞"],
+["hungry","おなかがすいた","気持ち・形容詞"],
+["thirsty","のどが渇いた","気持ち・形容詞"],
+["excited","わくわくした","気持ち・形容詞"],
+["nervous","緊張した","気持ち・形容詞"],
+["angry","怒った","気持ち・形容詞"],
+["surprised","驚いた","気持ち・形容詞"],
+["bored","退屈した","気持ち・形容詞"],
+["busy","忙しい","気持ち・形容詞"],
+["free","暇な・自由な","気持ち・形容詞"],
+["easy","簡単な","気持ち・形容詞"],
+["difficult","難しい","気持ち・形容詞"],
+["important","重要な","気持ち・形容詞"],
+["interesting","面白い（興味深い）","気持ち・形容詞"],
+["delicious","おいしい","気持ち・形容詞"],
+["beautiful","美しい","気持ち・形容詞"],
+// 旅行
+["airport","空港","旅行"],
+["flight","便・フライト","旅行"],
+["ticket","チケット","旅行"],
+["passport","パスポート","旅行"],
+["luggage","荷物","旅行"],
+["station","駅","旅行"],
+["train","電車","旅行"],
+["bus","バス","旅行"],
+["taxi","タクシー","旅行"],
+["hotel","ホテル","旅行"],
+["reservation","予約","旅行"],
+["sightseeing","観光","旅行"],
+["map","地図","旅行"],
+["Where is the restroom?","トイレはどこですか？","旅行"],
+["How much is this?","これはいくらですか？","旅行"],
+["Can I pay by card?","カードで払えますか？","旅行"],
+["I'd like to check in.","チェックインをお願いします","旅行"],
+["Could you take a photo?","写真を撮ってもらえますか？","旅行"],
+// 食事
+["breakfast","朝食","食事"],
+["lunch","昼食","食事"],
+["dinner","夕食","食事"],
+["menu","メニュー","食事"],
+["order","注文する","食事"],
+["check, please","お会計をお願いします","食事"],
+["spicy","辛い","食事"],
+["sweet","甘い","食事"],
+["bitter","苦い","食事"],
+["salty","しょっぱい","食事"],
+["vegetable","野菜","食事"],
+["meat","肉","食事"],
+["seafood","魚介類","食事"],
+["I'm allergic to eggs.","卵アレルギーです","食事"],
+["Can I have water, please?","お水をいただけますか？","食事"],
+// 仕事
+["meeting","会議","仕事"],
+["schedule","予定・スケジュール","仕事"],
+["deadline","締め切り","仕事"],
+["report","報告書","仕事"],
+["client","顧客","仕事"],
+["colleague","同僚","仕事"],
+["boss","上司","仕事"],
+["salary","給料","仕事"],
+["task","仕事・タスク","仕事"],
+["attach","添付する","仕事"],
+["reply","返信する","仕事"],
+["confirm","確認する","仕事"],
+["cancel","キャンセルする","仕事"],
+["postpone","延期する","仕事"],
+["Could you send me the file?","ファイルを送ってもらえますか？","仕事"],
+["I'll get back to you.","後ほど連絡します","仕事"],
+["Let me check my schedule.","予定を確認させてください","仕事"],
+// 時間・生活
+["today","今日","時間・生活"],
+["tomorrow","明日","時間・生活"],
+["yesterday","昨日","時間・生活"],
+["weekend","週末","時間・生活"],
+["morning","朝","時間・生活"],
+["afternoon","午後","時間・生活"],
+["evening","夕方","時間・生活"],
+["always","いつも","時間・生活"],
+["usually","たいてい","時間・生活"],
+["sometimes","ときどき","時間・生活"],
+["rarely","めったに〜ない","時間・生活"],
+["early","早い・早く","時間・生活"],
+["late","遅い・遅く","時間・生活"],
+["weather","天気","時間・生活"],
+["holiday","休日・祝日","時間・生活"],
+// 会話フレーズ
+["What do you mean?","どういう意味ですか？","会話フレーズ"],
+["Could you say that again?","もう一度言ってもらえますか？","会話フレーズ"],
+["Please speak slowly.","ゆっくり話してください","会話フレーズ"],
+["I see.","なるほど","会話フレーズ"],
+["That sounds good.","いいですね","会話フレーズ"],
+["I agree.","賛成です","会話フレーズ"],
+["I don't think so.","そうは思いません","会話フレーズ"],
+["Just a moment.","ちょっと待ってください","会話フレーズ"],
+["It depends.","場合によります","会話フレーズ"],
+["I'm not sure.","よくわかりません","会話フレーズ"],
+["What time is it?","何時ですか？","会話フレーズ"],
+["How was your day?","今日はどうだった？","会話フレーズ"],
+["What do you do?","お仕事は何ですか？","会話フレーズ"],
+["I'm from Japan.","日本出身です","会話フレーズ"],
+["Can you help me?","手伝ってもらえますか？","会話フレーズ"],
+["No worries.","心配しないで","会話フレーズ"],
+["Sounds fun!","楽しそう！","会話フレーズ"],
+["Good luck!","がんばって！","会話フレーズ"],
+["Congratulations!","おめでとう！","会話フレーズ"],
+["Cheers!","乾杯！","会話フレーズ"],
+];
+
+const ID_WORDS = [
+// あいさつ・基本
+["Selamat pagi","おはようございます","あいさつ・基本"],
+["Selamat siang","こんにちは（昼）","あいさつ・基本"],
+["Selamat sore","こんにちは（夕方）","あいさつ・基本"],
+["Selamat malam","こんばんは","あいさつ・基本"],
+["Apa kabar?","元気ですか？","あいさつ・基本"],
+["Baik-baik saja","元気です","あいさつ・基本"],
+["Terima kasih","ありがとう","あいさつ・基本"],
+["Sama-sama","どういたしまして","あいさつ・基本"],
+["Maaf","ごめんなさい","あいさつ・基本"],
+["Permisi","すみません（失礼します）","あいさつ・基本"],
+["Sampai jumpa","また会いましょう","あいさつ・基本"],
+["Selamat tinggal","さようなら","あいさつ・基本"],
+["Nama saya ...","私の名前は…です","あいさつ・基本"],
+["Senang bertemu Anda","お会いできてうれしいです","あいさつ・基本"],
+["Ya","はい","あいさつ・基本"],
+["Tidak","いいえ","あいさつ・基本"],
+["Tolong","お願いします・助けて","あいさつ・基本"],
+["Silakan","どうぞ","あいさつ・基本"],
+// 数字・時間
+["satu","1（いち）","数字・時間"],
+["dua","2（に）","数字・時間"],
+["tiga","3（さん）","数字・時間"],
+["empat","4（よん）","数字・時間"],
+["lima","5（ご）","数字・時間"],
+["enam","6（ろく）","数字・時間"],
+["tujuh","7（なな）","数字・時間"],
+["delapan","8（はち）","数字・時間"],
+["sembilan","9（きゅう）","数字・時間"],
+["sepuluh","10（じゅう）","数字・時間"],
+["seratus","100（ひゃく）","数字・時間"],
+["seribu","1000（せん）","数字・時間"],
+["hari ini","今日","数字・時間"],
+["besok","明日","数字・時間"],
+["kemarin","昨日","数字・時間"],
+["sekarang","今","数字・時間"],
+// 食事
+["makan","食べる","食事"],
+["minum","飲む","食事"],
+["nasi","ご飯","食事"],
+["mie","麺","食事"],
+["ayam","鶏肉","食事"],
+["ikan","魚","食事"],
+["sayur","野菜","食事"],
+["buah","果物","食事"],
+["air","水","食事"],
+["kopi","コーヒー","食事"],
+["teh","紅茶・お茶","食事"],
+["gula","砂糖","食事"],
+["pedas","辛い","食事"],
+["manis","甘い","食事"],
+["enak","おいしい","食事"],
+["nasi goreng","ナシゴレン（インドネシア風炒飯）","食事"],
+["Saya mau pesan ini.","これを注文したいです","食事"],
+["Berapa harganya?","いくらですか？","食事"],
+// 旅行
+["bandara","空港","旅行"],
+["pesawat","飛行機","旅行"],
+["stasiun","駅","旅行"],
+["kereta","電車","旅行"],
+["bus","バス","旅行"],
+["mobil","車","旅行"],
+["hotel","ホテル","旅行"],
+["kamar","部屋","旅行"],
+["pantai","ビーチ・海岸","旅行"],
+["pulau","島","旅行"],
+["jalan","道・通り","旅行"],
+["peta","地図","旅行"],
+["tiket","チケット","旅行"],
+["Di mana toilet?","トイレはどこですか？","旅行"],
+["kiri","左","旅行"],
+["kanan","右","旅行"],
+["lurus","まっすぐ","旅行"],
+// 日常動詞
+["pergi","行く","日常動詞"],
+["datang","来る","日常動詞"],
+["pulang","帰る","日常動詞"],
+["tidur","寝る","日常動詞"],
+["bangun","起きる","日常動詞"],
+["bekerja","働く","日常動詞"],
+["belajar","勉強する","日常動詞"],
+["membaca","読む","日常動詞"],
+["menulis","書く","日常動詞"],
+["berbicara","話す","日常動詞"],
+["mendengar","聞く","日常動詞"],
+["melihat","見る","日常動詞"],
+["membeli","買う","日常動詞"],
+["berjalan","歩く","日常動詞"],
+["berlari","走る","日常動詞"],
+["membantu","手伝う","日常動詞"],
+["bertemu","会う","日常動詞"],
+["mengerti","理解する","日常動詞"],
+// 形容詞
+["besar","大きい","形容詞"],
+["kecil","小さい","形容詞"],
+["baru","新しい","形容詞"],
+["lama","古い・（時間が）長い","形容詞"],
+["bagus","良い・すばらしい","形容詞"],
+["buruk","悪い","形容詞"],
+["panas","暑い・熱い","形容詞"],
+["dingin","寒い・冷たい","形容詞"],
+["mahal","（値段が）高い","形容詞"],
+["murah","安い","形容詞"],
+["cepat","速い","形容詞"],
+["lambat","遅い","形容詞"],
+["dekat","近い","形容詞"],
+["jauh","遠い","形容詞"],
+["mudah","簡単な","形容詞"],
+["sulit","難しい","形容詞"],
+// 疑問詞・会話
+["apa","何","疑問詞・会話"],
+["siapa","誰","疑問詞・会話"],
+["di mana","どこ","疑問詞・会話"],
+["kapan","いつ","疑問詞・会話"],
+["mengapa","なぜ","疑問詞・会話"],
+["bagaimana","どのように","疑問詞・会話"],
+["berapa","いくつ・いくら","疑問詞・会話"],
+["Siapa nama Anda?","お名前は何ですか？","疑問詞・会話"],
+["Saya dari Jepang.","私は日本から来ました","疑問詞・会話"],
+["Saya tidak mengerti.","わかりません","疑問詞・会話"],
+["Tolong bicara pelan-pelan.","ゆっくり話してください","疑問詞・会話"],
+["Sekali lagi","もう一度","疑問詞・会話"],
+["Tidak apa-apa","大丈夫です","疑問詞・会話"],
+["Hati-hati","気をつけて","疑問詞・会話"],
+["Bagus sekali!","すばらしい！","疑問詞・会話"],
+["Ayo!","さあ行こう！","疑問詞・会話"],
+["Semangat!","がんばって！","疑問詞・会話"],
+["Sampai besok","また明日","疑問詞・会話"],
+];
+
+/* 1年間の月別ロードマップ */
+const ROADMAP = [
+["基礎固め","あいさつと基本表現を両言語で身につける"],
+["日常動詞","毎日の行動を英語とインドネシア語で言えるように"],
+["気持ちを伝える","感情・形容詞の表現を増やす"],
+["食事を楽しむ","レストランや食べ物の語彙をマスター"],
+["旅行の準備","移動・宿泊・道案内の表現を覚える"],
+["復習月間","前半の総復習。忘れかけの単語を潰す"],
+["会話力アップ","質問と受け答えのフレーズを強化"],
+["仕事で使う","ビジネス基本表現（英語中心）に挑戦"],
+["数字と時間","買い物・予定の表現をスムーズに"],
+["長い文に挑戦","覚えたフレーズを組み合わせて話す"],
+["実践月間","音声を聞いてすぐ声に出す練習を強化"],
+["総仕上げ","1年の総復習。全単語マスターを目指す"],
+];
+
+const BADGES = [
+["はじめの一歩", s => totalDone(s) >= 1],
+["3日連続", s => s.bestStreak >= 3],
+["7日連続", s => s.bestStreak >= 7],
+["30日連続", s => s.bestStreak >= 30],
+["100日連続", s => s.bestStreak >= 100],
+["365日連続", s => s.bestStreak >= 365],
+["10語マスター", s => masteredCount() >= 10],
+["50語マスター", s => masteredCount() >= 50],
+["100語マスター", s => masteredCount() >= 100],
+["200語マスター", s => masteredCount() >= 200],
+["レベル5到達", s => level(s.xp) >= 5],
+["レベル10到達", s => level(s.xp) >= 10],
+];
+
+const INTERVALS = [0, 1, 3, 7, 14, 30, 60, 120]; // box → 日数
+const LANG_NAME = { en: 'English', id: 'Indonesia' };
+
+/* =====================================================
+   状態管理
+===================================================== */
+const KEY = 'mignon-lingo-v1';
+let state = load();
+
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY));
+    if (s && s.startDate) return s;
+  } catch (e) {}
+  return {
+    startDate: todayStr(),
+    xp: 0,
+    streak: 0,
+    bestStreak: 0,
+    lastGoalDate: null,
+    srs: {},           // id -> {box, due, reps, lapses}
+    log: {},           // date -> {done, newEn, newId}
+    custom: [],        // [id, lang, word, meaning]
+    customSeq: 0,
+    settings: { newPerDay: 5, dailyGoal: 20 },
+  };
+}
+function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
+
+function todayStr(offset = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() + offset);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function dayNumber() {
+  const ms = new Date(todayStr()) - new Date(state.startDate);
+  return Math.min(365, Math.floor(ms / 86400000) + 1);
+}
+function todayLog() {
+  const t = todayStr();
+  if (!state.log[t]) state.log[t] = { done: 0, newEn: 0, newId: 0 };
+  return state.log[t];
+}
+function level(xp) { return Math.floor(Math.sqrt(xp / 60)) + 1; }
+function xpForLevel(lv) { return (lv - 1) * (lv - 1) * 60; }
+function totalDone(s) { return Object.values(s.log).reduce((a, d) => a + d.done, 0); }
+
+/* 全カード（内蔵 + カスタム） */
+function allCards() {
+  const cards = [];
+  EN_WORDS.forEach((w, i) => cards.push({ id: 'e' + i, lang: 'en', word: w[0], meaning: w[1], cat: w[2] }));
+  ID_WORDS.forEach((w, i) => cards.push({ id: 'i' + i, lang: 'id', word: w[0], meaning: w[1], cat: w[2] }));
+  state.custom.forEach(c => cards.push({ id: c[0], lang: c[1], word: c[2], meaning: c[3], cat: 'マイ単語' }));
+  return cards;
+}
+function cardById(id) { return allCards().find(c => c.id === id); }
+function masteredCount() {
+  return Object.values(state.srs).filter(r => r.box >= 3).length;
+}
+function dueCards(lang) {
+  const t = todayStr();
+  return allCards().filter(c =>
+    (lang === 'mix' || c.lang === lang) &&
+    state.srs[c.id] && state.srs[c.id].due <= t
+  );
+}
+function newCards(lang) {
+  return allCards().filter(c =>
+    (lang === 'mix' || c.lang === lang) && !state.srs[c.id]
+  );
+}
+function newRemainingToday(lang) {
+  const log = todayLog();
+  const used = lang === 'en' ? log.newEn : log.newId;
+  return Math.max(0, state.settings.newPerDay - used);
+}
+
+/* =====================================================
+   画面遷移
+===================================================== */
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('on'));
+  const tab = document.getElementById('tab-' + name);
+  if (tab) tab.classList.add('on');
+  if (name === 'home') renderHome();
+  if (name === 'words') renderWords();
+  if (name === 'record') renderRecord();
+  window.scrollTo(0, 0);
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* =====================================================
+   ホーム
+===================================================== */
+function renderHome() {
+  const day = dayNumber();
+  const month = Math.min(11, Math.floor((day - 1) / 30.5));
+  const theme = ROADMAP[month];
+  const log = todayLog();
+  const goal = state.settings.dailyGoal;
+  const pct = Math.min(100, Math.round(log.done / goal * 100));
+
+  const dueEn = dueCards('en').length, dueId = dueCards('id').length;
+  const newEn = Math.min(newRemainingToday('en'), newCards('en').length);
+  const newId = Math.min(newRemainingToday('id'), newCards('id').length);
+
+  document.getElementById('view-home').innerHTML = `
+    <div class="section">
+      <div class="day-row">
+        <div class="day-num">Day ${day} <small>/ 365</small></div>
+        <div class="streak-num"><b>${state.streak}</b><br>days streak</div>
+      </div>
+      <div class="hairbar"><div style="width:${(day/365*100).toFixed(1)}%"></div></div>
+      <div class="note">${month + 1}ヶ月目のテーマ <b>「${theme[0]}」</b><br>${theme[1]}</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Today</div>
+      <div class="today-row">
+        <div class="today-count">${log.done} <small>/ ${goal}</small></div>
+        <div class="today-msg ${pct >= 100 ? 'done' : ''}">${pct >= 100 ? '本日の目標達成' : 'あと' + (goal - log.done) + '枚'}</div>
+      </div>
+      <div class="hairbar"><div style="width:${pct}%"></div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Learn</div>
+      <div class="lang-list">
+        <button class="lang-row" onclick="startSession('en')">
+          <span class="nm">英語<small>English</small></span>
+          <span class="ct">復習 ${dueEn}　新規 ${newEn}</span>
+        </button>
+        <button class="lang-row" onclick="startSession('id')">
+          <span class="nm">インドネシア語<small>Bahasa Indonesia</small></span>
+          <span class="ct">復習 ${dueId}　新規 ${newId}</span>
+        </button>
+        <button class="lang-row" onclick="startSession('mix')">
+          <span class="nm">ミックス<small>Mix</small></span>
+          <span class="ct">復習 ${dueEn+dueId}　新規 ${newEn+newId}</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Settings</div>
+      <div class="set-row">
+        <span>1日の新しい単語（言語ごと）</span>
+        <select onchange="state.settings.newPerDay=Number(this.value);save();renderHome()">
+          ${[3,5,8,12].map(n => `<option value="${n}" ${state.settings.newPerDay===n?'selected':''}>${n}語</option>`).join('')}
+        </select>
+      </div>
+      <div class="set-row">
+        <span>1日の目標カード数</span>
+        <select onchange="state.settings.dailyGoal=Number(this.value);save();renderHome()">
+          ${[10,20,30,50].map(n => `<option value="${n}" ${state.settings.dailyGoal===n?'selected':''}>${n}枚</option>`).join('')}
+        </select>
+      </div>
+    </div>`;
+}
+
+/* =====================================================
+   学習セッション
+===================================================== */
+let session = null;
+
+function startSession(lang) {
+  const due = shuffle(dueCards(lang));
+  let news = [];
+  if (lang === 'mix') {
+    news = shuffle(newCards('en')).slice(0, newRemainingToday('en'))
+      .concat(shuffle(newCards('id')).slice(0, newRemainingToday('id')));
+  } else {
+    news = shuffle(newCards(lang)).slice(0, newRemainingToday(lang));
+  }
+  const queue = due.concat(shuffle(news));
+  if (queue.length === 0) {
+    toast('今日の分は完了しました。また明日。');
+    return;
+  }
+  session = { lang, queue, index: 0, total: queue.length, xpGain: 0, correct: 0, revealed: false };
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('on'));
+  showStudyCard();
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-study').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showStudyCard() {
+  const v = document.getElementById('view-study');
+  if (session.index >= session.queue.length) { finishSession(); return; }
+
+  const card = session.queue[session.index];
+  const rec = state.srs[card.id];
+  const isNew = !rec;
+  const progress = Math.round(session.index / session.queue.length * 100);
+  // 一度以上正解しているカードは時々4択に（定着チェック）
+  const asQuiz = rec && rec.reps >= 1 && Math.random() < 0.5;
+
+  let cardHtml;
+  if (asQuiz) {
+    const pool = allCards().filter(c => c.lang === card.lang && c.id !== card.id);
+    const choices = shuffle([card].concat(shuffle(pool).slice(0, 3)));
+    cardHtml = `
+      <div class="flashcard" style="min-height:200px;padding-bottom:30px">
+        <div class="lang-tag">${LANG_NAME[card.lang]}</div>
+        <div class="word q">「${esc(card.meaning)}」は？</div>
+      </div>
+      <div>${choices.map(c => `<button class="choice-btn" data-id="${c.id}" onclick="answerQuiz(this,'${card.id}')">${esc(c.word)}</button>`).join('')}</div>`;
+  } else {
+    cardHtml = `
+      <div class="flashcard">
+        ${isNew ? '<div class="newtag">NEW</div>' : ''}
+        <div class="lang-tag">${LANG_NAME[card.lang]}</div>
+        <div class="catg">${esc(card.cat)}</div>
+        <div class="word">${esc(card.word)}</div>
+        <button class="speak-btn" onclick="speak('${card.id}')">&#9654;</button>
+        <div class="meaning" id="meaning" style="visibility:hidden">${esc(card.meaning)}</div>
+      </div>
+      <div class="btn-row" id="answer-btns">
+        <button class="abtn show" onclick="reveal()">答えを見る</button>
+      </div>`;
+  }
+
+  v.innerHTML = `
+    <div class="study-top">
+      <span>${session.index + 1} / ${session.queue.length}</span>
+      <button onclick="quitSession()">中断</button>
+    </div>
+    <div class="qline"><div style="width:${progress}%"></div></div>
+    ${cardHtml}`;
+
+  if (!asQuiz) speak(card.id);
+  session.revealed = false;
+}
+
+function reveal() {
+  if (session.revealed) return;
+  session.revealed = true;
+  document.getElementById('meaning').style.visibility = 'visible';
+  document.getElementById('answer-btns').innerHTML = `
+    <button class="abtn" onclick="grade('again')">もう一度<small>すぐ再出題</small></button>
+    <button class="abtn" onclick="grade('hard')">あいまい<small>明日また</small></button>
+    <button class="abtn good" onclick="grade('good')">覚えた<small>間隔をあける</small></button>`;
+}
+
+function answerQuiz(btn, correctId) {
+  document.querySelectorAll('.choice-btn').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.id === correctId) b.classList.add('correct');
+  });
+  const ok = btn.dataset.id === correctId;
+  if (!ok) btn.classList.add('wrong');
+  speak(correctId);
+  setTimeout(() => {
+    if (ok) { session.xpGain += 3; session.correct++; grade('good', true); }
+    else grade('again', true);
+  }, ok ? 700 : 1400);
+}
+
+function grade(rating, silent) {
+  const card = session.queue[session.index];
+  const rec = state.srs[card.id] || { box: 0, due: todayStr(), reps: 0, lapses: 0 };
+  const wasNew = !state.srs[card.id];
+
+  if (rating === 'again') {
+    rec.box = 1;
+    rec.lapses++;
+    rec.due = todayStr();
+    // セッション内で数枚あとに再出題
+    session.queue.splice(Math.min(session.index + 3, session.queue.length), 0, card);
+  } else if (rating === 'hard') {
+    rec.box = Math.max(1, rec.box);
+    rec.due = todayStr(1);
+  } else {
+    rec.box = Math.min(INTERVALS.length - 1, rec.box + 1);
+    rec.due = todayStr(INTERVALS[rec.box]);
+    session.correct++;
+  }
+  rec.reps++;
+  state.srs[card.id] = rec;
+
+  const log = todayLog();
+  log.done++;
+  if (wasNew) { card.lang === 'en' ? log.newEn++ : log.newId++; }
+  session.xpGain += 5;
+  state.xp += rating === 'again' ? 2 : 5;
+
+  checkGoalAndStreak();
+  save();
+  session.index++;
+  showStudyCard();
+}
+
+function checkGoalAndStreak() {
+  const t = todayStr();
+  if (todayLog().done >= state.settings.dailyGoal && state.lastGoalDate !== t) {
+    if (state.lastGoalDate === todayStr(-1)) state.streak++;
+    else state.streak = 1;
+    state.bestStreak = Math.max(state.bestStreak, state.streak);
+    state.lastGoalDate = t;
+    toast(`本日の目標達成 — ${state.streak}日連続`);
+  }
+}
+
+function finishSession() {
+  const acc = session.total ? Math.round(session.correct / session.total * 100) : 0;
+  state.xp += 15; // セッション完了ボーナス
+  save();
+  document.getElementById('view-study').innerHTML = `
+    <div class="done-card">
+      <div class="ttl">Complete</div>
+      <p>${session.total}枚のカードを学習しました<br>正答率 ${acc}%</p>
+      <div class="xp-gain">+ ${session.xpGain + 15} XP</div>
+      <button class="primary-btn" onclick="showView('home')">ホームへ</button>
+    </div>`;
+  session = null;
+}
+
+function quitSession() {
+  session = null;
+  showView('home');
+}
+
+/* =====================================================
+   単語帳
+===================================================== */
+let wordFilter = { lang: 'all', cat: 'all' };
+
+function renderWords() {
+  const cards = allCards().filter(c =>
+    (wordFilter.lang === 'all' || c.lang === wordFilter.lang) &&
+    (wordFilter.cat === 'all' || c.cat === wordFilter.cat)
+  );
+  const cats = [...new Set(allCards()
+    .filter(c => wordFilter.lang === 'all' || c.lang === wordFilter.lang)
+    .map(c => c.cat))];
+
+  const mark = c => {
+    const r = state.srs[c.id];
+    if (!r) return '<span style="color:var(--border)">○</span>';
+    return r.box >= 3 ? '●' : '◐';
+  };
+
+  document.getElementById('view-words').innerHTML = `
+    <div class="filter-row">
+      ${[['all','すべて'],['en','English'],['id','Indonesia']].map(([v,l]) =>
+        `<button class="chip ${wordFilter.lang===v?'on':''}" onclick="wordFilter.lang='${v}';wordFilter.cat='all';renderWords()">${l}</button>`).join('')}
+    </div>
+    <div class="filter-row sub">
+      <button class="chip ${wordFilter.cat==='all'?'on':''}" onclick="wordFilter.cat='all';renderWords()">全カテゴリ</button>
+      ${cats.map(c => `<button class="chip ${wordFilter.cat===c?'on':''}" onclick="wordFilter.cat='${esc(c)}';renderWords()">${esc(c)}</button>`).join('')}
+    </div>
+
+    <div class="legend">○ 未学習　◐ 学習中　● マスター　—　${cards.length}語</div>
+    <div>
+    ${cards.map(c => `
+      <div class="word-item" onclick="speak('${c.id}')">
+        <div><div class="w"><span class="lg">${c.lang.toUpperCase()}</span>${esc(c.word)}</div><div class="m">${esc(c.meaning)}</div></div>
+        <div class="lvl">${mark(c)}</div>
+      </div>`).join('')}
+    </div>
+
+    <div class="section add-form" style="border-bottom:none">
+      <div class="section-title">Add Word</div>
+      <select id="add-lang"><option value="en">English — 英語</option><option value="id">Indonesia — インドネシア語</option></select>
+      <input id="add-word" placeholder="単語・フレーズ">
+      <input id="add-meaning" placeholder="意味">
+      <button class="primary-btn" onclick="addCustomWord()">追加する</button>
+    </div>`;
+}
+
+function addCustomWord() {
+  const lang = document.getElementById('add-lang').value;
+  const word = document.getElementById('add-word').value.trim();
+  const meaning = document.getElementById('add-meaning').value.trim();
+  if (!word || !meaning) { toast('単語と意味の両方を入力してください'); return; }
+  state.customSeq++;
+  state.custom.push(['c' + state.customSeq, lang, word, meaning]);
+  save();
+  toast('追加しました');
+  renderWords();
+}
+
+/* =====================================================
+   記録
+===================================================== */
+function renderRecord() {
+  const lv = level(state.xp);
+  const cur = xpForLevel(lv), next = xpForLevel(lv + 1);
+  const lvPct = Math.round((state.xp - cur) / (next - cur) * 100);
+  const day = dayNumber();
+  const month = Math.min(11, Math.floor((day - 1) / 30.5));
+  const studiedDays = Object.keys(state.log).filter(d => state.log[d].done > 0).length;
+  const started = Object.keys(state.srs).length;
+
+  document.getElementById('view-record').innerHTML = `
+    <div class="section">
+      <div class="section-title">Level ${lv}</div>
+      <div class="hairbar" style="margin-top:0"><div style="width:${lvPct}%"></div></div>
+      <div class="note">${state.xp} XP — 次のレベルまで ${next - state.xp} XP</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Stats</div>
+      <div class="stat-grid">
+        <div class="stat"><div class="v">${state.streak}</div><div class="k">連続日数</div></div>
+        <div class="stat"><div class="v">${state.bestStreak}</div><div class="k">最長記録</div></div>
+        <div class="stat"><div class="v">${studiedDays}</div><div class="k">学習日数</div></div>
+        <div class="stat"><div class="v">${started}</div><div class="k">学習した単語</div></div>
+        <div class="stat"><div class="v">${masteredCount()}</div><div class="k">マスター</div></div>
+        <div class="stat"><div class="v">${totalDone(state)}</div><div class="k">累計カード</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Badges</div>
+      <div class="badge-list">
+        ${BADGES.map(([nm, fn]) => `<div class="badge ${fn(state) ? 'got' : ''}">${nm}</div>`).join('')}
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Roadmap — 365 days</div>
+      ${ROADMAP.map((r, i) => `
+        <div class="roadmap-item ${i === month ? 'now' : ''}">
+          <span class="mo">${i + 1}ヶ月目</span>
+          <span class="tx"><b>${r[0]}</b><small>${r[1]}</small></span>
+        </div>`).join('')}
+    </div>`;
+}
+
+/* =====================================================
+   ユーティリティ
+===================================================== */
+function speak(id) {
+  const card = cardById(id);
+  if (!card || !window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(card.word.replace(/\.\.\./g, ''));
+  u.lang = card.lang === 'en' ? 'en-US' : 'id-ID';
+  u.rate = 0.9;
+  speechSynthesis.speak(u);
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let toastTimer = null;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* 起動 */
+save();
+renderHome();
+</script>
+</body>
+</html>
