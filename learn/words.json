@@ -1,0 +1,3304 @@
+{
+ "app": "MIGNON LINGO",
+ "updated": "2026-07-06",
+ "note": "英語×インドネシア語 90日集中プログラムの単語データ。LINEボット等の外部ツールが読む用。",
+ "roadmap": [
+  {
+   "week": 1,
+   "theme": "あいさつ・自己紹介",
+   "goal": "出会いの表現を反射で言えるように"
+  },
+  {
+   "week": 2,
+   "theme": "基本動詞と語順",
+   "goal": "「誰が何をする」を両言語で作れるように"
+  },
+  {
+   "week": 3,
+   "theme": "質問する力",
+   "goal": "疑問文で会話を自分から始める"
+  },
+  {
+   "week": 4,
+   "theme": "数字・お金・買い物",
+   "goal": "値段のやり取りができるように"
+  },
+  {
+   "week": 5,
+   "theme": "食事・注文",
+   "goal": "レストランで困らないように"
+  },
+  {
+   "week": 6,
+   "theme": "過去を話す",
+   "goal": "昨日あったことを説明できるように"
+  },
+  {
+   "week": 7,
+   "theme": "予定と未来",
+   "goal": "明日の予定を話せるように"
+  },
+  {
+   "week": 8,
+   "theme": "移動・道案内",
+   "goal": "旅先で自力で移動できるように"
+  },
+  {
+   "week": 9,
+   "theme": "気持ちと意見",
+   "goal": "感想をひと言添えられるように"
+  },
+  {
+   "week": 10,
+   "theme": "依頼・お願い",
+   "goal": "人にものを頼めるように"
+  },
+  {
+   "week": 11,
+   "theme": "会話をつなぐ",
+   "goal": "あいづち・聞き返しで会話を続ける"
+  },
+  {
+   "week": 12,
+   "theme": "総仕上げ",
+   "goal": "日常会話の実戦テスト。全単語の総復習"
+  }
+ ],
+ "en": [
+  {
+   "word": "Good morning",
+   "meaning": "おはようございます",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Good evening",
+   "meaning": "こんばんは",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "How are you?",
+   "meaning": "元気ですか？",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "I'm good, thanks.",
+   "meaning": "元気です、ありがとう",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Nice to meet you.",
+   "meaning": "はじめまして",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "See you later.",
+   "meaning": "またあとで",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Take care.",
+   "meaning": "気をつけてね",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Long time no see.",
+   "meaning": "久しぶり",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Thank you so much.",
+   "meaning": "本当にありがとう",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "You're welcome.",
+   "meaning": "どういたしまして",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Excuse me.",
+   "meaning": "すみません（呼びかけ）",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "I'm sorry.",
+   "meaning": "ごめんなさい",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "No problem.",
+   "meaning": "問題ないよ",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Of course.",
+   "meaning": "もちろん",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Have a nice day.",
+   "meaning": "よい一日を",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Welcome.",
+   "meaning": "ようこそ",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Goodbye.",
+   "meaning": "さようなら",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Good night.",
+   "meaning": "おやすみなさい",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "wake up",
+   "meaning": "起きる",
+   "category": "日常動詞",
+   "forms": "変化: wake – woke – woken"
+  },
+  {
+   "word": "eat",
+   "meaning": "食べる",
+   "category": "日常動詞",
+   "forms": "変化: eat – ate – eaten"
+  },
+  {
+   "word": "drink",
+   "meaning": "飲む",
+   "category": "日常動詞",
+   "forms": "変化: drink – drank – drunk"
+  },
+  {
+   "word": "cook",
+   "meaning": "料理する",
+   "category": "日常動詞",
+   "forms": "名詞: cooking（料理）/ cook（料理人）"
+  },
+  {
+   "word": "work",
+   "meaning": "働く",
+   "category": "日常動詞",
+   "forms": "名詞: work（仕事）/ worker（働く人）"
+  },
+  {
+   "word": "walk",
+   "meaning": "歩く",
+   "category": "日常動詞"
+  },
+  {
+   "word": "run",
+   "meaning": "走る",
+   "category": "日常動詞",
+   "forms": "変化: run – ran – run"
+  },
+  {
+   "word": "buy",
+   "meaning": "買う",
+   "category": "日常動詞",
+   "forms": "変化: buy – bought – bought"
+  },
+  {
+   "word": "sell",
+   "meaning": "売る",
+   "category": "日常動詞",
+   "forms": "変化: sell – sold – sold"
+  },
+  {
+   "word": "read",
+   "meaning": "読む",
+   "category": "日常動詞",
+   "forms": "変化: read – read – read（過去形は「レッド」と発音）"
+  },
+  {
+   "word": "write",
+   "meaning": "書く",
+   "category": "日常動詞",
+   "forms": "変化: write – wrote – written"
+  },
+  {
+   "word": "listen",
+   "meaning": "聞く",
+   "category": "日常動詞"
+  },
+  {
+   "word": "speak",
+   "meaning": "話す",
+   "category": "日常動詞",
+   "forms": "変化: speak – spoke – spoken"
+  },
+  {
+   "word": "watch",
+   "meaning": "（じっと）見る",
+   "category": "日常動詞"
+  },
+  {
+   "word": "sleep",
+   "meaning": "眠る",
+   "category": "日常動詞",
+   "forms": "変化: sleep – slept – slept / 形容詞: sleepy（眠い）"
+  },
+  {
+   "word": "clean",
+   "meaning": "掃除する",
+   "category": "日常動詞",
+   "forms": "形容詞: clean（きれいな）⇔ dirty（汚い）"
+  },
+  {
+   "word": "wash",
+   "meaning": "洗う",
+   "category": "日常動詞"
+  },
+  {
+   "word": "drive",
+   "meaning": "運転する",
+   "category": "日常動詞",
+   "forms": "変化: drive – drove – driven / 名詞: driver（運転手）"
+  },
+  {
+   "word": "meet",
+   "meaning": "会う",
+   "category": "日常動詞",
+   "forms": "変化: meet – met – met / 名詞: meeting（会議）"
+  },
+  {
+   "word": "help",
+   "meaning": "手伝う",
+   "category": "日常動詞",
+   "forms": "名詞: help（助け）/ helpful（役に立つ）"
+  },
+  {
+   "word": "happy",
+   "meaning": "うれしい",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "sad",
+   "meaning": "悲しい",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "tired",
+   "meaning": "疲れた",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "hungry",
+   "meaning": "おなかがすいた",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "thirsty",
+   "meaning": "のどが渇いた",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "excited",
+   "meaning": "わくわくした",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "nervous",
+   "meaning": "緊張した",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "angry",
+   "meaning": "怒った",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "surprised",
+   "meaning": "驚いた",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "bored",
+   "meaning": "退屈した",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "busy",
+   "meaning": "忙しい",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "free",
+   "meaning": "暇な・自由な",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "easy",
+   "meaning": "簡単な",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "difficult",
+   "meaning": "難しい",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "important",
+   "meaning": "重要な",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "interesting",
+   "meaning": "面白い（興味深い）",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "delicious",
+   "meaning": "おいしい",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "beautiful",
+   "meaning": "美しい",
+   "category": "気持ち・形容詞"
+  },
+  {
+   "word": "airport",
+   "meaning": "空港",
+   "category": "旅行"
+  },
+  {
+   "word": "flight",
+   "meaning": "便・フライト",
+   "category": "旅行"
+  },
+  {
+   "word": "ticket",
+   "meaning": "チケット",
+   "category": "旅行"
+  },
+  {
+   "word": "passport",
+   "meaning": "パスポート",
+   "category": "旅行"
+  },
+  {
+   "word": "luggage",
+   "meaning": "荷物",
+   "category": "旅行"
+  },
+  {
+   "word": "station",
+   "meaning": "駅",
+   "category": "旅行"
+  },
+  {
+   "word": "train",
+   "meaning": "電車",
+   "category": "旅行"
+  },
+  {
+   "word": "bus",
+   "meaning": "バス",
+   "category": "旅行"
+  },
+  {
+   "word": "taxi",
+   "meaning": "タクシー",
+   "category": "旅行"
+  },
+  {
+   "word": "hotel",
+   "meaning": "ホテル",
+   "category": "旅行"
+  },
+  {
+   "word": "reservation",
+   "meaning": "予約",
+   "category": "旅行"
+  },
+  {
+   "word": "sightseeing",
+   "meaning": "観光",
+   "category": "旅行"
+  },
+  {
+   "word": "map",
+   "meaning": "地図",
+   "category": "旅行"
+  },
+  {
+   "word": "Where is the restroom?",
+   "meaning": "トイレはどこですか？",
+   "category": "旅行"
+  },
+  {
+   "word": "How much is this?",
+   "meaning": "これはいくらですか？",
+   "category": "旅行"
+  },
+  {
+   "word": "Can I pay by card?",
+   "meaning": "カードで払えますか？",
+   "category": "旅行"
+  },
+  {
+   "word": "I'd like to check in.",
+   "meaning": "チェックインをお願いします",
+   "category": "旅行"
+  },
+  {
+   "word": "Could you take a photo?",
+   "meaning": "写真を撮ってもらえますか？",
+   "category": "旅行"
+  },
+  {
+   "word": "breakfast",
+   "meaning": "朝食",
+   "category": "食事"
+  },
+  {
+   "word": "lunch",
+   "meaning": "昼食",
+   "category": "食事"
+  },
+  {
+   "word": "dinner",
+   "meaning": "夕食",
+   "category": "食事"
+  },
+  {
+   "word": "menu",
+   "meaning": "メニュー",
+   "category": "食事"
+  },
+  {
+   "word": "order",
+   "meaning": "注文する",
+   "category": "食事"
+  },
+  {
+   "word": "check, please",
+   "meaning": "お会計をお願いします",
+   "category": "食事"
+  },
+  {
+   "word": "spicy",
+   "meaning": "辛い",
+   "category": "食事"
+  },
+  {
+   "word": "sweet",
+   "meaning": "甘い",
+   "category": "食事"
+  },
+  {
+   "word": "bitter",
+   "meaning": "苦い",
+   "category": "食事"
+  },
+  {
+   "word": "salty",
+   "meaning": "しょっぱい",
+   "category": "食事"
+  },
+  {
+   "word": "vegetable",
+   "meaning": "野菜",
+   "category": "食事"
+  },
+  {
+   "word": "meat",
+   "meaning": "肉",
+   "category": "食事"
+  },
+  {
+   "word": "seafood",
+   "meaning": "魚介類",
+   "category": "食事"
+  },
+  {
+   "word": "I'm allergic to eggs.",
+   "meaning": "卵アレルギーです",
+   "category": "食事"
+  },
+  {
+   "word": "Can I have water, please?",
+   "meaning": "お水をいただけますか？",
+   "category": "食事"
+  },
+  {
+   "word": "meeting",
+   "meaning": "会議",
+   "category": "仕事"
+  },
+  {
+   "word": "schedule",
+   "meaning": "予定・スケジュール",
+   "category": "仕事"
+  },
+  {
+   "word": "deadline",
+   "meaning": "締め切り",
+   "category": "仕事"
+  },
+  {
+   "word": "report",
+   "meaning": "報告書",
+   "category": "仕事"
+  },
+  {
+   "word": "client",
+   "meaning": "顧客",
+   "category": "仕事"
+  },
+  {
+   "word": "colleague",
+   "meaning": "同僚",
+   "category": "仕事"
+  },
+  {
+   "word": "boss",
+   "meaning": "上司",
+   "category": "仕事"
+  },
+  {
+   "word": "salary",
+   "meaning": "給料",
+   "category": "仕事"
+  },
+  {
+   "word": "task",
+   "meaning": "仕事・タスク",
+   "category": "仕事"
+  },
+  {
+   "word": "attach",
+   "meaning": "添付する",
+   "category": "仕事"
+  },
+  {
+   "word": "reply",
+   "meaning": "返信する",
+   "category": "仕事"
+  },
+  {
+   "word": "confirm",
+   "meaning": "確認する",
+   "category": "仕事"
+  },
+  {
+   "word": "cancel",
+   "meaning": "キャンセルする",
+   "category": "仕事"
+  },
+  {
+   "word": "postpone",
+   "meaning": "延期する",
+   "category": "仕事"
+  },
+  {
+   "word": "Could you send me the file?",
+   "meaning": "ファイルを送ってもらえますか？",
+   "category": "仕事"
+  },
+  {
+   "word": "I'll get back to you.",
+   "meaning": "後ほど連絡します",
+   "category": "仕事"
+  },
+  {
+   "word": "Let me check my schedule.",
+   "meaning": "予定を確認させてください",
+   "category": "仕事"
+  },
+  {
+   "word": "today",
+   "meaning": "今日",
+   "category": "時間・生活"
+  },
+  {
+   "word": "tomorrow",
+   "meaning": "明日",
+   "category": "時間・生活"
+  },
+  {
+   "word": "yesterday",
+   "meaning": "昨日",
+   "category": "時間・生活"
+  },
+  {
+   "word": "weekend",
+   "meaning": "週末",
+   "category": "時間・生活"
+  },
+  {
+   "word": "morning",
+   "meaning": "朝",
+   "category": "時間・生活"
+  },
+  {
+   "word": "afternoon",
+   "meaning": "午後",
+   "category": "時間・生活"
+  },
+  {
+   "word": "evening",
+   "meaning": "夕方",
+   "category": "時間・生活"
+  },
+  {
+   "word": "always",
+   "meaning": "いつも",
+   "category": "時間・生活"
+  },
+  {
+   "word": "usually",
+   "meaning": "たいてい",
+   "category": "時間・生活"
+  },
+  {
+   "word": "sometimes",
+   "meaning": "ときどき",
+   "category": "時間・生活"
+  },
+  {
+   "word": "rarely",
+   "meaning": "めったに〜ない",
+   "category": "時間・生活"
+  },
+  {
+   "word": "early",
+   "meaning": "早い・早く",
+   "category": "時間・生活"
+  },
+  {
+   "word": "late",
+   "meaning": "遅い・遅く",
+   "category": "時間・生活"
+  },
+  {
+   "word": "weather",
+   "meaning": "天気",
+   "category": "時間・生活"
+  },
+  {
+   "word": "holiday",
+   "meaning": "休日・祝日",
+   "category": "時間・生活"
+  },
+  {
+   "word": "family",
+   "meaning": "家族",
+   "category": "人・家族"
+  },
+  {
+   "word": "parents",
+   "meaning": "両親",
+   "category": "人・家族"
+  },
+  {
+   "word": "husband",
+   "meaning": "夫",
+   "category": "人・家族"
+  },
+  {
+   "word": "wife",
+   "meaning": "妻",
+   "category": "人・家族"
+  },
+  {
+   "word": "son",
+   "meaning": "息子",
+   "category": "人・家族"
+  },
+  {
+   "word": "daughter",
+   "meaning": "娘",
+   "category": "人・家族"
+  },
+  {
+   "word": "child",
+   "meaning": "子ども",
+   "category": "人・家族"
+  },
+  {
+   "word": "friend",
+   "meaning": "友達",
+   "category": "人・家族"
+  },
+  {
+   "word": "people",
+   "meaning": "人々",
+   "category": "人・家族"
+  },
+  {
+   "word": "man",
+   "meaning": "男性",
+   "category": "人・家族"
+  },
+  {
+   "word": "woman",
+   "meaning": "女性",
+   "category": "人・家族"
+  },
+  {
+   "word": "neighbor",
+   "meaning": "隣人・ご近所さん",
+   "category": "人・家族"
+  },
+  {
+   "word": "head",
+   "meaning": "頭",
+   "category": "体・健康"
+  },
+  {
+   "word": "stomach",
+   "meaning": "おなか・胃",
+   "category": "体・健康"
+  },
+  {
+   "word": "headache",
+   "meaning": "頭痛",
+   "category": "体・健康"
+  },
+  {
+   "word": "fever",
+   "meaning": "熱",
+   "category": "体・健康"
+  },
+  {
+   "word": "medicine",
+   "meaning": "薬",
+   "category": "体・健康"
+  },
+  {
+   "word": "hospital",
+   "meaning": "病院",
+   "category": "体・健康"
+  },
+  {
+   "word": "doctor",
+   "meaning": "医者",
+   "category": "体・健康"
+  },
+  {
+   "word": "sick",
+   "meaning": "病気の・具合が悪い",
+   "category": "体・健康"
+  },
+  {
+   "word": "hurt",
+   "meaning": "痛む・痛める",
+   "category": "体・健康"
+  },
+  {
+   "word": "rest",
+   "meaning": "休む・休息",
+   "category": "体・健康"
+  },
+  {
+   "word": "healthy",
+   "meaning": "健康な",
+   "category": "体・健康"
+  },
+  {
+   "word": "sleepy",
+   "meaning": "眠い",
+   "category": "体・健康"
+  },
+  {
+   "word": "money",
+   "meaning": "お金",
+   "category": "買い物"
+  },
+  {
+   "word": "price",
+   "meaning": "値段",
+   "category": "買い物"
+  },
+  {
+   "word": "cheap",
+   "meaning": "安い",
+   "category": "買い物"
+  },
+  {
+   "word": "expensive",
+   "meaning": "（値段が）高い",
+   "category": "買い物"
+  },
+  {
+   "word": "discount",
+   "meaning": "割引",
+   "category": "買い物"
+  },
+  {
+   "word": "size",
+   "meaning": "サイズ",
+   "category": "買い物"
+  },
+  {
+   "word": "color",
+   "meaning": "色",
+   "category": "買い物"
+  },
+  {
+   "word": "try on",
+   "meaning": "試着する",
+   "category": "買い物"
+  },
+  {
+   "word": "cash",
+   "meaning": "現金",
+   "category": "買い物"
+  },
+  {
+   "word": "change",
+   "meaning": "おつり",
+   "category": "買い物"
+  },
+  {
+   "word": "receipt",
+   "meaning": "レシート・領収書",
+   "category": "買い物"
+  },
+  {
+   "word": "store",
+   "meaning": "店",
+   "category": "買い物"
+  },
+  {
+   "word": "sunny",
+   "meaning": "晴れた",
+   "category": "自然・天気"
+  },
+  {
+   "word": "rainy",
+   "meaning": "雨の",
+   "category": "自然・天気"
+  },
+  {
+   "word": "cloudy",
+   "meaning": "くもりの",
+   "category": "自然・天気"
+  },
+  {
+   "word": "hot",
+   "meaning": "暑い・熱い",
+   "category": "自然・天気"
+  },
+  {
+   "word": "cold",
+   "meaning": "寒い・冷たい",
+   "category": "自然・天気"
+  },
+  {
+   "word": "warm",
+   "meaning": "暖かい",
+   "category": "自然・天気"
+  },
+  {
+   "word": "cool",
+   "meaning": "涼しい",
+   "category": "自然・天気"
+  },
+  {
+   "word": "rain",
+   "meaning": "雨",
+   "category": "自然・天気"
+  },
+  {
+   "word": "What do you mean?",
+   "meaning": "どういう意味ですか？",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "Could you say that again?",
+   "meaning": "もう一度言ってもらえますか？",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "Please speak slowly.",
+   "meaning": "ゆっくり話してください",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "I see.",
+   "meaning": "なるほど",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "That sounds good.",
+   "meaning": "いいですね",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "I agree.",
+   "meaning": "賛成です",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "I don't think so.",
+   "meaning": "そうは思いません",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "Just a moment.",
+   "meaning": "ちょっと待ってください",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "It depends.",
+   "meaning": "場合によります",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "I'm not sure.",
+   "meaning": "よくわかりません",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "What time is it?",
+   "meaning": "何時ですか？",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "How was your day?",
+   "meaning": "今日はどうだった？",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "What do you do?",
+   "meaning": "お仕事は何ですか？",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "I'm from Japan.",
+   "meaning": "日本出身です",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "Can you help me?",
+   "meaning": "手伝ってもらえますか？",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "No worries.",
+   "meaning": "心配しないで",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "Sounds fun!",
+   "meaning": "楽しそう！",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "Good luck!",
+   "meaning": "がんばって！",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "Congratulations!",
+   "meaning": "おめでとう！",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "Cheers!",
+   "meaning": "乾杯！",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "Let me think.",
+   "meaning": "ちょっと考えさせて",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "What's this called in English?",
+   "meaning": "これは英語で何と言いますか？",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "Could you write it down?",
+   "meaning": "書いてもらえますか？",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "I'm just looking.",
+   "meaning": "（店で）見ているだけです",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "Take your time.",
+   "meaning": "ゆっくりでいいよ",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "I'm on my way.",
+   "meaning": "今向かっています",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "What's up?",
+   "meaning": "調子どう？",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "Never mind.",
+   "meaning": "気にしないで",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "That makes sense.",
+   "meaning": "なるほどね・筋が通ってる",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "I hope so.",
+   "meaning": "そうだといいな",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "Same here.",
+   "meaning": "私も同じ",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "How about you?",
+   "meaning": "あなたはどう？",
+   "category": "会話フレーズ"
+  },
+  {
+   "word": "go",
+   "meaning": "行く",
+   "category": "動詞・変化形",
+   "forms": "変化: go – went – gone / going（進行形）"
+  },
+  {
+   "word": "come",
+   "meaning": "来る",
+   "category": "動詞・変化形",
+   "forms": "変化: come – came – come"
+  },
+  {
+   "word": "get",
+   "meaning": "手に入れる・〜になる",
+   "category": "動詞・変化形",
+   "forms": "変化: get – got – gotten"
+  },
+  {
+   "word": "take",
+   "meaning": "取る・（時間が）かかる",
+   "category": "動詞・変化形",
+   "forms": "変化: take – took – taken"
+  },
+  {
+   "word": "make",
+   "meaning": "作る",
+   "category": "動詞・変化形",
+   "forms": "変化: make – made – made"
+  },
+  {
+   "word": "see",
+   "meaning": "見える・会う",
+   "category": "動詞・変化形",
+   "forms": "変化: see – saw – seen"
+  },
+  {
+   "word": "know",
+   "meaning": "知っている",
+   "category": "動詞・変化形",
+   "forms": "変化: know – knew – known"
+  },
+  {
+   "word": "think",
+   "meaning": "思う・考える",
+   "category": "動詞・変化形",
+   "forms": "変化: think – thought – thought"
+  },
+  {
+   "word": "say",
+   "meaning": "言う",
+   "category": "動詞・変化形",
+   "forms": "変化: say – said – said"
+  },
+  {
+   "word": "tell",
+   "meaning": "伝える・教える",
+   "category": "動詞・変化形",
+   "forms": "変化: tell – told – told"
+  },
+  {
+   "word": "give",
+   "meaning": "与える",
+   "category": "動詞・変化形",
+   "forms": "変化: give – gave – given"
+  },
+  {
+   "word": "find",
+   "meaning": "見つける",
+   "category": "動詞・変化形",
+   "forms": "変化: find – found – found"
+  },
+  {
+   "word": "feel",
+   "meaning": "感じる",
+   "category": "動詞・変化形",
+   "forms": "変化: feel – felt – felt / 名詞: feeling（気持ち）"
+  },
+  {
+   "word": "leave",
+   "meaning": "出発する・離れる",
+   "category": "動詞・変化形",
+   "forms": "変化: leave – left – left"
+  },
+  {
+   "word": "put",
+   "meaning": "置く",
+   "category": "動詞・変化形",
+   "forms": "変化: put – put – put"
+  },
+  {
+   "word": "bring",
+   "meaning": "持ってくる",
+   "category": "動詞・変化形",
+   "forms": "変化: bring – brought – brought"
+  },
+  {
+   "word": "send",
+   "meaning": "送る",
+   "category": "動詞・変化形",
+   "forms": "変化: send – sent – sent"
+  },
+  {
+   "word": "pay",
+   "meaning": "払う",
+   "category": "動詞・変化形",
+   "forms": "変化: pay – paid – paid / 名詞: payment（支払い）"
+  },
+  {
+   "word": "forget",
+   "meaning": "忘れる",
+   "category": "動詞・変化形",
+   "forms": "変化: forget – forgot – forgotten"
+  },
+  {
+   "word": "remember",
+   "meaning": "覚えている",
+   "category": "動詞・変化形"
+  },
+  {
+   "word": "understand",
+   "meaning": "理解する",
+   "category": "動詞・変化形",
+   "forms": "変化: understand – understood – understood"
+  },
+  {
+   "word": "try",
+   "meaning": "試す・やってみる",
+   "category": "動詞・変化形",
+   "forms": "変化: try – tried / try to 〜（〜しようとする）"
+  },
+  {
+   "word": "use",
+   "meaning": "使う",
+   "category": "動詞・変化形",
+   "forms": "形容詞: useful（役に立つ）"
+  },
+  {
+   "word": "start",
+   "meaning": "始める",
+   "category": "動詞・変化形",
+   "forms": "反対: finish（終える）"
+  },
+  {
+   "word": "finish",
+   "meaning": "終える",
+   "category": "動詞・変化形"
+  },
+  {
+   "word": "open",
+   "meaning": "開ける",
+   "category": "動詞・変化形",
+   "forms": "反対: close（閉める）"
+  },
+  {
+   "word": "close",
+   "meaning": "閉める",
+   "category": "動詞・変化形"
+  },
+  {
+   "word": "wait",
+   "meaning": "待つ",
+   "category": "動詞・変化形",
+   "forms": "wait for 〜（〜を待つ）"
+  },
+  {
+   "word": "ask",
+   "meaning": "尋ねる・頼む",
+   "category": "動詞・変化形",
+   "forms": "ask for 〜（〜を求める）"
+  },
+  {
+   "word": "answer",
+   "meaning": "答える",
+   "category": "動詞・変化形",
+   "forms": "名詞: answer（答え）"
+  },
+  {
+   "word": "house",
+   "meaning": "家",
+   "category": "身の回り"
+  },
+  {
+   "word": "room",
+   "meaning": "部屋",
+   "category": "身の回り"
+  },
+  {
+   "word": "key",
+   "meaning": "鍵",
+   "category": "身の回り"
+  },
+  {
+   "word": "phone",
+   "meaning": "電話・スマホ",
+   "category": "身の回り"
+  },
+  {
+   "word": "clothes",
+   "meaning": "服",
+   "category": "身の回り"
+  },
+  {
+   "word": "shoes",
+   "meaning": "靴",
+   "category": "身の回り",
+   "forms": "単数: shoe（片方の靴）"
+  },
+  {
+   "word": "umbrella",
+   "meaning": "傘",
+   "category": "身の回り"
+  },
+  {
+   "word": "wallet",
+   "meaning": "財布",
+   "category": "身の回り"
+  },
+  {
+   "word": "glasses",
+   "meaning": "メガネ",
+   "category": "身の回り"
+  },
+  {
+   "word": "table",
+   "meaning": "テーブル",
+   "category": "身の回り"
+  },
+  {
+   "word": "chair",
+   "meaning": "椅子",
+   "category": "身の回り"
+  },
+  {
+   "word": "door",
+   "meaning": "ドア",
+   "category": "身の回り"
+  },
+  {
+   "word": "window",
+   "meaning": "窓",
+   "category": "身の回り"
+  },
+  {
+   "word": "kitchen",
+   "meaning": "台所",
+   "category": "身の回り"
+  },
+  {
+   "word": "bed",
+   "meaning": "ベッド",
+   "category": "身の回り"
+  },
+  {
+   "word": "book",
+   "meaning": "本",
+   "category": "身の回り"
+  },
+  {
+   "word": "newspaper",
+   "meaning": "新聞",
+   "category": "身の回り"
+  },
+  {
+   "word": "trash",
+   "meaning": "ゴミ",
+   "category": "身の回り"
+  },
+  {
+   "word": "towel",
+   "meaning": "タオル",
+   "category": "身の回り"
+  },
+  {
+   "word": "soap",
+   "meaning": "石けん",
+   "category": "身の回り"
+  },
+  {
+   "word": "and",
+   "meaning": "そして・〜と",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "but",
+   "meaning": "でも・しかし",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "so",
+   "meaning": "だから",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "because",
+   "meaning": "なぜなら",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "then",
+   "meaning": "それから",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "also",
+   "meaning": "〜もまた",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "maybe",
+   "meaning": "たぶん",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "really",
+   "meaning": "本当に",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "very",
+   "meaning": "とても",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "a little",
+   "meaning": "少し",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "too",
+   "meaning": "〜すぎる・〜も",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "again",
+   "meaning": "もう一度",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "together",
+   "meaning": "一緒に",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "alone",
+   "meaning": "ひとりで",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "here",
+   "meaning": "ここ",
+   "category": "つなぎ言葉",
+   "forms": "反対: there（そこ）"
+  },
+  {
+   "word": "there",
+   "meaning": "そこ",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "later",
+   "meaning": "あとで",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "soon",
+   "meaning": "すぐに・まもなく",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "by the way",
+   "meaning": "ところで",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "for example",
+   "meaning": "たとえば",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "bank",
+   "meaning": "銀行",
+   "category": "場所・街"
+  },
+  {
+   "word": "post office",
+   "meaning": "郵便局",
+   "category": "場所・街"
+  },
+  {
+   "word": "convenience store",
+   "meaning": "コンビニ",
+   "category": "場所・街"
+  },
+  {
+   "word": "supermarket",
+   "meaning": "スーパー",
+   "category": "場所・街"
+  },
+  {
+   "word": "pharmacy",
+   "meaning": "薬局",
+   "category": "場所・街"
+  },
+  {
+   "word": "park",
+   "meaning": "公園",
+   "category": "場所・街"
+  },
+  {
+   "word": "library",
+   "meaning": "図書館",
+   "category": "場所・街"
+  },
+  {
+   "word": "museum",
+   "meaning": "美術館・博物館",
+   "category": "場所・街"
+  },
+  {
+   "word": "temple",
+   "meaning": "寺",
+   "category": "場所・街"
+  },
+  {
+   "word": "beach",
+   "meaning": "ビーチ",
+   "category": "場所・街"
+  },
+  {
+   "word": "mountain",
+   "meaning": "山",
+   "category": "場所・街"
+  },
+  {
+   "word": "river",
+   "meaning": "川",
+   "category": "場所・街"
+  },
+  {
+   "word": "bridge",
+   "meaning": "橋",
+   "category": "場所・街"
+  },
+  {
+   "word": "corner",
+   "meaning": "角",
+   "category": "場所・街",
+   "forms": "around the corner（角を曲がったところ）"
+  },
+  {
+   "word": "restaurant",
+   "meaning": "レストラン",
+   "category": "場所・街"
+  },
+  {
+   "word": "hour",
+   "meaning": "時間（60分）",
+   "category": "数字・時間"
+  },
+  {
+   "word": "minute",
+   "meaning": "分",
+   "category": "数字・時間"
+  },
+  {
+   "word": "week",
+   "meaning": "週",
+   "category": "数字・時間",
+   "forms": "weekly（毎週の）"
+  },
+  {
+   "word": "month",
+   "meaning": "月（期間）",
+   "category": "数字・時間",
+   "forms": "monthly（毎月の）"
+  },
+  {
+   "word": "year",
+   "meaning": "年",
+   "category": "数字・時間",
+   "forms": "yearly（毎年の）"
+  },
+  {
+   "word": "half",
+   "meaning": "半分・30分",
+   "category": "数字・時間",
+   "forms": "half past seven（7時半）"
+  },
+  {
+   "word": "date",
+   "meaning": "日付",
+   "category": "数字・時間"
+  },
+  {
+   "word": "birthday",
+   "meaning": "誕生日",
+   "category": "数字・時間"
+  },
+  {
+   "word": "noon",
+   "meaning": "正午",
+   "category": "数字・時間"
+  },
+  {
+   "word": "midnight",
+   "meaning": "真夜中",
+   "category": "数字・時間"
+  },
+  {
+   "word": "season",
+   "meaning": "季節",
+   "category": "数字・時間",
+   "forms": "spring / summer / fall / winter"
+  },
+  {
+   "word": "How's it going?",
+   "meaning": "調子どう？",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "I got it.",
+   "meaning": "わかった",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Are you sure?",
+   "meaning": "本当に？確かなの？",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Why not?",
+   "meaning": "もちろん・いいね",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "It's up to you.",
+   "meaning": "あなた次第だよ",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Not yet.",
+   "meaning": "まだだよ",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Exactly.",
+   "meaning": "その通り",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Absolutely.",
+   "meaning": "間違いなく・全くその通り",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Kind of.",
+   "meaning": "まあね・ちょっとね",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "No way!",
+   "meaning": "まさか！ありえない！",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Help yourself.",
+   "meaning": "ご自由にどうぞ",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "After you.",
+   "meaning": "お先にどうぞ",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "It's on me.",
+   "meaning": "私のおごりだよ",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Anyway",
+   "meaning": "とにかく・それはさておき",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "In my opinion",
+   "meaning": "私の意見では",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "That's too bad.",
+   "meaning": "それは残念",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Sounds like a plan.",
+   "meaning": "それでいこう",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Guess what?",
+   "meaning": "ねえ聞いて（何だと思う？）",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "I'm afraid not.",
+   "meaning": "残念ですが違います",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Take it easy.",
+   "meaning": "気楽にね・お大事に",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "I have a headache.",
+   "meaning": "頭が痛いです",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "I feel sick.",
+   "meaning": "気分が悪いです",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "I caught a cold.",
+   "meaning": "風邪をひきました",
+   "category": "体調・トラブル",
+   "forms": "catch – caught – caught"
+  },
+  {
+   "word": "Call an ambulance!",
+   "meaning": "救急車を呼んで！",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "I lost my wallet.",
+   "meaning": "財布をなくしました",
+   "category": "体調・トラブル",
+   "forms": "lose – lost – lost"
+  },
+  {
+   "word": "I missed the train.",
+   "meaning": "電車を逃しました",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "I'm lost.",
+   "meaning": "道に迷いました",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "It hurts here.",
+   "meaning": "ここが痛いです",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "I need help.",
+   "meaning": "助けが必要です",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "Is there a hospital near here?",
+   "meaning": "近くに病院はありますか？",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "Can you call a taxi?",
+   "meaning": "タクシーを呼んでもらえますか？",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "Where is the police station?",
+   "meaning": "警察署（交番）はどこですか？",
+   "category": "体調・トラブル"
+  }
+ ],
+ "id": [
+  {
+   "word": "Selamat pagi",
+   "meaning": "おはようございます",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Selamat siang",
+   "meaning": "こんにちは（昼）",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Selamat sore",
+   "meaning": "こんにちは（夕方）",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Selamat malam",
+   "meaning": "こんばんは",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Apa kabar?",
+   "meaning": "元気ですか？",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Baik-baik saja",
+   "meaning": "元気です",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Terima kasih",
+   "meaning": "ありがとう",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Sama-sama",
+   "meaning": "どういたしまして",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Maaf",
+   "meaning": "ごめんなさい",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Permisi",
+   "meaning": "すみません（失礼します）",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Sampai jumpa",
+   "meaning": "また会いましょう",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Selamat tinggal",
+   "meaning": "さようなら",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Nama saya ...",
+   "meaning": "私の名前は…です",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Senang bertemu Anda",
+   "meaning": "お会いできてうれしいです",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Ya",
+   "meaning": "はい",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Tidak",
+   "meaning": "いいえ",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Tolong",
+   "meaning": "お願いします・助けて",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "Silakan",
+   "meaning": "どうぞ",
+   "category": "あいさつ・基本"
+  },
+  {
+   "word": "satu",
+   "meaning": "1（いち）",
+   "category": "数字・時間"
+  },
+  {
+   "word": "dua",
+   "meaning": "2（に）",
+   "category": "数字・時間"
+  },
+  {
+   "word": "tiga",
+   "meaning": "3（さん）",
+   "category": "数字・時間"
+  },
+  {
+   "word": "empat",
+   "meaning": "4（よん）",
+   "category": "数字・時間"
+  },
+  {
+   "word": "lima",
+   "meaning": "5（ご）",
+   "category": "数字・時間"
+  },
+  {
+   "word": "enam",
+   "meaning": "6（ろく）",
+   "category": "数字・時間"
+  },
+  {
+   "word": "tujuh",
+   "meaning": "7（なな）",
+   "category": "数字・時間"
+  },
+  {
+   "word": "delapan",
+   "meaning": "8（はち）",
+   "category": "数字・時間"
+  },
+  {
+   "word": "sembilan",
+   "meaning": "9（きゅう）",
+   "category": "数字・時間"
+  },
+  {
+   "word": "sepuluh",
+   "meaning": "10（じゅう）",
+   "category": "数字・時間"
+  },
+  {
+   "word": "seratus",
+   "meaning": "100（ひゃく）",
+   "category": "数字・時間"
+  },
+  {
+   "word": "seribu",
+   "meaning": "1000（せん）",
+   "category": "数字・時間"
+  },
+  {
+   "word": "hari ini",
+   "meaning": "今日",
+   "category": "数字・時間"
+  },
+  {
+   "word": "besok",
+   "meaning": "明日",
+   "category": "数字・時間"
+  },
+  {
+   "word": "kemarin",
+   "meaning": "昨日",
+   "category": "数字・時間"
+  },
+  {
+   "word": "sekarang",
+   "meaning": "今",
+   "category": "数字・時間"
+  },
+  {
+   "word": "makan",
+   "meaning": "食べる",
+   "category": "食事"
+  },
+  {
+   "word": "minum",
+   "meaning": "飲む",
+   "category": "食事"
+  },
+  {
+   "word": "nasi",
+   "meaning": "ご飯",
+   "category": "食事"
+  },
+  {
+   "word": "mie",
+   "meaning": "麺",
+   "category": "食事"
+  },
+  {
+   "word": "ayam",
+   "meaning": "鶏肉",
+   "category": "食事"
+  },
+  {
+   "word": "ikan",
+   "meaning": "魚",
+   "category": "食事"
+  },
+  {
+   "word": "sayur",
+   "meaning": "野菜",
+   "category": "食事"
+  },
+  {
+   "word": "buah",
+   "meaning": "果物",
+   "category": "食事"
+  },
+  {
+   "word": "air",
+   "meaning": "水",
+   "category": "食事"
+  },
+  {
+   "word": "kopi",
+   "meaning": "コーヒー",
+   "category": "食事"
+  },
+  {
+   "word": "teh",
+   "meaning": "紅茶・お茶",
+   "category": "食事"
+  },
+  {
+   "word": "gula",
+   "meaning": "砂糖",
+   "category": "食事"
+  },
+  {
+   "word": "pedas",
+   "meaning": "辛い",
+   "category": "食事"
+  },
+  {
+   "word": "manis",
+   "meaning": "甘い",
+   "category": "食事"
+  },
+  {
+   "word": "enak",
+   "meaning": "おいしい",
+   "category": "食事"
+  },
+  {
+   "word": "nasi goreng",
+   "meaning": "ナシゴレン（インドネシア風炒飯）",
+   "category": "食事"
+  },
+  {
+   "word": "Saya mau pesan ini.",
+   "meaning": "これを注文したいです",
+   "category": "食事"
+  },
+  {
+   "word": "Berapa harganya?",
+   "meaning": "いくらですか？",
+   "category": "食事"
+  },
+  {
+   "word": "bandara",
+   "meaning": "空港",
+   "category": "旅行"
+  },
+  {
+   "word": "pesawat",
+   "meaning": "飛行機",
+   "category": "旅行"
+  },
+  {
+   "word": "stasiun",
+   "meaning": "駅",
+   "category": "旅行"
+  },
+  {
+   "word": "kereta",
+   "meaning": "電車",
+   "category": "旅行"
+  },
+  {
+   "word": "bus",
+   "meaning": "バス",
+   "category": "旅行"
+  },
+  {
+   "word": "mobil",
+   "meaning": "車",
+   "category": "旅行"
+  },
+  {
+   "word": "hotel",
+   "meaning": "ホテル",
+   "category": "旅行"
+  },
+  {
+   "word": "kamar",
+   "meaning": "部屋",
+   "category": "旅行"
+  },
+  {
+   "word": "pantai",
+   "meaning": "ビーチ・海岸",
+   "category": "旅行"
+  },
+  {
+   "word": "pulau",
+   "meaning": "島",
+   "category": "旅行"
+  },
+  {
+   "word": "jalan",
+   "meaning": "道・通り",
+   "category": "旅行"
+  },
+  {
+   "word": "peta",
+   "meaning": "地図",
+   "category": "旅行"
+  },
+  {
+   "word": "tiket",
+   "meaning": "チケット",
+   "category": "旅行"
+  },
+  {
+   "word": "Di mana toilet?",
+   "meaning": "トイレはどこですか？",
+   "category": "旅行"
+  },
+  {
+   "word": "kiri",
+   "meaning": "左",
+   "category": "旅行"
+  },
+  {
+   "word": "kanan",
+   "meaning": "右",
+   "category": "旅行"
+  },
+  {
+   "word": "lurus",
+   "meaning": "まっすぐ",
+   "category": "旅行"
+  },
+  {
+   "word": "pergi",
+   "meaning": "行く",
+   "category": "日常動詞"
+  },
+  {
+   "word": "datang",
+   "meaning": "来る",
+   "category": "日常動詞",
+   "forms": "名詞: kedatangan（到着）"
+  },
+  {
+   "word": "pulang",
+   "meaning": "帰る",
+   "category": "日常動詞"
+  },
+  {
+   "word": "tidur",
+   "meaning": "寝る",
+   "category": "日常動詞",
+   "forms": "kamar tidur（寝室）"
+  },
+  {
+   "word": "bangun",
+   "meaning": "起きる",
+   "category": "日常動詞"
+  },
+  {
+   "word": "bekerja",
+   "meaning": "働く",
+   "category": "日常動詞",
+   "forms": "語根: kerja（仕事）/ pekerjaan（職業）"
+  },
+  {
+   "word": "belajar",
+   "meaning": "勉強する",
+   "category": "日常動詞",
+   "forms": "語根: ajar / pelajaran（授業・レッスン）"
+  },
+  {
+   "word": "membaca",
+   "meaning": "読む",
+   "category": "日常動詞",
+   "forms": "語根: baca（口語では baca だけでもOK）"
+  },
+  {
+   "word": "menulis",
+   "meaning": "書く",
+   "category": "日常動詞",
+   "forms": "語根: tulis"
+  },
+  {
+   "word": "berbicara",
+   "meaning": "話す",
+   "category": "日常動詞",
+   "forms": "語根: bicara（口語: ngomong）"
+  },
+  {
+   "word": "mendengar",
+   "meaning": "聞く",
+   "category": "日常動詞",
+   "forms": "語根: dengar"
+  },
+  {
+   "word": "melihat",
+   "meaning": "見る",
+   "category": "日常動詞",
+   "forms": "語根: lihat"
+  },
+  {
+   "word": "membeli",
+   "meaning": "買う",
+   "category": "日常動詞",
+   "forms": "語根: beli（口語では beli だけでもOK）"
+  },
+  {
+   "word": "berjalan",
+   "meaning": "歩く",
+   "category": "日常動詞",
+   "forms": "語根: jalan（道）/ jalan-jalan（散歩・おでかけ）"
+  },
+  {
+   "word": "berlari",
+   "meaning": "走る",
+   "category": "日常動詞",
+   "forms": "語根: lari"
+  },
+  {
+   "word": "membantu",
+   "meaning": "手伝う",
+   "category": "日常動詞",
+   "forms": "語根: bantu / bantuan（助け）"
+  },
+  {
+   "word": "bertemu",
+   "meaning": "会う",
+   "category": "日常動詞",
+   "forms": "語根: temu / sampai jumpa の jumpa も「会う」"
+  },
+  {
+   "word": "mengerti",
+   "meaning": "理解する",
+   "category": "日常動詞",
+   "forms": "関連: arti（意味）/ Apa artinya?（どういう意味？）"
+  },
+  {
+   "word": "besar",
+   "meaning": "大きい",
+   "category": "形容詞"
+  },
+  {
+   "word": "kecil",
+   "meaning": "小さい",
+   "category": "形容詞"
+  },
+  {
+   "word": "baru",
+   "meaning": "新しい",
+   "category": "形容詞"
+  },
+  {
+   "word": "lama",
+   "meaning": "古い・（時間が）長い",
+   "category": "形容詞"
+  },
+  {
+   "word": "bagus",
+   "meaning": "良い・すばらしい",
+   "category": "形容詞"
+  },
+  {
+   "word": "buruk",
+   "meaning": "悪い",
+   "category": "形容詞"
+  },
+  {
+   "word": "panas",
+   "meaning": "暑い・熱い",
+   "category": "形容詞"
+  },
+  {
+   "word": "dingin",
+   "meaning": "寒い・冷たい",
+   "category": "形容詞"
+  },
+  {
+   "word": "mahal",
+   "meaning": "（値段が）高い",
+   "category": "形容詞"
+  },
+  {
+   "word": "murah",
+   "meaning": "安い",
+   "category": "形容詞"
+  },
+  {
+   "word": "cepat",
+   "meaning": "速い",
+   "category": "形容詞"
+  },
+  {
+   "word": "lambat",
+   "meaning": "遅い",
+   "category": "形容詞"
+  },
+  {
+   "word": "dekat",
+   "meaning": "近い",
+   "category": "形容詞"
+  },
+  {
+   "word": "jauh",
+   "meaning": "遠い",
+   "category": "形容詞"
+  },
+  {
+   "word": "mudah",
+   "meaning": "簡単な",
+   "category": "形容詞"
+  },
+  {
+   "word": "sulit",
+   "meaning": "難しい",
+   "category": "形容詞"
+  },
+  {
+   "word": "keluarga",
+   "meaning": "家族",
+   "category": "人・家族"
+  },
+  {
+   "word": "ayah",
+   "meaning": "父",
+   "category": "人・家族"
+  },
+  {
+   "word": "ibu",
+   "meaning": "母",
+   "category": "人・家族"
+  },
+  {
+   "word": "anak",
+   "meaning": "子ども",
+   "category": "人・家族"
+  },
+  {
+   "word": "suami",
+   "meaning": "夫",
+   "category": "人・家族"
+  },
+  {
+   "word": "istri",
+   "meaning": "妻",
+   "category": "人・家族"
+  },
+  {
+   "word": "teman",
+   "meaning": "友達",
+   "category": "人・家族"
+  },
+  {
+   "word": "orang",
+   "meaning": "人",
+   "category": "人・家族"
+  },
+  {
+   "word": "laki-laki",
+   "meaning": "男性",
+   "category": "人・家族"
+  },
+  {
+   "word": "perempuan",
+   "meaning": "女性",
+   "category": "人・家族"
+  },
+  {
+   "word": "kakak",
+   "meaning": "兄・姉",
+   "category": "人・家族"
+  },
+  {
+   "word": "adik",
+   "meaning": "弟・妹",
+   "category": "人・家族"
+  },
+  {
+   "word": "uang",
+   "meaning": "お金",
+   "category": "買い物"
+  },
+  {
+   "word": "harga",
+   "meaning": "値段",
+   "category": "買い物"
+  },
+  {
+   "word": "toko",
+   "meaning": "店",
+   "category": "買い物"
+  },
+  {
+   "word": "pasar",
+   "meaning": "市場",
+   "category": "買い物"
+  },
+  {
+   "word": "belanja",
+   "meaning": "買い物する",
+   "category": "買い物"
+  },
+  {
+   "word": "diskon",
+   "meaning": "割引",
+   "category": "買い物"
+  },
+  {
+   "word": "warna",
+   "meaning": "色",
+   "category": "買い物"
+  },
+  {
+   "word": "baju",
+   "meaning": "服",
+   "category": "買い物"
+  },
+  {
+   "word": "sepatu",
+   "meaning": "靴",
+   "category": "買い物"
+  },
+  {
+   "word": "tas",
+   "meaning": "かばん",
+   "category": "買い物"
+  },
+  {
+   "word": "kembalian",
+   "meaning": "おつり",
+   "category": "買い物"
+  },
+  {
+   "word": "rumah",
+   "meaning": "家",
+   "category": "場所・自然"
+  },
+  {
+   "word": "kantor",
+   "meaning": "会社・オフィス",
+   "category": "場所・自然"
+  },
+  {
+   "word": "sekolah",
+   "meaning": "学校",
+   "category": "場所・自然"
+  },
+  {
+   "word": "kamar mandi",
+   "meaning": "浴室・トイレ",
+   "category": "場所・自然"
+  },
+  {
+   "word": "gunung",
+   "meaning": "山",
+   "category": "場所・自然"
+  },
+  {
+   "word": "laut",
+   "meaning": "海",
+   "category": "場所・自然"
+  },
+  {
+   "word": "hujan",
+   "meaning": "雨",
+   "category": "場所・自然"
+  },
+  {
+   "word": "cuaca",
+   "meaning": "天気",
+   "category": "場所・自然"
+  },
+  {
+   "word": "matahari",
+   "meaning": "太陽",
+   "category": "場所・自然"
+  },
+  {
+   "word": "kota",
+   "meaning": "町・都市",
+   "category": "場所・自然"
+  },
+  {
+   "word": "apa",
+   "meaning": "何",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "siapa",
+   "meaning": "誰",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "di mana",
+   "meaning": "どこ",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "kapan",
+   "meaning": "いつ",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "mengapa",
+   "meaning": "なぜ",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "bagaimana",
+   "meaning": "どのように",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "berapa",
+   "meaning": "いくつ・いくら",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Siapa nama Anda?",
+   "meaning": "お名前は何ですか？",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Saya dari Jepang.",
+   "meaning": "私は日本から来ました",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Saya tidak mengerti.",
+   "meaning": "わかりません",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Tolong bicara pelan-pelan.",
+   "meaning": "ゆっくり話してください",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Sekali lagi",
+   "meaning": "もう一度",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Tidak apa-apa",
+   "meaning": "大丈夫です",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Hati-hati",
+   "meaning": "気をつけて",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Bagus sekali!",
+   "meaning": "すばらしい！",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Ayo!",
+   "meaning": "さあ行こう！",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Semangat!",
+   "meaning": "がんばって！",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Sampai besok",
+   "meaning": "また明日",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Boleh saya minta ...?",
+   "meaning": "…をいただけますか？",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Saya suka ini.",
+   "meaning": "これが好きです",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Saya tidak suka.",
+   "meaning": "好きではありません",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Bisa bahasa Inggris?",
+   "meaning": "英語を話せますか？",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Pelan-pelan saja",
+   "meaning": "ゆっくりでいいよ",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Tunggu sebentar",
+   "meaning": "ちょっと待って",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Tidak masalah",
+   "meaning": "問題ないよ",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Saya lapar.",
+   "meaning": "おなかがすいた",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Saya haus.",
+   "meaning": "のどが渇いた",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Saya capek.",
+   "meaning": "疲れた",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Sudah selesai.",
+   "meaning": "終わりました",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "Belum.",
+   "meaning": "まだです",
+   "category": "疑問詞・会話"
+  },
+  {
+   "word": "mau",
+   "meaning": "〜したい・欲しい",
+   "category": "動詞・変化形",
+   "forms": "Saya mau makan.（食べたい）"
+  },
+  {
+   "word": "suka",
+   "meaning": "好き",
+   "category": "動詞・変化形",
+   "forms": "Saya suka kopi.（コーヒーが好き）"
+  },
+  {
+   "word": "punya",
+   "meaning": "持っている",
+   "category": "動詞・変化形",
+   "forms": "Saya punya dua anak.（子どもが2人いる）"
+  },
+  {
+   "word": "tahu",
+   "meaning": "知っている",
+   "category": "動詞・変化形",
+   "forms": "Saya tidak tahu.（知りません）"
+  },
+  {
+   "word": "kenal",
+   "meaning": "（人を）知っている",
+   "category": "動詞・変化形",
+   "forms": "memperkenalkan（紹介する）"
+  },
+  {
+   "word": "berkata",
+   "meaning": "言う",
+   "category": "動詞・変化形",
+   "forms": "口語: bilang"
+  },
+  {
+   "word": "memberi",
+   "meaning": "与える",
+   "category": "動詞・変化形",
+   "forms": "語根: beri"
+  },
+  {
+   "word": "mengambil",
+   "meaning": "取る",
+   "category": "動詞・変化形",
+   "forms": "語根: ambil"
+  },
+  {
+   "word": "membawa",
+   "meaning": "持っていく",
+   "category": "動詞・変化形",
+   "forms": "語根: bawa"
+  },
+  {
+   "word": "mengirim",
+   "meaning": "送る",
+   "category": "動詞・変化形",
+   "forms": "語根: kirim"
+  },
+  {
+   "word": "membayar",
+   "meaning": "払う",
+   "category": "動詞・変化形",
+   "forms": "語根: bayar"
+  },
+  {
+   "word": "lupa",
+   "meaning": "忘れる",
+   "category": "動詞・変化形",
+   "forms": "Jangan lupa!（忘れないで！）"
+  },
+  {
+   "word": "ingat",
+   "meaning": "覚えている",
+   "category": "動詞・変化形"
+  },
+  {
+   "word": "mencoba",
+   "meaning": "試す",
+   "category": "動詞・変化形",
+   "forms": "語根: coba / Coba lagi.（もう一度やってみて）"
+  },
+  {
+   "word": "memakai",
+   "meaning": "使う・着る",
+   "category": "動詞・変化形",
+   "forms": "語根: pakai"
+  },
+  {
+   "word": "mulai",
+   "meaning": "始める",
+   "category": "動詞・変化形"
+  },
+  {
+   "word": "selesai",
+   "meaning": "終わる",
+   "category": "動詞・変化形",
+   "forms": "Sudah selesai.（終わりました）"
+  },
+  {
+   "word": "buka",
+   "meaning": "開ける",
+   "category": "動詞・変化形",
+   "forms": "反対: tutup（閉める）"
+  },
+  {
+   "word": "tutup",
+   "meaning": "閉める・閉店",
+   "category": "動詞・変化形"
+  },
+  {
+   "word": "menunggu",
+   "meaning": "待つ",
+   "category": "動詞・変化形",
+   "forms": "語根: tunggu / Tunggu sebentar.（ちょっと待って）"
+  },
+  {
+   "word": "bertanya",
+   "meaning": "尋ねる",
+   "category": "動詞・変化形",
+   "forms": "語根: tanya / pertanyaan（質問）"
+  },
+  {
+   "word": "menjawab",
+   "meaning": "答える",
+   "category": "動詞・変化形",
+   "forms": "語根: jawab / jawaban（答え）"
+  },
+  {
+   "word": "berenang",
+   "meaning": "泳ぐ",
+   "category": "動詞・変化形",
+   "forms": "語根: renang"
+  },
+  {
+   "word": "memasak",
+   "meaning": "料理する",
+   "category": "動詞・変化形",
+   "forms": "語根: masak / masakan（料理）"
+  },
+  {
+   "word": "mandi",
+   "meaning": "水浴びする・シャワーを浴びる",
+   "category": "動詞・変化形",
+   "forms": "kamar mandi（浴室）"
+  },
+  {
+   "word": "kunci",
+   "meaning": "鍵",
+   "category": "身の回り"
+  },
+  {
+   "word": "HP",
+   "meaning": "携帯電話・スマホ",
+   "category": "身の回り",
+   "forms": "handphone の略（ハーペー）"
+  },
+  {
+   "word": "dompet",
+   "meaning": "財布",
+   "category": "身の回り"
+  },
+  {
+   "word": "kacamata",
+   "meaning": "メガネ",
+   "category": "身の回り",
+   "forms": "mata（目）+ kaca（ガラス）"
+  },
+  {
+   "word": "payung",
+   "meaning": "傘",
+   "category": "身の回り"
+  },
+  {
+   "word": "meja",
+   "meaning": "テーブル・机",
+   "category": "身の回り"
+  },
+  {
+   "word": "kursi",
+   "meaning": "椅子",
+   "category": "身の回り"
+  },
+  {
+   "word": "pintu",
+   "meaning": "ドア",
+   "category": "身の回り"
+  },
+  {
+   "word": "jendela",
+   "meaning": "窓",
+   "category": "身の回り"
+  },
+  {
+   "word": "dapur",
+   "meaning": "台所",
+   "category": "身の回り"
+  },
+  {
+   "word": "tempat tidur",
+   "meaning": "ベッド",
+   "category": "身の回り",
+   "forms": "tempat（場所）+ tidur（寝る）"
+  },
+  {
+   "word": "buku",
+   "meaning": "本",
+   "category": "身の回り"
+  },
+  {
+   "word": "koran",
+   "meaning": "新聞",
+   "category": "身の回り"
+  },
+  {
+   "word": "sampah",
+   "meaning": "ゴミ",
+   "category": "身の回り"
+  },
+  {
+   "word": "lampu",
+   "meaning": "電気・ランプ",
+   "category": "身の回り"
+  },
+  {
+   "word": "AC",
+   "meaning": "エアコン",
+   "category": "身の回り",
+   "forms": "アーセーと読む"
+  },
+  {
+   "word": "sabun",
+   "meaning": "石けん",
+   "category": "身の回り"
+  },
+  {
+   "word": "handuk",
+   "meaning": "タオル",
+   "category": "身の回り"
+  },
+  {
+   "word": "celana",
+   "meaning": "ズボン",
+   "category": "身の回り"
+  },
+  {
+   "word": "kaos",
+   "meaning": "Tシャツ",
+   "category": "身の回り"
+  },
+  {
+   "word": "dan",
+   "meaning": "そして・〜と",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "tapi",
+   "meaning": "でも・しかし",
+   "category": "つなぎ言葉",
+   "forms": "丁寧: tetapi"
+  },
+  {
+   "word": "jadi",
+   "meaning": "だから・つまり",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "karena",
+   "meaning": "なぜなら",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "lalu",
+   "meaning": "それから",
+   "category": "つなぎ言葉",
+   "forms": "類語: kemudian"
+  },
+  {
+   "word": "juga",
+   "meaning": "〜も",
+   "category": "つなぎ言葉",
+   "forms": "Saya juga.（私も）"
+  },
+  {
+   "word": "mungkin",
+   "meaning": "たぶん",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "sangat",
+   "meaning": "とても（前置）",
+   "category": "つなぎ言葉",
+   "forms": "sangat enak = enak sekali"
+  },
+  {
+   "word": "sedikit",
+   "meaning": "少し",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "sekali",
+   "meaning": "とても（後置）",
+   "category": "つなぎ言葉",
+   "forms": "enak sekali（とてもおいしい）"
+  },
+  {
+   "word": "lagi",
+   "meaning": "もう一度・再び",
+   "category": "つなぎ言葉",
+   "forms": "Sekali lagi（もう一度）"
+  },
+  {
+   "word": "bersama",
+   "meaning": "一緒に",
+   "category": "つなぎ言葉",
+   "forms": "bersama-sama とも"
+  },
+  {
+   "word": "sendiri",
+   "meaning": "ひとりで・自分で",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "di sini",
+   "meaning": "ここ",
+   "category": "つなぎ言葉",
+   "forms": "di sana（そこ・あそこ）"
+  },
+  {
+   "word": "di sana",
+   "meaning": "そこ・あそこ",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "nanti",
+   "meaning": "あとで",
+   "category": "つなぎ言葉",
+   "forms": "Sampai nanti.（またあとで）"
+  },
+  {
+   "word": "segera",
+   "meaning": "すぐに",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "tentu saja",
+   "meaning": "もちろん",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "misalnya",
+   "meaning": "たとえば",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "ngomong-ngomong",
+   "meaning": "ところで",
+   "category": "つなぎ言葉"
+  },
+  {
+   "word": "bank",
+   "meaning": "銀行",
+   "category": "場所・街"
+  },
+  {
+   "word": "kantor pos",
+   "meaning": "郵便局",
+   "category": "場所・街"
+  },
+  {
+   "word": "apotek",
+   "meaning": "薬局",
+   "category": "場所・街"
+  },
+  {
+   "word": "supermarket",
+   "meaning": "スーパー",
+   "category": "場所・街"
+  },
+  {
+   "word": "taman",
+   "meaning": "公園",
+   "category": "場所・街"
+  },
+  {
+   "word": "perpustakaan",
+   "meaning": "図書館",
+   "category": "場所・街",
+   "forms": "語根: pustaka（書物）"
+  },
+  {
+   "word": "museum",
+   "meaning": "博物館・美術館",
+   "category": "場所・街"
+  },
+  {
+   "word": "masjid",
+   "meaning": "モスク",
+   "category": "場所・街"
+  },
+  {
+   "word": "pura",
+   "meaning": "（バリの）ヒンドゥー寺院",
+   "category": "場所・街"
+  },
+  {
+   "word": "sungai",
+   "meaning": "川",
+   "category": "場所・街"
+  },
+  {
+   "word": "jembatan",
+   "meaning": "橋",
+   "category": "場所・街"
+  },
+  {
+   "word": "warung",
+   "meaning": "食堂・売店",
+   "category": "場所・街",
+   "forms": "庶民的な小さいお店"
+  },
+  {
+   "word": "restoran",
+   "meaning": "レストラン",
+   "category": "場所・街"
+  },
+  {
+   "word": "kafe",
+   "meaning": "カフェ",
+   "category": "場所・街"
+  },
+  {
+   "word": "bioskop",
+   "meaning": "映画館",
+   "category": "場所・街"
+  },
+  {
+   "word": "rumah sakit",
+   "meaning": "病院",
+   "category": "場所・街",
+   "forms": "rumah（家）+ sakit（病気）"
+  },
+  {
+   "word": "jam",
+   "meaning": "時・時計",
+   "category": "数字・時間",
+   "forms": "jam tujuh（7時）"
+  },
+  {
+   "word": "menit",
+   "meaning": "分",
+   "category": "数字・時間"
+  },
+  {
+   "word": "minggu",
+   "meaning": "週・日曜日",
+   "category": "数字・時間",
+   "forms": "hari Minggu（日曜日）"
+  },
+  {
+   "word": "bulan",
+   "meaning": "月",
+   "category": "数字・時間",
+   "forms": "bulan depan（来月）"
+  },
+  {
+   "word": "tahun",
+   "meaning": "年",
+   "category": "数字・時間",
+   "forms": "tahun depan（来年）"
+  },
+  {
+   "word": "hari",
+   "meaning": "日",
+   "category": "数字・時間",
+   "forms": "setiap hari（毎日）"
+  },
+  {
+   "word": "pagi ini",
+   "meaning": "今朝",
+   "category": "数字・時間"
+  },
+  {
+   "word": "malam ini",
+   "meaning": "今夜",
+   "category": "数字・時間"
+  },
+  {
+   "word": "minggu depan",
+   "meaning": "来週",
+   "category": "数字・時間",
+   "forms": "depan（前・次の）"
+  },
+  {
+   "word": "lusa",
+   "meaning": "あさって",
+   "category": "数字・時間"
+  },
+  {
+   "word": "setiap hari",
+   "meaning": "毎日",
+   "category": "数字・時間"
+  },
+  {
+   "word": "kadang-kadang",
+   "meaning": "ときどき",
+   "category": "数字・時間"
+  },
+  {
+   "word": "selalu",
+   "meaning": "いつも",
+   "category": "数字・時間"
+  },
+  {
+   "word": "sering",
+   "meaning": "よく・頻繁に",
+   "category": "数字・時間"
+  },
+  {
+   "word": "jarang",
+   "meaning": "めったに〜ない",
+   "category": "数字・時間"
+  },
+  {
+   "word": "Bagaimana kabarnya?",
+   "meaning": "調子はどうですか？",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Sudah makan?",
+   "meaning": "ご飯食べた？（軽いあいさつ）",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Mau ke mana?",
+   "meaning": "どこ行くの？（軽いあいさつ）",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Terserah kamu.",
+   "meaning": "あなた次第だよ",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Benarkah?",
+   "meaning": "本当に？",
+   "category": "会話フレーズ2",
+   "forms": "口語: Masa?"
+  },
+  {
+   "word": "Tentu!",
+   "meaning": "もちろん！",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Sayang sekali.",
+   "meaning": "残念だね",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Jangan khawatir.",
+   "meaning": "心配しないで",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Santai saja.",
+   "meaning": "気楽にね",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Sebentar, ya.",
+   "meaning": "ちょっと待ってね",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Sampai nanti.",
+   "meaning": "またあとで",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Selamat makan.",
+   "meaning": "召し上がれ",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Selamat jalan.",
+   "meaning": "お気をつけて（見送る側）",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Selamat datang.",
+   "meaning": "ようこそ",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Apa artinya?",
+   "meaning": "どういう意味ですか？",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Bahasa Indonesianya apa?",
+   "meaning": "インドネシア語で何と言いますか？",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Coba lagi.",
+   "meaning": "もう一度やってみて",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Awas!",
+   "meaning": "危ない！",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Gampang.",
+   "meaning": "簡単だよ",
+   "category": "会話フレーズ2",
+   "forms": "丁寧: mudah"
+  },
+  {
+   "word": "Susah.",
+   "meaning": "難しいよ",
+   "category": "会話フレーズ2",
+   "forms": "丁寧: sulit"
+  },
+  {
+   "word": "Seru!",
+   "meaning": "楽しい！盛り上がる！",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Mantap!",
+   "meaning": "最高！バッチリ！",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Sama saja.",
+   "meaning": "同じだよ",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Semoga berhasil.",
+   "meaning": "うまくいきますように",
+   "category": "会話フレーズ2"
+  },
+  {
+   "word": "Saya sakit.",
+   "meaning": "具合が悪いです",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "Saya sakit kepala.",
+   "meaning": "頭が痛いです",
+   "category": "体調・トラブル",
+   "forms": "kepala（頭）"
+  },
+  {
+   "word": "Saya masuk angin.",
+   "meaning": "風邪をひきました",
+   "category": "体調・トラブル",
+   "forms": "直訳「風が入った」"
+  },
+  {
+   "word": "Panggil ambulans!",
+   "meaning": "救急車を呼んで！",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "Dompet saya hilang.",
+   "meaning": "財布をなくしました",
+   "category": "体調・トラブル",
+   "forms": "hilang（なくなる）"
+  },
+  {
+   "word": "Saya tersesat.",
+   "meaning": "道に迷いました",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "Di mana kantor polisi?",
+   "meaning": "警察はどこですか？",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "Tolong panggil taksi.",
+   "meaning": "タクシーを呼んでください",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "Sakit di sini.",
+   "meaning": "ここが痛いです",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "Saya perlu bantuan.",
+   "meaning": "助けが必要です",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "Ada rumah sakit di dekat sini?",
+   "meaning": "近くに病院はありますか？",
+   "category": "体調・トラブル"
+  },
+  {
+   "word": "Hati-hati di jalan.",
+   "meaning": "道中お気をつけて",
+   "category": "体調・トラブル"
+  }
+ ]
+}
