@@ -1375,6 +1375,9 @@ function renderHome() {
         </button>
       </div>
       ${allDone ? '<div class="alldone">本日のプログラム完了。よくやりました。</div>' : ''}
+      <div class="chip-row" style="margin-top:20px">
+        <button class="chip" onclick="reportToLine()">LINEに今日の報告を送る</button>
+      </div>
     </div>
 
     <div class="section">
@@ -1890,6 +1893,36 @@ function finishDialogue() {
       </div>
     </div>`;
   dsession = null;
+}
+
+/* =====================================================
+   LINEに報告（AI秘書連携）
+===================================================== */
+function buildReportText() {
+  const day = dayNumber();
+  const log = todayLog();
+  const goal = state.settings.cardsGoal;
+  const done = [log.cards >= goal, log.g, log.r, log.s].filter(Boolean).length;
+  const parts = [
+    `📚 MIGNON LINGO Day ${day}/90`,
+    `タスク ${done}/4（単語${log.cards}枚 文法${log.g ? '✅' : '—'} 読解${log.r ? '✅' : '—'} 音読${log.s ? '✅' : '—'}）`,
+    `🔥 ${state.streak}日連続`,
+  ];
+  const weak = allCards()
+    .filter(c => state.srs[c.id] && state.srs[c.id].lapses >= 2)
+    .sort((a, b) => state.srs[b.id].lapses - state.srs[a.id].lapses)
+    .slice(0, 3)
+    .map(c => c.word);
+  if (weak.length) parts.push(`苦手: ${weak.join(' / ')}`);
+  return parts.join('\n');
+}
+function reportToLine() {
+  const text = buildReportText();
+  if (navigator.share) {
+    navigator.share({ text }).catch(() => {});
+  } else {
+    location.href = 'https://line.me/R/share?text=' + encodeURIComponent(text);
+  }
 }
 
 /* =====================================================
