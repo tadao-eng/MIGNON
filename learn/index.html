@@ -73,6 +73,7 @@ header .tagline { font-size: 0.58rem; color: var(--sub); letter-spacing: 0.25em;
 .flashcard .word { font-size: 1.55rem; font-weight: 300; color: var(--primary); margin: 24px 0 4px; line-height: 1.5; word-break: break-word; letter-spacing: 0.02em; }
 .flashcard .word.q { font-size: 1.1rem; font-weight: 400; }
 .flashcard .meaning { font-size: 1rem; font-weight: 300; color: var(--text); margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); line-height: 1.8; }
+.flashcard .forms { font-size: 0.66rem; color: var(--sub); margin-top: 12px; letter-spacing: 0.04em; font-weight: 300; line-height: 1.8; }
 .speak-btn { background: none; border: 1px solid var(--border); border-radius: 50%; width: 42px; height: 42px; font-size: 0.7rem; color: var(--primary); cursor: pointer; margin: 20px auto 0; display: block; font-family: inherit; }
 
 .btn-row { display: flex; gap: 1px; background: var(--border); border: 1px solid var(--border); }
@@ -140,6 +141,22 @@ header .tagline { font-size: 0.58rem; color: var(--sub); letter-spacing: 0.25em;
 .roadmap-item .tx b { color: var(--text); font-weight: 400; }
 .roadmap-item .tx small { display: block; color: var(--sub); margin-top: 3px; font-weight: 300; }
 .roadmap-item.now .mo, .roadmap-item.now .tx b { color: var(--primary); font-weight: 700; }
+.heat { display: grid; grid-template-columns: repeat(15, 1fr); gap: 4px; }
+.heat span { aspect-ratio: 1; background: #F2F2F2; }
+.heat span.part { background: #C7C7D4; }
+.heat span.full { background: var(--primary); }
+.heat span.future { background: var(--bg); border: 1px solid var(--border); }
+
+/* ---- dialogue ---- */
+.dline { border-bottom: 1px solid var(--border); padding: 15px 2px; display: flex; gap: 12px; align-items: flex-start; }
+.dline:first-of-type { border-top: 1px solid var(--border); }
+.dline .sp { font-size: 0.58rem; color: var(--sub); letter-spacing: 0.15em; width: 18px; padding-top: 5px; flex-shrink: 0; }
+.dline.you .sp { color: var(--primary); font-weight: 700; }
+.dline .tx { flex: 1; }
+.dline .tx .t { font-size: 0.9rem; color: var(--primary); font-weight: 400; line-height: 1.7; }
+.dline.you .tx .t { font-weight: 600; }
+.dline .tx .j { font-size: 0.68rem; color: var(--sub); margin-top: 4px; font-weight: 300; }
+.dline .pl { background: none; border: 1px solid var(--border); border-radius: 50%; width: 32px; height: 32px; font-size: 0.5rem; color: var(--primary); cursor: pointer; flex-shrink: 0; font-family: inherit; }
 
 /* ---- nav ---- */
 nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); border-top: 1px solid var(--border); display: flex; justify-content: center; gap: 12vw; padding: 20px 0 max(22px, env(safe-area-inset-bottom)); z-index: 100; }
@@ -194,26 +211,26 @@ const EN_WORDS = [
 ["Welcome.","ようこそ","あいさつ・基本"],
 ["Goodbye.","さようなら","あいさつ・基本"],
 ["Good night.","おやすみなさい","あいさつ・基本"],
-["wake up","起きる","日常動詞"],
-["eat","食べる","日常動詞"],
-["drink","飲む","日常動詞"],
-["cook","料理する","日常動詞"],
-["work","働く","日常動詞"],
+["wake up","起きる","日常動詞","変化: wake – woke – woken"],
+["eat","食べる","日常動詞","変化: eat – ate – eaten"],
+["drink","飲む","日常動詞","変化: drink – drank – drunk"],
+["cook","料理する","日常動詞","名詞: cooking（料理）/ cook（料理人）"],
+["work","働く","日常動詞","名詞: work（仕事）/ worker（働く人）"],
 ["walk","歩く","日常動詞"],
-["run","走る","日常動詞"],
-["buy","買う","日常動詞"],
-["sell","売る","日常動詞"],
-["read","読む","日常動詞"],
-["write","書く","日常動詞"],
+["run","走る","日常動詞","変化: run – ran – run"],
+["buy","買う","日常動詞","変化: buy – bought – bought"],
+["sell","売る","日常動詞","変化: sell – sold – sold"],
+["read","読む","日常動詞","変化: read – read – read（過去形は「レッド」と発音）"],
+["write","書く","日常動詞","変化: write – wrote – written"],
 ["listen","聞く","日常動詞"],
-["speak","話す","日常動詞"],
+["speak","話す","日常動詞","変化: speak – spoke – spoken"],
 ["watch","（じっと）見る","日常動詞"],
-["sleep","眠る","日常動詞"],
-["clean","掃除する","日常動詞"],
+["sleep","眠る","日常動詞","変化: sleep – slept – slept / 形容詞: sleepy（眠い）"],
+["clean","掃除する","日常動詞","形容詞: clean（きれいな）⇔ dirty（汚い）"],
 ["wash","洗う","日常動詞"],
-["drive","運転する","日常動詞"],
-["meet","会う","日常動詞"],
-["help","手伝う","日常動詞"],
+["drive","運転する","日常動詞","変化: drive – drove – driven / 名詞: driver（運転手）"],
+["meet","会う","日常動詞","変化: meet – met – met / 名詞: meeting（会議）"],
+["help","手伝う","日常動詞","名詞: help（助け）/ helpful（役に立つ）"],
 ["happy","うれしい","気持ち・形容詞"],
 ["sad","悲しい","気持ち・形容詞"],
 ["tired","疲れた","気持ち・形容詞"],
@@ -373,6 +390,134 @@ const EN_WORDS = [
 ["I hope so.","そうだといいな","会話フレーズ"],
 ["Same here.","私も同じ","会話フレーズ"],
 ["How about you?","あなたはどう？","会話フレーズ"],
+["go","行く","動詞・変化形","変化: go – went – gone / going（進行形）"],
+["come","来る","動詞・変化形","変化: come – came – come"],
+["get","手に入れる・〜になる","動詞・変化形","変化: get – got – gotten"],
+["take","取る・（時間が）かかる","動詞・変化形","変化: take – took – taken"],
+["make","作る","動詞・変化形","変化: make – made – made"],
+["see","見える・会う","動詞・変化形","変化: see – saw – seen"],
+["know","知っている","動詞・変化形","変化: know – knew – known"],
+["think","思う・考える","動詞・変化形","変化: think – thought – thought"],
+["say","言う","動詞・変化形","変化: say – said – said"],
+["tell","伝える・教える","動詞・変化形","変化: tell – told – told"],
+["give","与える","動詞・変化形","変化: give – gave – given"],
+["find","見つける","動詞・変化形","変化: find – found – found"],
+["feel","感じる","動詞・変化形","変化: feel – felt – felt / 名詞: feeling（気持ち）"],
+["leave","出発する・離れる","動詞・変化形","変化: leave – left – left"],
+["put","置く","動詞・変化形","変化: put – put – put"],
+["bring","持ってくる","動詞・変化形","変化: bring – brought – brought"],
+["send","送る","動詞・変化形","変化: send – sent – sent"],
+["pay","払う","動詞・変化形","変化: pay – paid – paid / 名詞: payment（支払い）"],
+["forget","忘れる","動詞・変化形","変化: forget – forgot – forgotten"],
+["remember","覚えている","動詞・変化形"],
+["understand","理解する","動詞・変化形","変化: understand – understood – understood"],
+["try","試す・やってみる","動詞・変化形","変化: try – tried / try to 〜（〜しようとする）"],
+["use","使う","動詞・変化形","形容詞: useful（役に立つ）"],
+["start","始める","動詞・変化形","反対: finish（終える）"],
+["finish","終える","動詞・変化形"],
+["open","開ける","動詞・変化形","反対: close（閉める）"],
+["close","閉める","動詞・変化形"],
+["wait","待つ","動詞・変化形","wait for 〜（〜を待つ）"],
+["ask","尋ねる・頼む","動詞・変化形","ask for 〜（〜を求める）"],
+["answer","答える","動詞・変化形","名詞: answer（答え）"],
+["house","家","身の回り"],
+["room","部屋","身の回り"],
+["key","鍵","身の回り"],
+["phone","電話・スマホ","身の回り"],
+["clothes","服","身の回り"],
+["shoes","靴","身の回り","単数: shoe（片方の靴）"],
+["umbrella","傘","身の回り"],
+["wallet","財布","身の回り"],
+["glasses","メガネ","身の回り"],
+["table","テーブル","身の回り"],
+["chair","椅子","身の回り"],
+["door","ドア","身の回り"],
+["window","窓","身の回り"],
+["kitchen","台所","身の回り"],
+["bed","ベッド","身の回り"],
+["book","本","身の回り"],
+["newspaper","新聞","身の回り"],
+["trash","ゴミ","身の回り"],
+["towel","タオル","身の回り"],
+["soap","石けん","身の回り"],
+["and","そして・〜と","つなぎ言葉"],
+["but","でも・しかし","つなぎ言葉"],
+["so","だから","つなぎ言葉"],
+["because","なぜなら","つなぎ言葉"],
+["then","それから","つなぎ言葉"],
+["also","〜もまた","つなぎ言葉"],
+["maybe","たぶん","つなぎ言葉"],
+["really","本当に","つなぎ言葉"],
+["very","とても","つなぎ言葉"],
+["a little","少し","つなぎ言葉"],
+["too","〜すぎる・〜も","つなぎ言葉"],
+["again","もう一度","つなぎ言葉"],
+["together","一緒に","つなぎ言葉"],
+["alone","ひとりで","つなぎ言葉"],
+["here","ここ","つなぎ言葉","反対: there（そこ）"],
+["there","そこ","つなぎ言葉"],
+["later","あとで","つなぎ言葉"],
+["soon","すぐに・まもなく","つなぎ言葉"],
+["by the way","ところで","つなぎ言葉"],
+["for example","たとえば","つなぎ言葉"],
+["bank","銀行","場所・街"],
+["post office","郵便局","場所・街"],
+["convenience store","コンビニ","場所・街"],
+["supermarket","スーパー","場所・街"],
+["pharmacy","薬局","場所・街"],
+["park","公園","場所・街"],
+["library","図書館","場所・街"],
+["museum","美術館・博物館","場所・街"],
+["temple","寺","場所・街"],
+["beach","ビーチ","場所・街"],
+["mountain","山","場所・街"],
+["river","川","場所・街"],
+["bridge","橋","場所・街"],
+["corner","角","場所・街","around the corner（角を曲がったところ）"],
+["restaurant","レストラン","場所・街"],
+["hour","時間（60分）","数字・時間"],
+["minute","分","数字・時間"],
+["week","週","数字・時間","weekly（毎週の）"],
+["month","月（期間）","数字・時間","monthly（毎月の）"],
+["year","年","数字・時間","yearly（毎年の）"],
+["half","半分・30分","数字・時間","half past seven（7時半）"],
+["date","日付","数字・時間"],
+["birthday","誕生日","数字・時間"],
+["noon","正午","数字・時間"],
+["midnight","真夜中","数字・時間"],
+["season","季節","数字・時間","spring / summer / fall / winter"],
+["How's it going?","調子どう？","会話フレーズ2"],
+["I got it.","わかった","会話フレーズ2"],
+["Are you sure?","本当に？確かなの？","会話フレーズ2"],
+["Why not?","もちろん・いいね","会話フレーズ2"],
+["It's up to you.","あなた次第だよ","会話フレーズ2"],
+["Not yet.","まだだよ","会話フレーズ2"],
+["Exactly.","その通り","会話フレーズ2"],
+["Absolutely.","間違いなく・全くその通り","会話フレーズ2"],
+["Kind of.","まあね・ちょっとね","会話フレーズ2"],
+["No way!","まさか！ありえない！","会話フレーズ2"],
+["Help yourself.","ご自由にどうぞ","会話フレーズ2"],
+["After you.","お先にどうぞ","会話フレーズ2"],
+["It's on me.","私のおごりだよ","会話フレーズ2"],
+["Anyway","とにかく・それはさておき","会話フレーズ2"],
+["In my opinion","私の意見では","会話フレーズ2"],
+["That's too bad.","それは残念","会話フレーズ2"],
+["Sounds like a plan.","それでいこう","会話フレーズ2"],
+["Guess what?","ねえ聞いて（何だと思う？）","会話フレーズ2"],
+["I'm afraid not.","残念ですが違います","会話フレーズ2"],
+["Take it easy.","気楽にね・お大事に","会話フレーズ2"],
+["I have a headache.","頭が痛いです","体調・トラブル"],
+["I feel sick.","気分が悪いです","体調・トラブル"],
+["I caught a cold.","風邪をひきました","体調・トラブル","catch – caught – caught"],
+["Call an ambulance!","救急車を呼んで！","体調・トラブル"],
+["I lost my wallet.","財布をなくしました","体調・トラブル","lose – lost – lost"],
+["I missed the train.","電車を逃しました","体調・トラブル"],
+["I'm lost.","道に迷いました","体調・トラブル"],
+["It hurts here.","ここが痛いです","体調・トラブル"],
+["I need help.","助けが必要です","体調・トラブル"],
+["Is there a hospital near here?","近くに病院はありますか？","体調・トラブル"],
+["Can you call a taxi?","タクシーを呼んでもらえますか？","体調・トラブル"],
+["Where is the police station?","警察署（交番）はどこですか？","体調・トラブル"],
 ];
 
 const ID_WORDS = [
@@ -446,23 +591,23 @@ const ID_WORDS = [
 ["kanan","右","旅行"],
 ["lurus","まっすぐ","旅行"],
 ["pergi","行く","日常動詞"],
-["datang","来る","日常動詞"],
+["datang","来る","日常動詞","名詞: kedatangan（到着）"],
 ["pulang","帰る","日常動詞"],
-["tidur","寝る","日常動詞"],
+["tidur","寝る","日常動詞","kamar tidur（寝室）"],
 ["bangun","起きる","日常動詞"],
-["bekerja","働く","日常動詞"],
-["belajar","勉強する","日常動詞"],
-["membaca","読む","日常動詞"],
-["menulis","書く","日常動詞"],
-["berbicara","話す","日常動詞"],
-["mendengar","聞く","日常動詞"],
-["melihat","見る","日常動詞"],
-["membeli","買う","日常動詞"],
-["berjalan","歩く","日常動詞"],
-["berlari","走る","日常動詞"],
-["membantu","手伝う","日常動詞"],
-["bertemu","会う","日常動詞"],
-["mengerti","理解する","日常動詞"],
+["bekerja","働く","日常動詞","語根: kerja（仕事）/ pekerjaan（職業）"],
+["belajar","勉強する","日常動詞","語根: ajar / pelajaran（授業・レッスン）"],
+["membaca","読む","日常動詞","語根: baca（口語では baca だけでもOK）"],
+["menulis","書く","日常動詞","語根: tulis"],
+["berbicara","話す","日常動詞","語根: bicara（口語: ngomong）"],
+["mendengar","聞く","日常動詞","語根: dengar"],
+["melihat","見る","日常動詞","語根: lihat"],
+["membeli","買う","日常動詞","語根: beli（口語では beli だけでもOK）"],
+["berjalan","歩く","日常動詞","語根: jalan（道）/ jalan-jalan（散歩・おでかけ）"],
+["berlari","走る","日常動詞","語根: lari"],
+["membantu","手伝う","日常動詞","語根: bantu / bantuan（助け）"],
+["bertemu","会う","日常動詞","語根: temu / sampai jumpa の jumpa も「会う」"],
+["mengerti","理解する","日常動詞","関連: arti（意味）/ Apa artinya?（どういう意味？）"],
 ["besar","大きい","形容詞"],
 ["kecil","小さい","形容詞"],
 ["baru","新しい","形容詞"],
@@ -542,6 +687,138 @@ const ID_WORDS = [
 ["Saya capek.","疲れた","疑問詞・会話"],
 ["Sudah selesai.","終わりました","疑問詞・会話"],
 ["Belum.","まだです","疑問詞・会話"],
+["mau","〜したい・欲しい","動詞・変化形","Saya mau makan.（食べたい）"],
+["suka","好き","動詞・変化形","Saya suka kopi.（コーヒーが好き）"],
+["punya","持っている","動詞・変化形","Saya punya dua anak.（子どもが2人いる）"],
+["tahu","知っている","動詞・変化形","Saya tidak tahu.（知りません）"],
+["kenal","（人を）知っている","動詞・変化形","memperkenalkan（紹介する）"],
+["berkata","言う","動詞・変化形","口語: bilang"],
+["memberi","与える","動詞・変化形","語根: beri"],
+["mengambil","取る","動詞・変化形","語根: ambil"],
+["membawa","持っていく","動詞・変化形","語根: bawa"],
+["mengirim","送る","動詞・変化形","語根: kirim"],
+["membayar","払う","動詞・変化形","語根: bayar"],
+["lupa","忘れる","動詞・変化形","Jangan lupa!（忘れないで！）"],
+["ingat","覚えている","動詞・変化形"],
+["mencoba","試す","動詞・変化形","語根: coba / Coba lagi.（もう一度やってみて）"],
+["memakai","使う・着る","動詞・変化形","語根: pakai"],
+["mulai","始める","動詞・変化形"],
+["selesai","終わる","動詞・変化形","Sudah selesai.（終わりました）"],
+["buka","開ける","動詞・変化形","反対: tutup（閉める）"],
+["tutup","閉める・閉店","動詞・変化形"],
+["menunggu","待つ","動詞・変化形","語根: tunggu / Tunggu sebentar.（ちょっと待って）"],
+["bertanya","尋ねる","動詞・変化形","語根: tanya / pertanyaan（質問）"],
+["menjawab","答える","動詞・変化形","語根: jawab / jawaban（答え）"],
+["berenang","泳ぐ","動詞・変化形","語根: renang"],
+["memasak","料理する","動詞・変化形","語根: masak / masakan（料理）"],
+["mandi","水浴びする・シャワーを浴びる","動詞・変化形","kamar mandi（浴室）"],
+["kunci","鍵","身の回り"],
+["HP","携帯電話・スマホ","身の回り","handphone の略（ハーペー）"],
+["dompet","財布","身の回り"],
+["kacamata","メガネ","身の回り","mata（目）+ kaca（ガラス）"],
+["payung","傘","身の回り"],
+["meja","テーブル・机","身の回り"],
+["kursi","椅子","身の回り"],
+["pintu","ドア","身の回り"],
+["jendela","窓","身の回り"],
+["dapur","台所","身の回り"],
+["tempat tidur","ベッド","身の回り","tempat（場所）+ tidur（寝る）"],
+["buku","本","身の回り"],
+["koran","新聞","身の回り"],
+["sampah","ゴミ","身の回り"],
+["lampu","電気・ランプ","身の回り"],
+["AC","エアコン","身の回り","アーセーと読む"],
+["sabun","石けん","身の回り"],
+["handuk","タオル","身の回り"],
+["celana","ズボン","身の回り"],
+["kaos","Tシャツ","身の回り"],
+["dan","そして・〜と","つなぎ言葉"],
+["tapi","でも・しかし","つなぎ言葉","丁寧: tetapi"],
+["jadi","だから・つまり","つなぎ言葉"],
+["karena","なぜなら","つなぎ言葉"],
+["lalu","それから","つなぎ言葉","類語: kemudian"],
+["juga","〜も","つなぎ言葉","Saya juga.（私も）"],
+["mungkin","たぶん","つなぎ言葉"],
+["sangat","とても（前置）","つなぎ言葉","sangat enak = enak sekali"],
+["sedikit","少し","つなぎ言葉"],
+["sekali","とても（後置）","つなぎ言葉","enak sekali（とてもおいしい）"],
+["lagi","もう一度・再び","つなぎ言葉","Sekali lagi（もう一度）"],
+["bersama","一緒に","つなぎ言葉","bersama-sama とも"],
+["sendiri","ひとりで・自分で","つなぎ言葉"],
+["di sini","ここ","つなぎ言葉","di sana（そこ・あそこ）"],
+["di sana","そこ・あそこ","つなぎ言葉"],
+["nanti","あとで","つなぎ言葉","Sampai nanti.（またあとで）"],
+["segera","すぐに","つなぎ言葉"],
+["tentu saja","もちろん","つなぎ言葉"],
+["misalnya","たとえば","つなぎ言葉"],
+["ngomong-ngomong","ところで","つなぎ言葉"],
+["bank","銀行","場所・街"],
+["kantor pos","郵便局","場所・街"],
+["apotek","薬局","場所・街"],
+["supermarket","スーパー","場所・街"],
+["taman","公園","場所・街"],
+["perpustakaan","図書館","場所・街","語根: pustaka（書物）"],
+["museum","博物館・美術館","場所・街"],
+["masjid","モスク","場所・街"],
+["pura","（バリの）ヒンドゥー寺院","場所・街"],
+["sungai","川","場所・街"],
+["jembatan","橋","場所・街"],
+["warung","食堂・売店","場所・街","庶民的な小さいお店"],
+["restoran","レストラン","場所・街"],
+["kafe","カフェ","場所・街"],
+["bioskop","映画館","場所・街"],
+["rumah sakit","病院","場所・街","rumah（家）+ sakit（病気）"],
+["jam","時・時計","数字・時間","jam tujuh（7時）"],
+["menit","分","数字・時間"],
+["minggu","週・日曜日","数字・時間","hari Minggu（日曜日）"],
+["bulan","月","数字・時間","bulan depan（来月）"],
+["tahun","年","数字・時間","tahun depan（来年）"],
+["hari","日","数字・時間","setiap hari（毎日）"],
+["pagi ini","今朝","数字・時間"],
+["malam ini","今夜","数字・時間"],
+["minggu depan","来週","数字・時間","depan（前・次の）"],
+["lusa","あさって","数字・時間"],
+["setiap hari","毎日","数字・時間"],
+["kadang-kadang","ときどき","数字・時間"],
+["selalu","いつも","数字・時間"],
+["sering","よく・頻繁に","数字・時間"],
+["jarang","めったに〜ない","数字・時間"],
+["Bagaimana kabarnya?","調子はどうですか？","会話フレーズ2"],
+["Sudah makan?","ご飯食べた？（軽いあいさつ）","会話フレーズ2"],
+["Mau ke mana?","どこ行くの？（軽いあいさつ）","会話フレーズ2"],
+["Terserah kamu.","あなた次第だよ","会話フレーズ2"],
+["Benarkah?","本当に？","会話フレーズ2","口語: Masa?"],
+["Tentu!","もちろん！","会話フレーズ2"],
+["Sayang sekali.","残念だね","会話フレーズ2"],
+["Jangan khawatir.","心配しないで","会話フレーズ2"],
+["Santai saja.","気楽にね","会話フレーズ2"],
+["Sebentar, ya.","ちょっと待ってね","会話フレーズ2"],
+["Sampai nanti.","またあとで","会話フレーズ2"],
+["Selamat makan.","召し上がれ","会話フレーズ2"],
+["Selamat jalan.","お気をつけて（見送る側）","会話フレーズ2"],
+["Selamat datang.","ようこそ","会話フレーズ2"],
+["Apa artinya?","どういう意味ですか？","会話フレーズ2"],
+["Bahasa Indonesianya apa?","インドネシア語で何と言いますか？","会話フレーズ2"],
+["Coba lagi.","もう一度やってみて","会話フレーズ2"],
+["Awas!","危ない！","会話フレーズ2"],
+["Gampang.","簡単だよ","会話フレーズ2","丁寧: mudah"],
+["Susah.","難しいよ","会話フレーズ2","丁寧: sulit"],
+["Seru!","楽しい！盛り上がる！","会話フレーズ2"],
+["Mantap!","最高！バッチリ！","会話フレーズ2"],
+["Sama saja.","同じだよ","会話フレーズ2"],
+["Semoga berhasil.","うまくいきますように","会話フレーズ2"],
+["Saya sakit.","具合が悪いです","体調・トラブル"],
+["Saya sakit kepala.","頭が痛いです","体調・トラブル","kepala（頭）"],
+["Saya masuk angin.","風邪をひきました","体調・トラブル","直訳「風が入った」"],
+["Panggil ambulans!","救急車を呼んで！","体調・トラブル"],
+["Dompet saya hilang.","財布をなくしました","体調・トラブル","hilang（なくなる）"],
+["Saya tersesat.","道に迷いました","体調・トラブル"],
+["Di mana kantor polisi?","警察はどこですか？","体調・トラブル"],
+["Tolong panggil taksi.","タクシーを呼んでください","体調・トラブル"],
+["Sakit di sini.","ここが痛いです","体調・トラブル"],
+["Saya perlu bantuan.","助けが必要です","体調・トラブル"],
+["Ada rumah sakit di dekat sini?","近くに病院はありますか？","体調・トラブル"],
+["Hati-hati di jalan.","道中お気をつけて","体調・トラブル"],
 ];
 
 /* =====================================================
@@ -594,6 +871,36 @@ en: [
 {t:"依頼・提案", e:"Could you 〜?「〜していただけますか」、Let's 〜「〜しよう」、Shall we 〜?「〜しましょうか」。丁寧に頼めると会話が広がります。",
  ex:[["Could you say that again?","もう一度言っていただけますか？"],["Let's take a break.","休憩しましょう"]],
  q:[["___ you open the window?",["Could","Do","Are","Let's"],0],["___ have lunch together.",["Let's","Could","Shall","Do"],0],["「駅まで連れて行っていただけますか」 Could you ___ me to the station?",["take","takes","took","taking"],0]]},
+{t:"接続詞（and / but / so / because）", e:"文と文をつなぐと会話が長くなります。and そして ／ but でも ／ so だから ／ because なぜなら。",
+ ex:[["I was tired, so I went to bed early.","疲れていたので早く寝た"],["I like coffee, but I don't like tea.","コーヒーは好きだけど紅茶は好きじゃない"]],
+ q:[["I was hungry, ___ I ate a sandwich.",["but","so","because","or"],1],["I stayed home ___ it was raining.",["so","and","because","but"],2],["I like dogs, ___ my wife likes cats.",["but","so","because","then"],0]]},
+{t:"命令文（Please 〜 / Don't 〜）", e:"動詞の原形で文を始めると命令・指示になります。Please を付けると丁寧に、Don't を付けると「〜しないで」。",
+ ex:[["Please sit down.","どうぞ座ってください"],["Don't worry.","心配しないで"],["Turn left at the corner.","角を左に曲がって"]],
+ q:[["「窓を開けてください」 ___ open the window.",["Please","Do","You","Let's"],0],["「遅れないで」 ___ be late.",["Not","No","Don't","Doesn't"],2],["「まっすぐ行って、それから右に曲がって」 Go straight, and ___ right.",["turn","turns","turning","turned"],0]]},
+{t:"頻度の副詞（always / usually / sometimes / never）", e:"「どのくらいの頻度か」は always いつも → usually たいてい → often よく → sometimes ときどき → never 決して〜ない。ふつう一般動詞の前に置きます。",
+ ex:[["I always drink coffee in the morning.","朝はいつもコーヒーを飲む"],["He never eats breakfast.","彼は決して朝食を食べない"]],
+ q:[["「私はたいてい7時に起きる」 I ___ wake up at seven.",["usually","never","not","very"],0],["頻度が一番高いのは？",["sometimes","often","always","usually"],2],["He ___ eats natto.（彼は決して納豆を食べない）",["always","never","very","much"],1]]},
+{t:"現在完了・経験（Have you ever ...?）", e:"「〜したことがある？」は Have you ever + 過去分詞? 。答えは Yes, I have. ／ No, I haven't（never）。",
+ ex:[["Have you ever been to Bali?","バリに行ったことある？"],["I have eaten nasi goreng before.","前にナシゴレンを食べたことがある"]],
+ q:[["___ you ever been to Indonesia?",["Have","Do","Are","Did"],0],["I have ___ sushi many times.",["eat","ate","eaten","eating"],2],["「一度も見たことがない」 I have ___ seen it.",["ever","never","not","no"],1]]},
+{t:"誘う・提案する（Would you like ...? / How about ...?）", e:"Would you like ...?「〜はいかがですか」、How about ...?「〜はどう？」。お店でも友達同士でも使えます。",
+ ex:[["Would you like some coffee?","コーヒーはいかがですか？"],["How about tomorrow?","明日はどう？"]],
+ q:[["___ you like something to drink?",["Would","Will","Do","Are"],0],["___ about lunch together?",["What","How","Why","When"],1],["Would you like ___ join us?",["to","for","at","in"],0]]},
+{t:"理由をたずねる（Why ...? — Because ...）", e:"Why ...?「なぜ？」と聞かれたら Because ...「なぜなら」で答えます。理由を言えると会話が深まります。",
+ ex:[["Why do you study Indonesian?","なぜインドネシア語を勉強しているの？"],["Because I want to travel to Bali.","バリを旅行したいからです"]],
+ q:[["___ are you tired? — Because I worked late.",["What","Why","How","When"],1],["Why do you like this cafe? — ___ the coffee is great.",["So","But","Because","And"],2],["「なぜ遅れたの？」 ___ were you late?",["Why","Because","What","Who"],0]]},
+{t:"好みの言い方（like to 〜 / enjoy 〜ing）", e:"like to + 原形（または like 〜ing）「〜するのが好き」、enjoy 〜ing「〜を楽しむ」。enjoy の後は必ず ing形です。",
+ ex:[["I like to cook on weekends.","週末に料理するのが好き"],["I enjoy learning languages.","語学を学ぶのを楽しんでいる"]],
+ q:[["I like ___ movies.",["watch","to watch","watched","watches"],1],["I enjoy ___ music.",["listen","to listen","listening","listened"],2],["「走るのが好き」 I like ___.",["run","running","ran","runs"],1]]},
+{t:"推量（maybe / might / must be）", e:"maybe たぶん（文頭に）／ might 〜かもしれない ／ must be 〜に違いない。断定せずに話せると自然です。",
+ ex:[["Maybe he is busy.","たぶん彼は忙しいんだよ"],["It might rain tomorrow.","明日は雨かもしれない"],["You must be tired.","疲れているに違いないね"]],
+ q:[["___ she is at home.（たぶん家にいるよ）",["Maybe","Must","Might","May be"],0],["It ___ rain later.（あとで雨かも）",["must","might","maybe","never"],1],["You ___ be hungry.（おなかがすいてるに違いない）",["might","maybe","must","never"],2]]},
+{t:"感想を言う（It was ... / It looks ...）", e:"感想は It was + 形容詞「〜だった」、It looks + 形容詞「〜そうに見える」。ひと言添えるだけで会話が続きます。",
+ ex:[["It was delicious.","おいしかったです"],["That looks fun!","楽しそう！"],["It sounds interesting.","面白そうだね（聞いた感じ）"]],
+ q:[["The movie ___ great.（映画は最高だった）",["was","is","be","did"],0],["That cake ___ delicious.（おいしそうに見える）",["sees","looks","watches","feels"],1],["It ___ like a good idea.（良いアイデアに聞こえる）",["looks","sees","sounds","hears"],2]]},
+{t:"聞き返し・あいづち", e:"聞き取れないときは Pardon? ／ Sorry? 「え、何て？」。あいづちは I see. ／ Really? ／ That's great! 。聞き返せれば会話は止まりません。",
+ ex:[["Pardon? Could you speak slowly?","え？ゆっくり話してもらえますか"],["Really? That's great!","本当？すごいね！"]],
+ q:[["聞き取れなかったときの一言は？",["Pardon?","Goodbye.","Me too.","Not yet."],0],["「すごいね！」は？",["That's too bad.","That's great!","I'm lost.","No way."],1],["相手の話に「なるほど」は？",["I see.","I'm sorry.","Excuse me.","After you."],0]]},
 ],
 id: [
 {t:"語順の基本（主語＋動詞＋目的語）", e:"インドネシア語は英語と同じ「主語＋動詞＋目的語」の語順です。動詞は人称や時制で変化しません。活用がないので、単語を並べるだけで文が作れます。",
@@ -641,6 +948,36 @@ id: [
 {t:"丁寧な会話", e:"Permisi すみません（声かけ）／ Silakan どうぞ ／ Terima kasih banyak 本当にありがとう ／ Boleh saya minta ...? 〜をいただけますか？",
  ex:[["Permisi, numpang tanya.","すみません、ちょっとお尋ねします"],["Boleh saya minta menu?","メニューをいただけますか？"]],
  q:[["人に声をかける「すみません」は？",["Maaf","Permisi","Tolong","Jangan"],1],["「どうぞ」は？",["Silakan","Sama-sama","Permisi","Minta"],0],["Boleh saya minta air? の意味は？",["水を飲めますか","お水をいただけますか","水はありますか","水が好きです"],1]]},
+{t:"接続詞（dan / tapi / jadi / karena）", e:"dan そして ／ tapi でも ／ jadi だから ／ karena なぜなら。文をつなげると一気に会話らしくなります。",
+ ex:[["Saya lapar, jadi saya makan.","おなかがすいたので食べた"],["Saya suka kopi, tapi tidak suka teh.","コーヒーは好きだけど紅茶は好きじゃない"]],
+ q:[["Saya capek, ___ saya tidur.（疲れたので寝た）",["tapi","jadi","dan","atau"],1],["Saya tinggal di rumah ___ hujan.（雨だから家にいた）",["jadi","dan","karena","tapi"],2],["Saya suka nasi ___ mie.（ご飯も麺も好き）",["dan","tapi","jadi","karena"],0]]},
+{t:"勧誘（Ayo / Mari）", e:"Ayo ＋動詞「〜しよう！」（口語的）、Mari ＋動詞「〜しましょう」（丁寧）。誘えると友達が増えます。",
+ ex:[["Ayo makan!","食べよう！"],["Mari kita mulai.","始めましょう"]],
+ q:[["「行こう！」は？",["Ayo pergi!","Jangan pergi!","Sudah pergi.","Belum pergi."],0],["丁寧に「始めましょう」は？",["Ayo cepat","Mari kita mulai","Jangan mulai","Sudah mulai"],1],["Ayo の意味は？",["やめよう","〜しよう","まだ","もう"],1]]},
+{t:"経験（pernah）", e:"pernah を動詞の前に置くと「〜したことがある」。否定は belum pernah「まだ〜したことがない」／ tidak pernah「一度も〜しない」。",
+ ex:[["Saya pernah pergi ke Bali.","バリに行ったことがある"],["Saya belum pernah makan durian.","ドリアンをまだ食べたことがない"]],
+ q:[["「行ったことがある」= Saya ___ pergi.",["akan","pernah","sedang","mau"],1],["「まだ食べたことがない」= Saya ___ pernah makan.",["tidak","bukan","belum","jangan"],2],["Apakah kamu pernah ke Jepang? の意味は？",["日本に行きたい？","日本に行ったことある？","日本に住んでる？","日本が好き？"],1]]},
+{t:"願望（mau / ingin）", e:"mau ＋動詞「〜したい」（口語で最頻出）、ingin はやや丁寧・強い願望。mau は「欲しい」の意味でも使えます。",
+ ex:[["Saya mau makan nasi goreng.","ナシゴレンが食べたい"],["Saya ingin belajar bahasa Indonesia.","インドネシア語を学びたい"]],
+ q:[["「飲みたい」= Saya ___ minum.",["mau","bisa","harus","pernah"],0],["Mau ke mana?（どこ行くの？）の mau は？",["〜できる","〜したい","〜すべき","〜した"],1],["「これが欲しい」= Saya ___ ini.",["mau","ada","dari","ke"],0]]},
+{t:"義務（harus）", e:"harus ＋動詞「〜しなければならない」。tidak usah「〜しなくていい」も一緒に覚えると便利です。",
+ ex:[["Saya harus bekerja besok.","明日働かなければならない"],["Kamu tidak usah bayar.","払わなくていいよ"]],
+ q:[["「行かなければならない」= Saya ___ pergi.",["mau","bisa","harus","pernah"],2],["harus の意味は？",["〜したい","〜できる","〜しなければ","〜したことがある"],2],["「払わなくていい」= Tidak ___ bayar.",["usah","bisa","mau","ada"],0]]},
+{t:"頻度（selalu / sering / kadang-kadang / jarang）", e:"selalu いつも ／ sering よく ／ kadang-kadang ときどき ／ jarang めったに〜ない ／ tidak pernah 一度も〜ない。動詞の前に置きます。",
+ ex:[["Saya selalu minum kopi pagi.","朝はいつもコーヒーを飲む"],["Dia jarang datang.","彼はめったに来ない"]],
+ q:[["「ときどき」は？",["selalu","sering","kadang-kadang","jarang"],2],["頻度が一番高いのは？",["jarang","kadang-kadang","sering","selalu"],3],["Saya ___ makan di warung.（よく食堂で食べる）",["sering","jarang","belum","bukan"],0]]},
+{t:"「ある・いる」（ada）", e:"ada は「ある・いる」。Ada ...? で「〜ありますか？」と聞けます。存在を表す万能動詞です。",
+ ex:[["Ada toilet di sini?","ここにトイレはありますか？"],["Tidak ada masalah.","問題ないです"]],
+ q:[["「ATMはありますか？」= ___ ATM?",["Ada","Apa","Mana","Siapa"],0],["「時間がない」= Tidak ___ waktu.",["ada","bisa","mau","harus"],0],["Ada berapa orang?（何人いますか？）の ada は？",["行く","ある・いる","食べる","話す"],1]]},
+{t:"me-動詞の仕組み", e:"辞書の見出しは語根（beli 買う）で、丁寧な文では me- が付きます（membeli）。日常会話では語根だけでも通じることが多いです。b→mem、t→men（tが消える: tulis→menulis）など音で変化します。",
+ ex:[["beli → membeli","買う"],["tulis → menulis","書く"],["kirim → mengirim","送る"]],
+ q:[["tulis（書く）の me-形は？",["metulis","menulis","memtulis","mengtulis"],1],["membeli の語根は？",["mbeli","beli","embeli","li"],1],["日常会話では？",["必ずme-形を使う","語根だけでも通じることが多い","過去形にする","英語を使う"],1]]},
+{t:"ber-動詞の仕組み", e:"ber- が付く動詞は「〜を身につけている・〜の状態」を表すものが多いです。berjalan 歩く（jalan 道）、berbicara 話す（bicara）、bekerja 働く（kerja 仕事）。",
+ ex:[["berjalan","歩く（jalan = 道）"],["bekerja","働く（kerja = 仕事）"],["berbahasa Indonesia","インドネシア語を話す"]],
+ q:[["kerja（仕事）の動詞形は？",["berkerja","bekerja","mengerja","kerjaan"],1],["berjalan の語根 jalan の意味は？",["家","道","車","仕事"],1],["「インドネシア語ができます」= Saya bisa ___ Indonesia.",["berbahasa","membahasa","bahasakan","bahasanya"],0]]},
+{t:"強調と程度（sekali / banget / lumayan）", e:"enak sekali とてもおいしい（後置）／ banget（口語の「超」）／ lumayan まあまあ ／ terlalu 〜すぎる。程度が言えると感想が豊かになります。",
+ ex:[["Enak sekali!","とてもおいしい！"],["Murah banget!","超安い！（口語）"],["Lumayan.","まあまあかな"]],
+ q:[["「とてもおいしい」= Enak ___.",["sekali","sedikit","jarang","belum"],0],["口語の「超」は？",["lumayan","banget","terlalu","jarang"],1],["「辛すぎる」= ___ pedas.",["Sekali","Lumayan","Terlalu","Banget"],2]]},
 ],
 };
 
@@ -726,6 +1063,100 @@ id: [
 ],
 };
 
+/* =====================================================
+   会話ダイアログ  {t:場面, lines:[[話者, セリフ, 訳]]}  ※B役があなた
+===================================================== */
+const DIALOGUES = {
+en: [
+{t:"カフェで注文する", lines:[
+["A","Hi, what can I get for you?","いらっしゃいませ、何になさいますか？"],
+["B","Can I have a coffee, please?","コーヒーをひとつお願いします"],
+["A","Sure. Hot or iced?","かしこまりました。ホットとアイス、どちらに？"],
+["B","Hot, please. And one sandwich.","ホットで。あとサンドイッチをひとつ"],
+["A","For here or to go?","店内でお召し上がりですか、お持ち帰りですか？"],
+["B","For here, please. Thank you.","店内でお願いします。ありがとう"]]},
+{t:"道を聞く", lines:[
+["B","Excuse me. Where is the station?","すみません、駅はどこですか？"],
+["A","Go straight and turn left at the bank.","まっすぐ行って、銀行のところで左です"],
+["B","How long does it take?","どのくらいかかりますか？"],
+["A","About five minutes.","5分くらいですよ"],
+["B","I see. Thank you so much!","なるほど。本当にありがとうございます！"],
+["A","No problem. Have a nice day!","どういたしまして。良い一日を！"]]},
+{t:"初対面の自己紹介", lines:[
+["A","Hi, I'm Sarah. Nice to meet you.","こんにちは、サラです。はじめまして"],
+["B","Nice to meet you too. I'm Ken, from Japan.","はじめまして。日本から来たケンです"],
+["A","What do you do, Ken?","ケンはお仕事は何を？"],
+["B","I run a small cafe in Tokyo.","東京で小さなカフェをやっています"],
+["A","That sounds great! How long are you staying?","素敵！いつまで滞在するの？"],
+["B","For one week. It's my first time here.","1週間です。ここに来るのは初めてなんです"]]},
+{t:"ホテルでチェックイン", lines:[
+["B","Hello. I'd like to check in. My name is Ken.","こんにちは。チェックインをお願いします。ケンです"],
+["A","Welcome, Mr. Ken. May I see your passport?","ようこそ。パスポートを拝見できますか？"],
+["B","Here you are.","はい、どうぞ"],
+["A","Thank you. Your room is 502, on the fifth floor.","ありがとうございます。お部屋は5階の502号室です"],
+["B","What time is breakfast?","朝食は何時ですか？"],
+["A","From seven to ten, on the second floor.","7時から10時まで、2階でどうぞ"]]},
+{t:"レストランで支払う", lines:[
+["B","Excuse me. Check, please.","すみません、お会計をお願いします"],
+["A","Sure. Here's your bill. It's 25 dollars.","かしこまりました。25ドルです"],
+["B","Can I pay by card?","カードで払えますか？"],
+["A","Of course. ... Here's your receipt.","もちろんです。…こちらレシートです"],
+["B","The food was delicious. Thank you!","料理おいしかったです。ありがとう！"],
+["A","Thank you! Please come again.","ありがとうございます！またお越しください"]]},
+{t:"友達と予定を立てる", lines:[
+["A","Are you free this weekend?","今週末ひま？"],
+["B","Yes, I'm free on Sunday. Why?","うん、日曜なら空いてるよ。どうして？"],
+["A","How about lunch together?","一緒にランチどう？"],
+["B","Sounds good! Where do you want to go?","いいね！どこ行きたい？"],
+["A","There is a new Thai restaurant near the park.","公園の近くに新しいタイ料理店があるんだ"],
+["B","Perfect. See you at noon!","いいね。じゃあ12時に！"]]},
+],
+id: [
+{t:"食堂（ワルン）で注文する", lines:[
+["A","Selamat siang. Mau pesan apa?","こんにちは。何を注文しますか？"],
+["B","Saya mau nasi goreng satu.","ナシゴレンをひとつお願いします"],
+["A","Mau minum apa?","お飲み物は？"],
+["B","Es teh, ya. Tidak terlalu manis.","アイスティーで。あまり甘くしないでね"],
+["A","Baik. Tunggu sebentar, ya.","わかりました。少々お待ちくださいね"],
+["B","Terima kasih.","ありがとう"]]},
+{t:"道を聞く", lines:[
+["B","Permisi, numpang tanya. Di mana stasiun?","すみません、ちょっとお尋ねします。駅はどこですか？"],
+["A","Lurus saja, lalu belok kiri di bank.","まっすぐ行って、銀行で左に曲がってください"],
+["B","Berapa menit dari sini?","ここから何分ですか？"],
+["A","Kira-kira lima menit.","だいたい5分です"],
+["B","Oh, dekat ya. Terima kasih banyak!","ああ、近いですね。本当にありがとうございます！"],
+["A","Sama-sama. Hati-hati di jalan!","どういたしまして。道中お気をつけて！"]]},
+{t:"初対面の自己紹介", lines:[
+["A","Halo! Siapa nama Anda?","こんにちは！お名前は？"],
+["B","Nama saya Ken. Saya dari Jepang.","ケンです。日本から来ました"],
+["A","Senang bertemu Anda. Sudah berapa lama di sini?","お会いできてうれしいです。こちらへはどのくらい？"],
+["B","Baru tiga hari. Bali bagus sekali!","まだ3日です。バリは本当に素晴らしいですね！"],
+["A","Bahasa Indonesia Anda bagus!","インドネシア語お上手ですね！"],
+["B","Terima kasih. Saya belajar setiap hari.","ありがとう。毎日勉強しているんです"]]},
+{t:"市場で値段を聞く", lines:[
+["B","Permisi, berapa harga mangga ini?","すみません、このマンゴーはいくらですか？"],
+["A","Satu kilo dua puluh ribu.","1キロ2万ルピアだよ"],
+["B","Wah, agak mahal. Boleh kurang?","うーん、ちょっと高いな。安くなりますか？"],
+["A","Baik, lima belas ribu, ya.","わかった、1万5千でいいよ"],
+["B","Oke, saya beli satu kilo.","OK、1キロ買います"],
+["A","Terima kasih, ya!","ありがとうね！"]]},
+{t:"ホテルでチェックイン", lines:[
+["B","Selamat sore. Saya mau check-in. Nama saya Ken.","こんにちは。チェックインをお願いします。ケンです"],
+["A","Selamat datang, Pak Ken. Boleh lihat paspor?","ようこそ、ケンさん。パスポートを拝見できますか？"],
+["B","Ini, silakan.","はい、どうぞ"],
+["A","Kamar Anda nomor 502, di lantai lima.","お部屋は5階の502号室です"],
+["B","Jam berapa sarapan?","朝食は何時ですか？"],
+["A","Dari jam tujuh sampai jam sepuluh.","7時から10時までです"]]},
+{t:"タクシーに乗る", lines:[
+["B","Selamat pagi. Ke bandara, ya.","おはようございます。空港までお願いします"],
+["A","Baik. Pakai jalan tol?","わかりました。高速を使いますか？"],
+["B","Ya, boleh. Berapa lama kira-kira?","はい、いいですよ。だいたいどのくらいかかりますか？"],
+["A","Kira-kira tiga puluh menit kalau tidak macet.","渋滞がなければ30分くらいです"],
+["B","Oke. Pelan-pelan saja, tidak usah cepat.","OK。ゆっくりでいいですよ、急がなくて大丈夫"],
+["A","Baik, Pak.","かしこまりました"]]},
+],
+};
+
 /* 90日・週別ロードマップ */
 const ROADMAP = [
 ["あいさつ・自己紹介","出会いの表現を反射で言えるように"],
@@ -767,6 +1198,7 @@ const LANG_JP = { en: '英語', id: 'インドネシア語' };
 const KEY = 'mignon-lingo-v2';
 const OLD_KEY = 'mignon-lingo-v1';
 let state = load();
+state.dlg = state.dlg || { en: 0, id: 0 };
 
 function freshState() {
   return {
@@ -779,6 +1211,7 @@ function freshState() {
     log: {},           // date -> {cards, newEn, newId, g, r, s}
     gram: { en: { next: 0 }, id: { next: 0 } },
     read: { en: 0, id: 0 },
+    dlg: { en: 0, id: 0 },
     custom: [],        // [id, lang, word, meaning]
     customSeq: 0,
     settings: { newPerDay: 8, cardsGoal: 40, vocabLang: 'mix', rate: 0.95 },
@@ -817,6 +1250,11 @@ function todayStr(offset = 0) {
   d.setDate(d.getDate() + offset);
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
+function addDays(dateStr, n) {
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + n);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
 function dayNumber() {
   const ms = new Date(todayStr()) - new Date(state.startDate);
   return Math.floor(ms / 86400000) + 1;
@@ -839,9 +1277,9 @@ function readingLangToday() { return dayNumber() % 2 === 1 ? 'id' : 'en'; }
 /* 全カード（内蔵 + カスタム） */
 function allCards() {
   const cards = [];
-  EN_WORDS.forEach((w, i) => cards.push({ id: 'e' + i, lang: 'en', word: w[0], meaning: w[1], cat: w[2] }));
-  ID_WORDS.forEach((w, i) => cards.push({ id: 'i' + i, lang: 'id', word: w[0], meaning: w[1], cat: w[2] }));
-  state.custom.forEach(c => cards.push({ id: c[0], lang: c[1], word: c[2], meaning: c[3], cat: 'マイ単語' }));
+  EN_WORDS.forEach((w, i) => cards.push({ id: 'e' + i, lang: 'en', word: w[0], meaning: w[1], cat: w[2], forms: w[3] || '' }));
+  ID_WORDS.forEach((w, i) => cards.push({ id: 'i' + i, lang: 'id', word: w[0], meaning: w[1], cat: w[2], forms: w[3] || '' }));
+  state.custom.forEach(c => cards.push({ id: c[0], lang: c[1], word: c[2], meaning: c[3], cat: 'マイ単語', forms: '' }));
   return cards;
 }
 function cardById(id) { return allCards().find(c => c.id === id); }
@@ -942,6 +1380,9 @@ function renderHome() {
     <div class="section">
       <div class="section-title">Extra <small>追加でやり込む</small></div>
       <div class="chip-row">
+        <button class="chip" onclick="startDialogue('en')">会話練習: 英語</button>
+        <button class="chip" onclick="startDialogue('id')">会話練習: インドネシア語</button>
+        <button class="chip" onclick="startWeakSession()">苦手単語 特訓</button>
         <button class="chip" onclick="startSession('en')">単語: 英語のみ</button>
         <button class="chip" onclick="startSession('id')">単語: インドネシア語のみ</button>
         <button class="chip" onclick="startGrammar('${gLang === 'en' ? 'id' : 'en'}')">文法: もう1課</button>
@@ -975,6 +1416,15 @@ function renderHome() {
           ${[[0.7,'ゆっくり'],[0.85,'すこしゆっくり'],[0.95,'ふつう'],[1.1,'はやい']].map(([v,l]) => `<option value="${v}" ${state.settings.rate===v?'selected':''}>${l}</option>`).join('')}
         </select>
       </div>
+      <div class="set-row">
+        <span>学習データのバックアップ</span>
+        <button class="chip on" onclick="exportData()">コピーする</button>
+      </div>
+      <div class="set-row">
+        <span>バックアップから復元</span>
+        <button class="chip" onclick="importData()">貼り付ける</button>
+      </div>
+      <div class="note" style="margin-top:8px">バックアップは進捗データのテキストです。メモアプリ等に貼って保管し、機種変更時に「復元」で貼り付けてください。</div>
     </div>`;
 }
 
@@ -1043,10 +1493,12 @@ function showStudyCard() {
   const card = session.queue[session.index];
   const rec = state.srs[card.id];
   const isNew = !rec;
-  const asQuiz = rec && rec.reps >= 1 && Math.random() < 0.5;
+  // 2回目以降のカードは、意味クイズ・リスニング・フラッシュカードを混ぜて出題
+  const roll = Math.random();
+  const mode = rec && rec.reps >= 1 ? (roll < 0.35 ? 'quiz' : roll < 0.65 ? 'listen' : 'flash') : 'flash';
 
   let cardHtml;
-  if (asQuiz) {
+  if (mode === 'quiz') {
     const pool = allCards().filter(c => c.lang === card.lang && c.id !== card.id);
     const choices = shuffle([card].concat(shuffle(pool).slice(0, 3)));
     cardHtml = `
@@ -1055,6 +1507,16 @@ function showStudyCard() {
         <div class="word q">「${esc(card.meaning)}」は？</div>
       </div>
       <div>${choices.map(c => `<button class="choice-btn" data-id="${c.id}" onclick="answerQuiz(this,'${card.id}')">${esc(c.word)}</button>`).join('')}</div>`;
+  } else if (mode === 'listen') {
+    const pool = allCards().filter(c => c.lang === card.lang && c.id !== card.id && c.meaning !== card.meaning);
+    const choices = shuffle([card].concat(shuffle(pool).slice(0, 3)));
+    cardHtml = `
+      <div class="flashcard" style="min-height:190px;padding-bottom:28px">
+        <div class="lang-tag">${LANG_NAME[card.lang]} — Listening</div>
+        <div class="word q">音声を聞いて意味を選んでください</div>
+        <button class="speak-btn" onclick="speak('${card.id}')">&#9654;</button>
+      </div>
+      <div>${choices.map(c => `<button class="choice-btn" data-id="${c.id}" onclick="answerQuiz(this,'${card.id}')">${esc(c.meaning)}</button>`).join('')}</div>`;
   } else {
     cardHtml = `
       <div class="flashcard">
@@ -1063,7 +1525,7 @@ function showStudyCard() {
         <div class="catg">${esc(card.cat)}</div>
         <div class="word">${esc(card.word)}</div>
         <button class="speak-btn" onclick="speak('${card.id}')">&#9654;</button>
-        <div class="meaning" id="meaning" style="visibility:hidden">${esc(card.meaning)}</div>
+        <div class="meaning" id="meaning" style="visibility:hidden">${esc(card.meaning)}${card.forms ? `<div class="forms">${esc(card.forms)}</div>` : ''}</div>
       </div>
       <div class="btn-row" id="answer-btns">
         <button class="abtn show" onclick="reveal()">答えを見る</button>
@@ -1071,7 +1533,7 @@ function showStudyCard() {
   }
 
   v.innerHTML = studyHeader('単語', session.index + 1, session.queue.length) + cardHtml;
-  if (!asQuiz) speak(card.id);
+  if (mode !== 'quiz') speak(card.id); // 意味クイズで音を流すと答えがバレるため
   session.revealed = false;
 }
 
@@ -1322,7 +1784,7 @@ function showSpeakCard() {
     <div class="flashcard">
       <div class="lang-tag">${LANG_NAME[card.lang]}</div>
       <div class="word">${esc(card.word)}</div>
-      <div class="meaning" style="visibility:visible">${esc(card.meaning)}</div>
+      <div class="meaning" style="visibility:visible">${esc(card.meaning)}${card.forms ? `<div class="forms">${esc(card.forms)}</div>` : ''}</div>
       <button class="speak-btn" onclick="speak('${card.id}')">&#9654;</button>
       <div class="note" style="text-align:center">音声を聞いて、同じように<b>声に出して</b>言ってみましょう。<br>口が覚えるまで2〜3回。</div>
     </div>
@@ -1343,6 +1805,117 @@ function finishSpeaking() {
       <div class="center-row"><button class="primary-btn" onclick="showView('home')">ホームへ</button></div>
     </div>`;
   ssession = null;
+}
+
+/* =====================================================
+   Extra: 苦手単語 特訓
+===================================================== */
+function startWeakSession() {
+  const weak = allCards()
+    .filter(c => state.srs[c.id] && state.srs[c.id].lapses >= 2)
+    .sort((a, b) => state.srs[b.id].lapses - state.srs[a.id].lapses)
+    .slice(0, 15);
+  if (weak.length === 0) {
+    toast('苦手単語はまだありません（「もう一度」が多い単語が対象になります）');
+    return;
+  }
+  session = { lang: 'mix', queue: shuffle(weak), index: 0, total: weak.length, xpGain: 0, correct: 0, revealed: false };
+  showStudyView();
+  showStudyCard();
+}
+
+/* =====================================================
+   Extra: 会話練習（ダイアログ）
+===================================================== */
+let dsession = null;
+
+function startDialogue(lang) {
+  const list = DIALOGUES[lang];
+  const idx = state.dlg[lang] % list.length;
+  dsession = { lang, d: list[idx], no: idx + 1, total: list.length };
+  showStudyView();
+  renderDialogue();
+}
+
+function renderDialogue() {
+  const d = dsession;
+  document.getElementById('view-study').innerHTML =
+    studyHeader(`会話 — ${LANG_JP[d.lang]}`, 0, 0) + `
+    <div class="lesson-head">
+      <div class="lt">Dialogue ${d.no} / ${d.total}</div>
+      <h3>${esc(d.d.t)}</h3>
+    </div>
+    <div class="note" style="margin-bottom:14px">B があなたの役です。音声を聞いたあと、<b>B のセリフを声に出して</b>言いましょう。</div>
+    <div>
+      ${d.d.lines.map((l, i) => `
+        <div class="dline ${l[0] === 'B' ? 'you' : ''}">
+          <span class="sp">${l[0]}</span>
+          <span class="tx"><span class="t">${esc(l[1])}</span><span class="j" style="display:block">${esc(l[2])}</span></span>
+          <button class="pl" onclick="speakText(${JSON.stringify(l[1]).replace(/"/g,'&quot;')}, '${d.lang}')">&#9654;</button>
+        </div>`).join('')}
+    </div>
+    <div class="center-row">
+      <button class="ghost-btn" onclick="playDialogueAll()">通し再生</button><br>
+      <button class="primary-btn" onclick="finishDialogue()">練習した</button>
+    </div>`;
+}
+
+function playDialogueAll() {
+  if (!window.speechSynthesis || !dsession) return;
+  speechSynthesis.cancel();
+  const lang = dsession.lang;
+  dsession.d.lines.forEach(l => {
+    const u = new SpeechSynthesisUtterance(l[1]);
+    const v = pickVoice(lang);
+    if (v) u.voice = v;
+    u.lang = lang === 'en' ? 'en-US' : 'id-ID';
+    u.rate = state.settings.rate || 0.95;
+    speechSynthesis.speak(u); // キューに積まれ順番に再生される
+  });
+}
+
+function finishDialogue() {
+  const d = dsession;
+  state.dlg[d.lang]++;
+  state.xp += 15;
+  save();
+  document.getElementById('view-study').innerHTML = `
+    <div class="done-card">
+      <div class="ttl">Dialogue Complete</div>
+      <p>「${esc(d.d.t)}」を練習しました。<br>実際の場面を想像しながら繰り返すと定着します。</p>
+      <div class="xp-gain">+ 15 XP</div>
+      <div class="center-row">
+        <button class="primary-btn" onclick="showView('home')">ホームへ</button><br>
+        <button class="ghost-btn" onclick="startDialogue('${d.lang}')">次のダイアログ</button>
+      </div>
+    </div>`;
+  dsession = null;
+}
+
+/* =====================================================
+   バックアップ
+===================================================== */
+async function exportData() {
+  const data = JSON.stringify(state);
+  try {
+    await navigator.clipboard.writeText(data);
+    toast('コピーしました。メモアプリ等に貼り付けて保管してください');
+  } catch (e) {
+    prompt('このテキストを全選択してコピーし、保管してください', data);
+  }
+}
+function importData() {
+  const t = prompt('バックアップのテキストを貼り付けてください');
+  if (!t) return;
+  try {
+    const s = JSON.parse(t);
+    if (!s.startDate || !s.srs) throw new Error('invalid');
+    if (!confirm('現在のデータを上書きして復元します。よろしいですか？')) return;
+    localStorage.setItem(KEY, JSON.stringify(s));
+    location.reload();
+  } catch (e) {
+    toast('データの形式が正しくありません');
+  }
 }
 
 /* =====================================================
@@ -1417,6 +1990,16 @@ function renderRecord() {
   const studiedDays = Object.keys(state.log).filter(d => state.log[d].cards > 0 || state.log[d].g || state.log[d].r || state.log[d].s).length;
   const gramDone = Math.min(state.gram.en.next, GRAMMAR.en.length) + Math.min(state.gram.id.next, GRAMMAR.id.length);
 
+  const today = todayStr();
+  const heatCells = Array.from({ length: 90 }, (_, i) => {
+    const d = addDays(state.startDate, i);
+    if (d > today) return '<span class="future"></span>';
+    const l = state.log[d];
+    if (!l || (!l.cards && !l.g && !l.r && !l.s)) return '<span></span>';
+    const full = l.cards >= state.settings.cardsGoal && l.g && l.r && l.s;
+    return `<span class="${full ? 'full' : 'part'}"></span>`;
+  }).join('');
+
   document.getElementById('view-record').innerHTML = `
     <div class="section">
       <div class="section-title">Level ${lv}</div>
@@ -1437,6 +2020,12 @@ function renderRecord() {
         <div class="stat"><div class="v">${state.read.en + state.read.id}</div><div class="k">読んだ本文</div></div>
         <div class="stat"><div class="v">${Object.keys(state.srs).length}</div><div class="k">学習した単語</div></div>
       </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Heatmap <small>90 days</small></div>
+      <div class="heat">${heatCells}</div>
+      <div class="legend">薄い = 一部のタスク完了　濃い = 全タスク完了。マスを塗りつぶしていきましょう。</div>
     </div>
 
     <div class="section">
@@ -1523,6 +2112,11 @@ function toast(msg) {
 /* 起動 */
 save();
 renderHome();
+
+/* オフライン対応（https配信時のみ） */
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
 </script>
 </body>
 </html>
