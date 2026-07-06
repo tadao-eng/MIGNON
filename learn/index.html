@@ -19,17 +19,18 @@
 body { font-family: 'Inter','Noto Sans JP',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 #app { max-width: 500px; margin: 0 auto; padding: 0 20px 110px; }
 
-header { text-align: center; padding: 70px 0 10px; }
+header { text-align: center; padding: 60px 0 10px; }
 header h1 { font-weight: 300; letter-spacing: 0.35em; font-size: 1rem; color: var(--primary); text-transform: uppercase; }
-header .tagline { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.25em; margin-top: 10px; text-transform: uppercase; }
+header .tagline { font-size: 0.58rem; color: var(--sub); letter-spacing: 0.25em; margin-top: 10px; text-transform: uppercase; }
 
 .view { display: none; }
 .view.active { display: block; animation: fadein .3s ease; }
 @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
 
-.section { padding: 36px 0; border-bottom: 1px solid var(--border); }
+.section { padding: 34px 0; border-bottom: 1px solid var(--border); }
 .section:last-child { border-bottom: none; }
-.section-title { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.25em; color: var(--primary); text-transform: uppercase; margin-bottom: 22px; }
+.section-title { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.25em; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; }
+.section-title small { color: var(--sub); font-weight: 400; letter-spacing: 0.15em; margin-left: 10px; }
 
 /* ---- home ---- */
 .day-row { display: flex; justify-content: space-between; align-items: baseline; }
@@ -42,35 +43,36 @@ header .tagline { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.25em; 
 .note { font-size: 0.72rem; color: var(--sub); margin-top: 18px; line-height: 1.9; }
 .note b { color: var(--text); font-weight: 400; }
 
-.today-row { display: flex; justify-content: space-between; align-items: baseline; }
-.today-count { font-size: 1.6rem; font-weight: 300; color: var(--primary); }
-.today-count small { font-size: 0.75rem; color: var(--sub); }
-.today-msg { font-size: 0.7rem; color: var(--sub); letter-spacing: 0.05em; }
-.today-msg.done { color: var(--primary); }
+.task-list { border-top: 1px solid var(--border); }
+.task-row { display: flex; justify-content: space-between; align-items: center; width: 100%; background: none; border: none; border-bottom: 1px solid var(--border); padding: 20px 2px; cursor: pointer; font-family: inherit; text-align: left; }
+.task-row:active { background: #FAFAFA; }
+.task-row .nm { font-size: 0.88rem; color: var(--primary); font-weight: 400; letter-spacing: 0.05em; }
+.task-row .nm small { display: block; font-size: 0.58rem; color: var(--sub); letter-spacing: 0.15em; margin-top: 5px; }
+.task-row .st { font-size: 0.68rem; color: var(--sub); letter-spacing: 0.1em; text-align: right; flex-shrink: 0; line-height: 1.7; }
+.task-row .st b { color: var(--primary); font-weight: 400; }
+.task-row.donetask .nm { color: var(--sub); text-decoration: line-through; }
+.alldone { font-size: 0.72rem; color: var(--primary); letter-spacing: 0.15em; margin-top: 18px; }
 
-.lang-list { border-top: 1px solid var(--border); }
-.lang-row { display: flex; justify-content: space-between; align-items: center; width: 100%; background: none; border: none; border-bottom: 1px solid var(--border); padding: 22px 2px; cursor: pointer; font-family: inherit; text-align: left; }
-.lang-row:active { background: #FAFAFA; }
-.lang-row .nm { font-size: 0.9rem; color: var(--primary); font-weight: 400; letter-spacing: 0.05em; }
-.lang-row .nm small { display: block; font-size: 0.58rem; color: var(--sub); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 5px; }
-.lang-row .ct { font-size: 0.65rem; color: var(--sub); letter-spacing: 0.1em; text-align: right; line-height: 1.8; flex-shrink: 0; }
+.chip-row { display: flex; gap: 20px; flex-wrap: wrap; }
+.chip { border: none; background: none; padding: 4px 0; font-size: 0.68rem; cursor: pointer; font-family: inherit; color: var(--sub); letter-spacing: 0.1em; border-bottom: 1px solid transparent; }
+.chip.on { color: var(--primary); border-bottom-color: var(--primary); }
 
 .set-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; font-size: 0.78rem; color: var(--text); }
 .set-row select { border: none; border-bottom: 1px solid var(--border); padding: 6px 2px; font-family: inherit; background: transparent; font-size: 0.78rem; outline: none; color: var(--primary); border-radius: 0; }
 
-/* ---- study ---- */
+/* ---- study (shared) ---- */
 .study-top { display: flex; justify-content: space-between; align-items: center; padding-top: 26px; font-size: 0.65rem; color: var(--sub); letter-spacing: 0.15em; }
 .study-top button { background: none; border: none; color: var(--sub); font-size: 0.65rem; cursor: pointer; letter-spacing: 0.15em; font-family: inherit; padding: 4px; }
 .qline { height: 1px; background: var(--border); margin-top: 14px; position: relative; }
 .qline > div { position: absolute; top: 0; left: 0; height: 1px; background: var(--primary); transition: width .3s; }
 
-.flashcard { padding: 60px 10px 40px; text-align: center; min-height: 300px; display: flex; flex-direction: column; justify-content: center; }
+.flashcard { padding: 56px 10px 36px; text-align: center; min-height: 290px; display: flex; flex-direction: column; justify-content: center; }
 .flashcard .lang-tag { font-size: 0.58rem; color: var(--sub); letter-spacing: 0.3em; text-transform: uppercase; }
 .flashcard .catg { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.1em; margin-top: 8px; }
 .flashcard .newtag { font-size: 0.55rem; color: var(--primary); letter-spacing: 0.3em; margin-bottom: 14px; }
-.flashcard .word { font-size: 1.6rem; font-weight: 300; color: var(--primary); margin: 26px 0 4px; line-height: 1.5; word-break: break-word; letter-spacing: 0.02em; }
-.flashcard .word.q { font-size: 1.15rem; font-weight: 400; }
-.flashcard .meaning { font-size: 1rem; font-weight: 300; color: var(--text); margin-top: 26px; padding-top: 26px; border-top: 1px solid var(--border); line-height: 1.8; }
+.flashcard .word { font-size: 1.55rem; font-weight: 300; color: var(--primary); margin: 24px 0 4px; line-height: 1.5; word-break: break-word; letter-spacing: 0.02em; }
+.flashcard .word.q { font-size: 1.1rem; font-weight: 400; }
+.flashcard .meaning { font-size: 1rem; font-weight: 300; color: var(--text); margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); line-height: 1.8; }
 .speak-btn { background: none; border: 1px solid var(--border); border-radius: 50%; width: 42px; height: 42px; font-size: 0.7rem; color: var(--primary); cursor: pointer; margin: 20px auto 0; display: block; font-family: inherit; }
 
 .btn-row { display: flex; gap: 1px; background: var(--border); border: 1px solid var(--border); }
@@ -81,7 +83,7 @@ header .tagline { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.25em; 
 .abtn.good { background: var(--primary); color: white; }
 .abtn.good small { color: rgba(255,255,255,0.6); }
 
-.choice-btn { display: block; width: 100%; background: var(--bg); border: none; border-bottom: 1px solid var(--border); padding: 18px 4px; font-size: 0.88rem; font-weight: 300; text-align: left; cursor: pointer; font-family: inherit; color: var(--text); }
+.choice-btn { display: block; width: 100%; background: var(--bg); border: none; border-bottom: 1px solid var(--border); padding: 17px 4px; font-size: 0.85rem; font-weight: 300; text-align: left; cursor: pointer; font-family: inherit; color: var(--text); line-height: 1.6; }
 .choice-btn:first-of-type { border-top: 1px solid var(--border); }
 .choice-btn:active { background: #FAFAFA; }
 .choice-btn.correct { background: var(--primary); color: white; }
@@ -92,12 +94,27 @@ header .tagline { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.25em; 
 .done-card p { font-size: 0.72rem; color: var(--sub); line-height: 2.1; margin-top: 20px; }
 .done-card .xp-gain { font-size: 0.7rem; color: var(--primary); letter-spacing: 0.2em; margin-top: 14px; }
 .primary-btn { background: var(--primary); color: white; border: none; padding: 20px 50px; font-size: 0.7rem; letter-spacing: 0.3em; cursor: pointer; margin-top: 40px; font-family: inherit; font-weight: 600; }
+.ghost-btn { background: none; color: var(--primary); border: 1px solid var(--border); padding: 19px 40px; font-size: 0.7rem; letter-spacing: 0.3em; cursor: pointer; margin-top: 14px; font-family: inherit; font-weight: 400; }
+
+/* ---- grammar / reading ---- */
+.lesson-head { padding-top: 40px; }
+.lesson-head .lt { font-size: 0.58rem; color: var(--sub); letter-spacing: 0.3em; text-transform: uppercase; }
+.lesson-head h3 { font-size: 1.15rem; font-weight: 400; color: var(--primary); margin-top: 14px; line-height: 1.6; }
+.lesson-exp { font-size: 0.85rem; line-height: 2.1; color: var(--text); font-weight: 300; margin-top: 24px; }
+.example { border-top: 1px solid var(--border); padding: 16px 2px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.example:last-of-type { border-bottom: 1px solid var(--border); }
+.example .t { font-size: 0.92rem; color: var(--primary); font-weight: 400; line-height: 1.7; }
+.example .j { font-size: 0.7rem; color: var(--sub); margin-top: 4px; font-weight: 300; }
+.example .pl { background: none; border: 1px solid var(--border); border-radius: 50%; width: 34px; height: 34px; font-size: 0.55rem; color: var(--primary); cursor: pointer; flex-shrink: 0; font-family: inherit; }
+.q-stem { font-size: 1rem; font-weight: 300; color: var(--primary); line-height: 2; padding: 40px 0 24px; text-align: center; }
+.q-stem small { display: block; font-size: 0.62rem; color: var(--sub); letter-spacing: 0.2em; margin-bottom: 14px; }
+.passage { font-size: 0.98rem; font-weight: 300; color: var(--primary); line-height: 2.3; padding: 30px 0 10px; }
+.passage-jp { font-size: 0.78rem; font-weight: 300; color: var(--sub); line-height: 2.1; padding: 20px 0; border-top: 1px solid var(--border); margin-top: 20px; }
+.center-row { text-align: center; }
 
 /* ---- words ---- */
 .filter-row { display: flex; gap: 20px; flex-wrap: wrap; padding-top: 26px; }
 .filter-row.sub { padding-top: 14px; gap: 16px; }
-.chip { border: none; background: none; padding: 4px 0; font-size: 0.68rem; cursor: pointer; font-family: inherit; color: var(--sub); letter-spacing: 0.1em; border-bottom: 1px solid transparent; }
-.chip.on { color: var(--primary); border-bottom-color: var(--primary); }
 .word-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 16px 2px; cursor: pointer; }
 .word-item .w { font-weight: 400; font-size: 0.88rem; color: var(--primary); }
 .word-item .w .lg { font-size: 0.55rem; color: var(--sub); letter-spacing: 0.2em; margin-right: 8px; }
@@ -119,7 +136,7 @@ header .tagline { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.25em; 
 .badge.got::before { content: '●'; }
 .roadmap-item { display: flex; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--border); font-size: 0.74rem; align-items: baseline; }
 .roadmap-item:last-child { border-bottom: none; }
-.roadmap-item .mo { color: var(--sub); flex-shrink: 0; width: 52px; font-size: 0.62rem; letter-spacing: 0.05em; }
+.roadmap-item .mo { color: var(--sub); flex-shrink: 0; width: 48px; font-size: 0.62rem; letter-spacing: 0.05em; }
 .roadmap-item .tx b { color: var(--text); font-weight: 400; }
 .roadmap-item .tx small { display: block; color: var(--sub); margin-top: 3px; font-weight: 300; }
 .roadmap-item.now .mo, .roadmap-item.now .tx b { color: var(--primary); font-weight: 700; }
@@ -129,7 +146,7 @@ nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); bord
 nav button { background: none; border: none; font-family: inherit; font-size: 0.62rem; color: var(--sub); cursor: pointer; letter-spacing: 0.25em; text-transform: uppercase; padding: 4px 2px; border-bottom: 1px solid transparent; }
 nav button.on { color: var(--primary); border-bottom-color: var(--primary); }
 
-.toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 14px 26px; font-size: 0.68rem; letter-spacing: 0.15em; z-index: 500; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
+.toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 14px 26px; font-size: 0.68rem; letter-spacing: 0.1em; z-index: 500; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; max-width: 92vw; }
 .toast.show { opacity: 1; }
 </style>
 </head>
@@ -137,7 +154,7 @@ nav button.on { color: var(--primary); border-bottom-color: var(--primary); }
 <div id="app">
   <header>
     <h1>MIGNON LINGO</h1>
-    <div class="tagline">English &times; Bahasa Indonesia &mdash; 365 days</div>
+    <div class="tagline">English &times; Bahasa Indonesia &mdash; 90 day intensive</div>
   </header>
 
   <div id="view-home" class="view active"></div>
@@ -159,7 +176,6 @@ nav button.on { color: var(--primary); border-bottom-color: var(--primary); }
    単語データ  [単語, 意味, カテゴリ]
 ===================================================== */
 const EN_WORDS = [
-// あいさつ・基本
 ["Good morning","おはようございます","あいさつ・基本"],
 ["Good evening","こんばんは","あいさつ・基本"],
 ["How are you?","元気ですか？","あいさつ・基本"],
@@ -178,7 +194,6 @@ const EN_WORDS = [
 ["Welcome.","ようこそ","あいさつ・基本"],
 ["Goodbye.","さようなら","あいさつ・基本"],
 ["Good night.","おやすみなさい","あいさつ・基本"],
-// 日常動詞
 ["wake up","起きる","日常動詞"],
 ["eat","食べる","日常動詞"],
 ["drink","飲む","日常動詞"],
@@ -199,7 +214,6 @@ const EN_WORDS = [
 ["drive","運転する","日常動詞"],
 ["meet","会う","日常動詞"],
 ["help","手伝う","日常動詞"],
-// 気持ち・形容詞
 ["happy","うれしい","気持ち・形容詞"],
 ["sad","悲しい","気持ち・形容詞"],
 ["tired","疲れた","気持ち・形容詞"],
@@ -218,7 +232,6 @@ const EN_WORDS = [
 ["interesting","面白い（興味深い）","気持ち・形容詞"],
 ["delicious","おいしい","気持ち・形容詞"],
 ["beautiful","美しい","気持ち・形容詞"],
-// 旅行
 ["airport","空港","旅行"],
 ["flight","便・フライト","旅行"],
 ["ticket","チケット","旅行"],
@@ -237,7 +250,6 @@ const EN_WORDS = [
 ["Can I pay by card?","カードで払えますか？","旅行"],
 ["I'd like to check in.","チェックインをお願いします","旅行"],
 ["Could you take a photo?","写真を撮ってもらえますか？","旅行"],
-// 食事
 ["breakfast","朝食","食事"],
 ["lunch","昼食","食事"],
 ["dinner","夕食","食事"],
@@ -253,7 +265,6 @@ const EN_WORDS = [
 ["seafood","魚介類","食事"],
 ["I'm allergic to eggs.","卵アレルギーです","食事"],
 ["Can I have water, please?","お水をいただけますか？","食事"],
-// 仕事
 ["meeting","会議","仕事"],
 ["schedule","予定・スケジュール","仕事"],
 ["deadline","締め切り","仕事"],
@@ -271,7 +282,6 @@ const EN_WORDS = [
 ["Could you send me the file?","ファイルを送ってもらえますか？","仕事"],
 ["I'll get back to you.","後ほど連絡します","仕事"],
 ["Let me check my schedule.","予定を確認させてください","仕事"],
-// 時間・生活
 ["today","今日","時間・生活"],
 ["tomorrow","明日","時間・生活"],
 ["yesterday","昨日","時間・生活"],
@@ -287,7 +297,50 @@ const EN_WORDS = [
 ["late","遅い・遅く","時間・生活"],
 ["weather","天気","時間・生活"],
 ["holiday","休日・祝日","時間・生活"],
-// 会話フレーズ
+["family","家族","人・家族"],
+["parents","両親","人・家族"],
+["husband","夫","人・家族"],
+["wife","妻","人・家族"],
+["son","息子","人・家族"],
+["daughter","娘","人・家族"],
+["child","子ども","人・家族"],
+["friend","友達","人・家族"],
+["people","人々","人・家族"],
+["man","男性","人・家族"],
+["woman","女性","人・家族"],
+["neighbor","隣人・ご近所さん","人・家族"],
+["head","頭","体・健康"],
+["stomach","おなか・胃","体・健康"],
+["headache","頭痛","体・健康"],
+["fever","熱","体・健康"],
+["medicine","薬","体・健康"],
+["hospital","病院","体・健康"],
+["doctor","医者","体・健康"],
+["sick","病気の・具合が悪い","体・健康"],
+["hurt","痛む・痛める","体・健康"],
+["rest","休む・休息","体・健康"],
+["healthy","健康な","体・健康"],
+["sleepy","眠い","体・健康"],
+["money","お金","買い物"],
+["price","値段","買い物"],
+["cheap","安い","買い物"],
+["expensive","（値段が）高い","買い物"],
+["discount","割引","買い物"],
+["size","サイズ","買い物"],
+["color","色","買い物"],
+["try on","試着する","買い物"],
+["cash","現金","買い物"],
+["change","おつり","買い物"],
+["receipt","レシート・領収書","買い物"],
+["store","店","買い物"],
+["sunny","晴れた","自然・天気"],
+["rainy","雨の","自然・天気"],
+["cloudy","くもりの","自然・天気"],
+["hot","暑い・熱い","自然・天気"],
+["cold","寒い・冷たい","自然・天気"],
+["warm","暖かい","自然・天気"],
+["cool","涼しい","自然・天気"],
+["rain","雨","自然・天気"],
 ["What do you mean?","どういう意味ですか？","会話フレーズ"],
 ["Could you say that again?","もう一度言ってもらえますか？","会話フレーズ"],
 ["Please speak slowly.","ゆっくり話してください","会話フレーズ"],
@@ -308,10 +361,21 @@ const EN_WORDS = [
 ["Good luck!","がんばって！","会話フレーズ"],
 ["Congratulations!","おめでとう！","会話フレーズ"],
 ["Cheers!","乾杯！","会話フレーズ"],
+["Let me think.","ちょっと考えさせて","会話フレーズ"],
+["What's this called in English?","これは英語で何と言いますか？","会話フレーズ"],
+["Could you write it down?","書いてもらえますか？","会話フレーズ"],
+["I'm just looking.","（店で）見ているだけです","会話フレーズ"],
+["Take your time.","ゆっくりでいいよ","会話フレーズ"],
+["I'm on my way.","今向かっています","会話フレーズ"],
+["What's up?","調子どう？","会話フレーズ"],
+["Never mind.","気にしないで","会話フレーズ"],
+["That makes sense.","なるほどね・筋が通ってる","会話フレーズ"],
+["I hope so.","そうだといいな","会話フレーズ"],
+["Same here.","私も同じ","会話フレーズ"],
+["How about you?","あなたはどう？","会話フレーズ"],
 ];
 
 const ID_WORDS = [
-// あいさつ・基本
 ["Selamat pagi","おはようございます","あいさつ・基本"],
 ["Selamat siang","こんにちは（昼）","あいさつ・基本"],
 ["Selamat sore","こんにちは（夕方）","あいさつ・基本"],
@@ -330,7 +394,6 @@ const ID_WORDS = [
 ["Tidak","いいえ","あいさつ・基本"],
 ["Tolong","お願いします・助けて","あいさつ・基本"],
 ["Silakan","どうぞ","あいさつ・基本"],
-// 数字・時間
 ["satu","1（いち）","数字・時間"],
 ["dua","2（に）","数字・時間"],
 ["tiga","3（さん）","数字・時間"],
@@ -347,7 +410,6 @@ const ID_WORDS = [
 ["besok","明日","数字・時間"],
 ["kemarin","昨日","数字・時間"],
 ["sekarang","今","数字・時間"],
-// 食事
 ["makan","食べる","食事"],
 ["minum","飲む","食事"],
 ["nasi","ご飯","食事"],
@@ -366,7 +428,6 @@ const ID_WORDS = [
 ["nasi goreng","ナシゴレン（インドネシア風炒飯）","食事"],
 ["Saya mau pesan ini.","これを注文したいです","食事"],
 ["Berapa harganya?","いくらですか？","食事"],
-// 旅行
 ["bandara","空港","旅行"],
 ["pesawat","飛行機","旅行"],
 ["stasiun","駅","旅行"],
@@ -384,7 +445,6 @@ const ID_WORDS = [
 ["kiri","左","旅行"],
 ["kanan","右","旅行"],
 ["lurus","まっすぐ","旅行"],
-// 日常動詞
 ["pergi","行く","日常動詞"],
 ["datang","来る","日常動詞"],
 ["pulang","帰る","日常動詞"],
@@ -403,7 +463,6 @@ const ID_WORDS = [
 ["membantu","手伝う","日常動詞"],
 ["bertemu","会う","日常動詞"],
 ["mengerti","理解する","日常動詞"],
-// 形容詞
 ["besar","大きい","形容詞"],
 ["kecil","小さい","形容詞"],
 ["baru","新しい","形容詞"],
@@ -420,7 +479,39 @@ const ID_WORDS = [
 ["jauh","遠い","形容詞"],
 ["mudah","簡単な","形容詞"],
 ["sulit","難しい","形容詞"],
-// 疑問詞・会話
+["keluarga","家族","人・家族"],
+["ayah","父","人・家族"],
+["ibu","母","人・家族"],
+["anak","子ども","人・家族"],
+["suami","夫","人・家族"],
+["istri","妻","人・家族"],
+["teman","友達","人・家族"],
+["orang","人","人・家族"],
+["laki-laki","男性","人・家族"],
+["perempuan","女性","人・家族"],
+["kakak","兄・姉","人・家族"],
+["adik","弟・妹","人・家族"],
+["uang","お金","買い物"],
+["harga","値段","買い物"],
+["toko","店","買い物"],
+["pasar","市場","買い物"],
+["belanja","買い物する","買い物"],
+["diskon","割引","買い物"],
+["warna","色","買い物"],
+["baju","服","買い物"],
+["sepatu","靴","買い物"],
+["tas","かばん","買い物"],
+["kembalian","おつり","買い物"],
+["rumah","家","場所・自然"],
+["kantor","会社・オフィス","場所・自然"],
+["sekolah","学校","場所・自然"],
+["kamar mandi","浴室・トイレ","場所・自然"],
+["gunung","山","場所・自然"],
+["laut","海","場所・自然"],
+["hujan","雨","場所・自然"],
+["cuaca","天気","場所・自然"],
+["matahari","太陽","場所・自然"],
+["kota","町・都市","場所・自然"],
 ["apa","何","疑問詞・会話"],
 ["siapa","誰","疑問詞・会話"],
 ["di mana","どこ","疑問詞・会話"],
@@ -439,53 +530,245 @@ const ID_WORDS = [
 ["Ayo!","さあ行こう！","疑問詞・会話"],
 ["Semangat!","がんばって！","疑問詞・会話"],
 ["Sampai besok","また明日","疑問詞・会話"],
+["Boleh saya minta ...?","…をいただけますか？","疑問詞・会話"],
+["Saya suka ini.","これが好きです","疑問詞・会話"],
+["Saya tidak suka.","好きではありません","疑問詞・会話"],
+["Bisa bahasa Inggris?","英語を話せますか？","疑問詞・会話"],
+["Pelan-pelan saja","ゆっくりでいいよ","疑問詞・会話"],
+["Tunggu sebentar","ちょっと待って","疑問詞・会話"],
+["Tidak masalah","問題ないよ","疑問詞・会話"],
+["Saya lapar.","おなかがすいた","疑問詞・会話"],
+["Saya haus.","のどが渇いた","疑問詞・会話"],
+["Saya capek.","疲れた","疑問詞・会話"],
+["Sudah selesai.","終わりました","疑問詞・会話"],
+["Belum.","まだです","疑問詞・会話"],
 ];
 
-/* 1年間の月別ロードマップ */
+/* =====================================================
+   文法レッスン  {t:題, e:解説, ex:[[例文,訳]], q:[[問題,[選択肢],正解idx]]}
+===================================================== */
+const GRAMMAR = {
+en: [
+{t:"be動詞（am / is / are）", e:"「AはBです」は be動詞で表します。主語によって形が変わります。I am ／ You are ／ He・She・It is ／ We・They are。",
+ ex:[["I am busy.","私は忙しい"],["She is kind.","彼女は親切だ"],["They are friends.","彼らは友達だ"]],
+ q:[["「私は日本人です」 I ___ Japanese.",["am","is","are","be"],0],["「彼は先生です」 He ___ a teacher.",["am","is","are","be"],1],["「彼らは忙しい」 They ___ busy.",["is","am","are","be"],2]]},
+{t:"一般動詞の現在形", e:"動作は動詞で表します。主語が he／she／it のときは動詞に s が付きます。I work. ／ He works.",
+ ex:[["I drink coffee every day.","毎日コーヒーを飲む"],["She works in Tokyo.","彼女は東京で働いている"],["We eat lunch at noon.","私たちは正午に昼食を食べる"]],
+ q:[["She ___ in Tokyo.",["work","works","working","worked"],1],["I ___ coffee every morning.",["drink","drinks","drinking","drank"],0],["He ___ English.",["speak","speaking","speaks","spoke"],2]]},
+{t:"否定文（don't / doesn't）", e:"「〜しない」は don't（he／she／it は doesn't）を動詞の前に置きます。doesn't の後ろの動詞は原形に戻ります。",
+ ex:[["I don't eat breakfast.","朝食を食べない"],["He doesn't drink coffee.","彼はコーヒーを飲まない"]],
+ q:[["I ___ like natto.",["don't","doesn't","am not","not"],0],["She ___ watch TV.",["don't","doesn't","isn't","not"],1],["He doesn't ___ coffee.",["drinks","drink","drinking","drank"],1]]},
+{t:"疑問文（Do / Does）", e:"「〜しますか？」は Do（he／she／it は Does）を文頭に置きます。答え方は Yes, I do. ／ No, I don't.",
+ ex:[["Do you like sushi?","寿司は好きですか？"],["Does she work today?","彼女は今日働きますか？"]],
+ q:[["___ you like coffee?",["Do","Does","Are","Is"],0],["___ he play soccer?",["Do","Does","Is","Are"],1],["Do you like music? — Yes, I ___.",["do","does","am","like"],0]]},
+{t:"wh疑問文（What / Where / When）", e:"What（何）Where（どこ）When（いつ）Who（誰）を文頭に置き、そのあとに疑問文の語順を続けます。",
+ ex:[["What do you do?","お仕事は何ですか？"],["Where do you live?","どこに住んでいますか？"],["When does it start?","いつ始まりますか？"]],
+ q:[["___ do you live? — In Osaka.",["What","Where","When","Who"],1],["___ time is it?",["What","Where","When","How"],0],["___ does the movie start? — At 7 p.m.",["Where","Who","When","What"],2]]},
+{t:"現在進行形（be + 〜ing）", e:"「今まさに〜している」は be動詞 + 動詞ing で表します。",
+ ex:[["I am cooking dinner.","夕食を作っているところです"],["She is studying English.","彼女は英語を勉強中です"]],
+ q:[["I ___ cooking now.",["am","is","are","do"],0],["They are ___ TV.",["watch","watches","watching","watched"],2],["「彼は今寝ている」 He is ___ now.",["sleep","sleeps","sleeping","slept"],2]]},
+{t:"過去形", e:"過去のことは動詞に ed を付ける（規則変化）か、不規則に変化させます。went（go）、ate（eat）、saw（see）など頻出の不規則形は丸ごと覚えましょう。",
+ ex:[["I worked yesterday.","昨日働いた"],["We went to Kyoto.","京都へ行った"],["I ate too much.","食べすぎた"]],
+ q:[["I ___ to Kyoto last week.",["go","went","gone","going"],1],["She ___ TV last night.",["watch","watches","watched","watching"],2],["「昨日たくさん食べた」 I ___ a lot yesterday.",["eat","eats","ate","eaten"],2]]},
+{t:"be動詞の過去（was / were）", e:"「〜だった」は was（I／he／she／it）、were（you／we／they）で表します。",
+ ex:[["I was tired yesterday.","昨日は疲れていた"],["They were happy.","彼らはうれしかった"]],
+ q:[["I ___ busy yesterday.",["am","was","were","is"],1],["They ___ at home.",["was","is","were","be"],2],["The movie ___ interesting.",["were","was","are","is"],1]]},
+{t:"未来（will / be going to）", e:"「〜するつもり・〜するだろう」は will + 原形、または be going to + 原形で表します。",
+ ex:[["I will call you tomorrow.","明日電話するね"],["We are going to travel to Bali.","バリへ旅行する予定です"]],
+ q:[["I ___ call you later.",["will","am","do","was"],0],["We are ___ to visit Kyoto.",["go","going","went","goes"],1],["「明日は雨だろう」 It ___ rain tomorrow.",["will","is","does","was"],0]]},
+{t:"can（〜できる）", e:"「〜できる」は can + 動詞の原形。否定は can't。Can you ...? で「〜できますか／〜してくれますか」。",
+ ex:[["I can speak a little English.","少し英語を話せます"],["Can you help me?","手伝ってくれますか？"]],
+ q:[["I ___ swim.",["can","am","do","will"],0],["She can ___ the piano.",["plays","play","playing","played"],1],["___ you help me?",["Do","Can","Are","Is"],1]]},
+{t:"want to / have to", e:"want to + 原形「〜したい」、have to + 原形「〜しなければならない」。会話で最頻出のパターンです。",
+ ex:[["I want to learn Indonesian.","インドネシア語を学びたい"],["I have to work tomorrow.","明日は働かなければならない"]],
+ q:[["I want ___ eat sushi.",["to","for","at","on"],0],["「今日は働かなければならない」 I ___ to work today.",["have","like","can","am"],0],["She wants to ___ a new bag.",["buys","buy","bought","buying"],1]]},
+{t:"比較", e:"「〜より…」は 形容詞+er + than。長い形容詞は more 〜 than。「一番」は the 〜est ／ the most 〜。",
+ ex:[["This bag is cheaper than that one.","このかばんはあれより安い"],["This is the most popular menu.","これが一番人気のメニューです"]],
+ q:[["This one is ___ than that one.",["cheap","cheaper","cheapest","more cheap"],1],["Health is ___ important than money.",["more","most","much","many"],0],["This is the ___ restaurant in town.",["good","better","best","well"],2]]},
+{t:"前置詞（in / on / at）", e:"時間：at 7:00、on Monday、in April。場所：at the station（地点）、on the table（接触）、in Tokyo（中）。",
+ ex:[["See you at seven.","7時に会いましょう"],["I live in Tokyo.","東京に住んでいます"],["Your key is on the table.","鍵はテーブルの上だよ"]],
+ q:[["See you ___ Monday.",["in","on","at","to"],1],["I live ___ Osaka.",["on","at","in","to"],2],["The meeting starts ___ 10 a.m.",["in","on","at","for"],2]]},
+{t:"There is / There are", e:"「〜がある・いる」は There is（単数）／ There are（複数）で表します。",
+ ex:[["There is a cafe near my house.","家の近くにカフェがある"],["There are many islands in Indonesia.","インドネシアにはたくさんの島がある"]],
+ q:[["There ___ a bank near here.",["is","are","am","be"],0],["There ___ many people in the park.",["is","are","was","be"],1],["「この近くにコンビニはありますか」 ___ there a convenience store around here?",["Is","Are","Do","Does"],0]]},
+{t:"依頼・提案", e:"Could you 〜?「〜していただけますか」、Let's 〜「〜しよう」、Shall we 〜?「〜しましょうか」。丁寧に頼めると会話が広がります。",
+ ex:[["Could you say that again?","もう一度言っていただけますか？"],["Let's take a break.","休憩しましょう"]],
+ q:[["___ you open the window?",["Could","Do","Are","Let's"],0],["___ have lunch together.",["Let's","Could","Shall","Do"],0],["「駅まで連れて行っていただけますか」 Could you ___ me to the station?",["take","takes","took","taking"],0]]},
+],
+id: [
+{t:"語順の基本（主語＋動詞＋目的語）", e:"インドネシア語は英語と同じ「主語＋動詞＋目的語」の語順です。動詞は人称や時制で変化しません。活用がないので、単語を並べるだけで文が作れます。",
+ ex:[["Saya makan nasi.","私はご飯を食べる"],["Dia minum kopi.","彼はコーヒーを飲む"]],
+ q:[["「私はコーヒーを飲む」= Saya ___ kopi.",["minum","makan","pergi","tidur"],0],["Dia ___ nasi goreng.（彼はナシゴレンを食べる）",["minum","makan","melihat","membaca"],1],["インドネシア語の動詞は？",["主語で変化する","時制で変化する","変化しない","語尾にsが付く"],2]]},
+{t:"人称代名詞", e:"saya 私 ／ kamu きみ（Anda あなた・丁寧）／ dia 彼・彼女 ／ kami 私たち（相手を含まない）／ kita 私たち（相手を含む）／ mereka 彼ら。",
+ ex:[["Saya dari Jepang.","私は日本出身です"],["Mereka teman saya.","彼らは私の友達です"]],
+ q:[["「彼・彼女」は？",["saya","dia","kamu","mereka"],1],["丁寧な「あなた」は？",["kamu","dia","Anda","kita"],2],["「彼ら」は？",["kami","kita","mereka","dia"],2]]},
+{t:"所有の表し方", e:"「私の家」は rumah saya のように「名詞＋所有者」の順になります。日本語と語順が逆なので注意しましょう。",
+ ex:[["rumah saya","私の家"],["nama saya","私の名前"],["teman dia","彼の友達"]],
+ q:[["「私の名前」は？",["saya nama","nama saya","nama-saya","saya-nama"],1],["「彼の家」は？",["dia rumah","rumah dia","rumahnya saya","dia punya"],1],["所有を表す語順は？",["所有者＋名詞","名詞＋所有者","どちらでも良い","前置詞が必要"],1]]},
+{t:"否定（tidak / bukan）", e:"動詞・形容詞を否定するときは tidak、名詞を否定するときは bukan を使います。",
+ ex:[["Saya tidak makan daging.","私は肉を食べません"],["Ini bukan tas saya.","これは私のかばんではありません"]],
+ q:[["Saya ___ mengerti.（わかりません）",["bukan","tidak","jangan","belum"],1],["Ini ___ mobil saya.（これは私の車ではない）",["tidak","jangan","bukan","belum"],2],["形容詞を否定するのは？",["bukan","tidak","jangan","apa"],1]]},
+{t:"疑問文（Apakah・語尾上げ）", e:"文頭に Apakah を付けるか、文末を上げ調子で言うだけで疑問文になります。とてもシンプルです。",
+ ex:[["Apakah kamu suka kopi?","コーヒーは好きですか？"],["Kamu orang Jepang?","日本人ですか？"]],
+ q:[["疑問文を作るには？",["動詞を前に出す","Apakahを付ける","doを付ける","語順を逆にする"],1],["Apakah kamu ___ pedas?（辛いのは好き？）",["suka","mau","bisa","ada"],0],["「はい」は？",["Tidak","Ya","Bukan","Belum"],1]]},
+{t:"疑問詞", e:"apa 何 ／ siapa 誰 ／ di mana どこ ／ kapan いつ ／ berapa いくつ・いくら ／ bagaimana どう。",
+ ex:[["Ini apa?","これは何ですか？"],["Berapa harganya?","いくらですか？"]],
+ q:[["「どこ」は？",["apa","kapan","di mana","siapa"],2],["値段を聞くときは？",["Siapa","Berapa","Kapan","Mengapa"],1],["Siapa nama Anda? の意味は？",["出身はどこ？","お名前は？","何歳？","元気？"],1]]},
+{t:"時間表現（sudah / belum / akan / sedang）", e:"動詞の前に置くだけで時間を表せます。sudah もう〜した ／ belum まだ〜していない ／ akan 〜するつもり ／ sedang 〜している最中。",
+ ex:[["Saya sudah makan.","もう食べました"],["Dia sedang tidur.","彼は寝ているところです"],["Saya akan pergi ke Bali.","バリへ行く予定です"]],
+ q:[["「もう食べた」= Saya ___ makan.",["akan","sedang","sudah","belum"],2],["「まだです」は？",["Sudah","Belum","Akan","Sedang"],1],["「〜している最中」を表すのは？",["sudah","akan","sedang","belum"],2]]},
+{t:"形容詞は名詞の後ろ", e:"「大きい家」は rumah besar のように「名詞＋形容詞」の順になります。",
+ ex:[["rumah besar","大きい家"],["kopi panas","熱いコーヒー"],["orang baik","良い人"]],
+ q:[["「熱いコーヒー」は？",["panas kopi","kopi panas","kopi yang","panas-kopi"],1],["「大きいかばん」は？",["besar tas","tas besar","tas kecil","besar-tas"],1],["形容詞の位置は？",["名詞の前","名詞の後ろ","文頭","文末のみ"],1]]},
+{t:"数の言い方", e:"11〜19は「〜belas」、20・30…は「〜puluh」。21は dua puluh satu。買い物で頻出の ribu（千）も重要です（5万ルピア= lima puluh ribu）。",
+ ex:[["lima belas","15"],["dua puluh","20"],["lima puluh ribu","50,000（5万）"]],
+ q:[["「20」は？",["dua belas","dua puluh","sepuluh dua","dua ribu"],1],["「15」は？",["lima puluh","lima belas","satu lima","seribu lima"],1],["「5000」は？",["lima puluh","lima ratus","lima ribu","lima belas"],2]]},
+{t:"場所の前置詞（di / ke / dari）", e:"di 〜で・〜に（場所）／ ke 〜へ ／ dari 〜から。この3つで移動と場所の表現はほぼカバーできます。",
+ ex:[["Saya tinggal di Tokyo.","東京に住んでいます"],["Saya pergi ke pantai.","ビーチへ行きます"],["Dia datang dari Jakarta.","彼はジャカルタから来ました"]],
+ q:[["Saya pergi ___ bandara.（空港へ行く）",["di","ke","dari","pada"],1],["Saya bekerja ___ Tokyo.（東京で働く）",["di","ke","dari","untuk"],0],["「日本から来ました」= Saya datang ___ Jepang.",["di","ke","dari","dengan"],2]]},
+{t:"bisa / boleh", e:"bisa 〜できる ／ boleh 〜してもよい。どちらも動詞の前に置きます。Boleh saya ...? で「〜してもいいですか？」。",
+ ex:[["Saya bisa berbahasa Indonesia sedikit.","少しインドネシア語ができます"],["Boleh saya duduk di sini?","ここに座ってもいいですか？"]],
+ q:[["「泳げます」= Saya ___ berenang.",["boleh","bisa","mau","harus"],1],["___ saya masuk?（入ってもいいですか？）",["Bisa","Boleh","Mau","Akan"],1],["bisa の意味は？",["〜したい","〜できる","〜すべき","〜してよい"],1]]},
+{t:"依頼と禁止（tolong / minta / jangan）", e:"Tolong ＋動詞「〜してください」、Minta ＋名詞「〜をください」、Jangan ＋動詞「〜しないで」。",
+ ex:[["Tolong bicara pelan-pelan.","ゆっくり話してください"],["Minta air.","お水をください"],["Jangan lupa.","忘れないで"]],
+ q:[["「手伝ってください」= ___ bantu saya.",["Jangan","Tolong","Bukan","Tidak"],1],["「お水をください」= ___ air.",["Minta","Jangan","Bukan","Apakah"],0],["「忘れないで」= ___ lupa.",["Tolong","Minta","Jangan","Tidak"],2]]},
+{t:"比較（lebih ... daripada）", e:"「AはBより〜」は A lebih 形容詞 daripada B。「一番〜」は paling ＋形容詞。",
+ ex:[["Ini lebih murah daripada itu.","これはあれより安い"],["Nasi goreng paling enak.","ナシゴレンが一番おいしい"]],
+ q:[["Ini ___ besar daripada itu.",["paling","lebih","sangat","banyak"],1],["「一番おいしい」= ___ enak.",["lebih","paling","sangat","lumayan"],1],["「AはBより安い」= A lebih murah ___ B.",["daripada","dengan","untuk","seperti"],0]]},
+{t:"yang の使い方", e:"yang は「〜のもの・〜なほう」。Saya mau yang ini.「これが欲しい」のように、お店や注文でとても便利な単語です。",
+ ex:[["yang besar","大きいほう"],["Saya mau yang ini.","これが欲しいです"],["orang yang baik","親切な人"]],
+ q:[["「大きいほうをください」= Minta ___ besar.",["yang","ini","itu","di"],0],["Saya mau ___ ini.（これが欲しい）",["yang","apa","di","ke"],0],["yang のはたらきは？",["否定する","「〜のほう」を表す","過去を表す","場所を表す"],1]]},
+{t:"丁寧な会話", e:"Permisi すみません（声かけ）／ Silakan どうぞ ／ Terima kasih banyak 本当にありがとう ／ Boleh saya minta ...? 〜をいただけますか？",
+ ex:[["Permisi, numpang tanya.","すみません、ちょっとお尋ねします"],["Boleh saya minta menu?","メニューをいただけますか？"]],
+ q:[["人に声をかける「すみません」は？",["Maaf","Permisi","Tolong","Jangan"],1],["「どうぞ」は？",["Silakan","Sama-sama","Permisi","Minta"],0],["Boleh saya minta air? の意味は？",["水を飲めますか","お水をいただけますか","水はありますか","水が好きです"],1]]},
+],
+};
+
+/* =====================================================
+   リーディング  {t:題, text:本文, jp:訳, q:[[問い,[選択肢],正解idx]]}
+===================================================== */
+const READINGS = {
+en: [
+{t:"Self-introduction", text:"Hi, my name is Ken. I am from Japan. I work at a small cafe in Tokyo. I am learning English and Indonesian.",
+ jp:"こんにちは、ケンです。日本出身です。東京の小さなカフェで働いています。英語とインドネシア語を勉強しています。",
+ q:[["ケンはどこで働いている？",["大きなホテル","小さなカフェ","学校","空港"],1],["ケンが学んでいるのは？",["英語だけ","インドネシア語だけ","英語とインドネシア語","中国語"],2]]},
+{t:"My morning", text:"I wake up at six every morning. I drink coffee and read the news. Then I walk to work. It takes twenty minutes.",
+ jp:"毎朝6時に起きます。コーヒーを飲んでニュースを読みます。それから歩いて仕事へ行きます。20分かかります。",
+ q:[["起きる時間は？",["5時","6時","7時","8時"],1],["通勤の方法は？",["電車","バス","徒歩","自転車"],2]]},
+{t:"Weekend", text:"On weekends, I usually clean my house in the morning. In the afternoon, I meet my friends. We often watch movies together.",
+ jp:"週末はたいてい午前中に家を掃除します。午後は友達に会います。よく一緒に映画を見ます。",
+ q:[["週末の午前は何をする？",["映画を見る","掃除をする","買い物","料理"],1],["友達とよくすることは？",["買い物","運動","映画鑑賞","旅行"],2]]},
+{t:"At the cafe", text:"A customer comes to my cafe every day. He always orders a hot coffee and a sandwich. Today he ordered orange juice. I was surprised.",
+ jp:"あるお客さんが毎日カフェに来ます。いつもホットコーヒーとサンドイッチを注文します。今日はオレンジジュースを注文しました。私は驚きました。",
+ q:[["常連客がいつも頼むのは？",["紅茶とケーキ","コーヒーとサンドイッチ","ジュースとパン","水だけ"],1],["今日頼んだのは？",["ホットコーヒー","紅茶","オレンジジュース","サンドイッチだけ"],2]]},
+{t:"Rainy day", text:"It was very hot yesterday. Today it is raining, so it is a little cool. I forgot my umbrella at home. I have to buy one at the convenience store.",
+ jp:"昨日はとても暑かった。今日は雨なので少し涼しい。家に傘を忘れました。コンビニで買わなければなりません。",
+ q:[["今日の天気は？",["晴れ","雪","雨","くもり"],2],["なぜ傘を買う？",["壊れたから","家に忘れたから","なくしたから","プレゼント用"],1]]},
+{t:"Shopping", text:"I went shopping last Sunday. I wanted to buy a new bag. The black bag was nice, but it was too expensive. So I bought a brown one. It was fifty percent off.",
+ jp:"先週の日曜日に買い物へ行きました。新しいかばんが欲しかったのです。黒いかばんは素敵でしたが高すぎました。だから茶色のを買いました。50%オフでした。",
+ q:[["買ったのは？",["黒いかばん","茶色いかばん","何も買わなかった","靴"],1],["茶色のかばんは？",["定価だった","50%オフだった","売り切れだった","高すぎた"],1]]},
+{t:"Travel plan", text:"Next month, I am going to visit Bali with my friend. We will stay there for five days. I want to see the beautiful beaches and eat local food. I am so excited.",
+ jp:"来月、友達とバリへ行く予定です。5日間滞在します。美しいビーチを見て、地元の料理を食べたい。とても楽しみです。",
+ q:[["どこへ行く予定？",["ジャカルタ","バリ","東京","ハワイ"],1],["滞在日数は？",["3日","5日","1週間","10日"],1]]},
+{t:"Work day", text:"I had three meetings today. The first meeting was long and a little boring. But in the afternoon, my client said, 'Your idea is great.' I was very happy.",
+ jp:"今日は会議が3つありました。最初の会議は長くて少し退屈でした。でも午後、クライアントが「あなたのアイデアは素晴らしい」と言ってくれました。とてもうれしかったです。",
+ q:[["今日の会議の数は？",["1つ","2つ","3つ","4つ"],2],["クライアントは何と言った？",["高すぎる","アイデアが素晴らしい","締め切りを延ばして","また明日"],1]]},
+{t:"Cooking", text:"My hobby is cooking. I cook dinner every night. Last night, I made Indonesian fried rice, nasi goreng, for the first time. It was spicy but delicious.",
+ jp:"趣味は料理です。毎晩夕食を作ります。昨夜、初めてインドネシアの炒飯「ナシゴレン」を作りました。辛かったけどおいしかったです。",
+ q:[["初めて作った料理は？",["カレー","ナシゴレン","パスタ","寿司"],1],["味はどうだった？",["甘かった","まずかった","辛いけどおいしい","苦かった"],2]]},
+{t:"Phone call", text:"I called a restaurant to make a reservation. 'Can I book a table for two at seven?' I asked. The staff said, 'Sorry, seven is full. How about eight?' So we will have dinner at eight.",
+ jp:"レストランに予約の電話をしました。「7時に2名で予約できますか？」と聞きました。店員は「すみません、7時は満席です。8時はいかがですか？」。それで8時に夕食をとることになりました。",
+ q:[["予約は何人分？",["1人","2人","3人","4人"],1],["結局何時に食事する？",["7時","7時半","8時","9時"],2]]},
+{t:"Birthday dinner", text:"Yesterday was my wife's birthday. We went to a nice Italian restaurant. The pasta was wonderful, and the staff brought a small cake with a candle. My wife was surprised and smiled a lot.",
+ jp:"昨日は妻の誕生日でした。素敵なイタリアンレストランへ行きました。パスタは最高で、スタッフがろうそく付きの小さなケーキを運んでくれました。妻は驚いて、たくさん笑顔になりました。",
+ q:[["何のお祝い？",["結婚記念日","妻の誕生日","昇進","引っ越し"],1],["スタッフが持ってきたのは？",["花","ワイン","ろうそく付きのケーキ","プレゼント"],2]]},
+{t:"Three months later", text:"I have studied English for three months. Now I can talk with customers from other countries at my cafe. Next year, I want to travel around Indonesia and speak Indonesian everywhere. Learning languages opens many doors.",
+ jp:"英語を3ヶ月勉強しました。今ではカフェで外国からのお客さんと話せます。来年はインドネシアを旅して、どこでもインドネシア語を話したい。語学はたくさんの扉を開いてくれます。",
+ q:[["今できるようになったことは？",["字幕なしで映画を見る","外国人のお客さんと話す","通訳の仕事","論文を書く"],1],["来年したいことは？",["留学する","インドネシアを旅して現地語を話す","店を増やす","英検を受ける"],1]]},
+],
+id: [
+{t:"Perkenalan（自己紹介）", text:"Halo, nama saya Ken. Saya orang Jepang. Saya tinggal di Tokyo. Saya belajar bahasa Indonesia.",
+ jp:"こんにちは、ケンです。日本人です。東京に住んでいます。インドネシア語を勉強しています。",
+ q:[["ケンはどこに住んでいる？",["ジャカルタ","東京","バリ","大阪"],1],["何を勉強している？",["英語","インドネシア語","中国語","韓国語"],1]]},
+{t:"Makanan（食べ物）", text:"Saya suka makanan Indonesia. Nasi goreng enak sekali. Saya juga suka mie goreng. Tapi saya tidak suka makanan yang terlalu pedas.",
+ jp:"インドネシア料理が好きです。ナシゴレンはとてもおいしい。ミーゴレンも好きです。でも辛すぎる料理は好きではありません。",
+ q:[["苦手なのは？",["甘いもの","辛すぎるもの","冷たいもの","苦いもの"],1],["好きな料理は？",["寿司","ナシゴレンとミーゴレン","サラダ","スープ"],1]]},
+{t:"Keluarga（家族）", text:"Keluarga saya ada empat orang: saya, istri saya, dan dua anak. Anak saya suka bermain di taman. Setiap hari Minggu, kami pergi ke taman bersama.",
+ jp:"私の家族は4人です。私、妻、子ども2人。子どもは公園で遊ぶのが好きです。毎週日曜日、一緒に公園へ行きます。",
+ q:[["家族は何人？",["2人","3人","4人","5人"],2],["日曜日はどこへ行く？",["海","公園","市場","学校"],1]]},
+{t:"Di pasar（市場で）", text:"Hari ini saya pergi ke pasar. Saya membeli buah dan sayur. Mangga di pasar murah dan manis. Saya membeli tiga mangga.",
+ jp:"今日は市場へ行きました。果物と野菜を買いました。市場のマンゴーは安くて甘い。マンゴーを3つ買いました。",
+ q:[["マンゴーはいくつ買った？",["1つ","2つ","3つ","4つ"],2],["市場のマンゴーは？",["高い","安くて甘い","すっぱい","売り切れ"],1]]},
+{t:"Cuaca（天気）", text:"Hari ini cuaca panas sekali. Kemarin hujan besar. Saya mau minum es teh di kafe. Besok saya akan pergi ke pantai.",
+ jp:"今日はとても暑い。昨日は大雨でした。カフェでアイスティーを飲みたい。明日はビーチへ行く予定です。",
+ q:[["昨日の天気は？",["晴れ","大雨","雪","強風"],1],["明日どこへ行く？",["山","ビーチ","市場","空港"],1]]},
+{t:"Rutinitas（日課）", text:"Saya bangun jam enam pagi. Saya minum kopi dan membaca berita. Lalu saya berjalan ke kantor. Dari rumah ke kantor dua puluh menit.",
+ jp:"朝6時に起きます。コーヒーを飲んでニュースを読みます。それから歩いて会社へ行きます。家から会社まで20分です。",
+ q:[["何時に起きる？",["5時","6時","7時","8時"],1],["会社まで何分？",["10分","15分","20分","30分"],2]]},
+{t:"Teman baru（新しい友達）", text:"Kemarin saya bertemu teman baru dari Bali. Nama dia Made. Dia bekerja di restoran Jepang. Kami berbicara bahasa Indonesia dan bahasa Jepang.",
+ jp:"昨日、バリ出身の新しい友達に会いました。名前はマデ。日本食レストランで働いています。私たちはインドネシア語と日本語で話しました。",
+ q:[["新しい友達の出身は？",["ジャカルタ","バリ","スラバヤ","東京"],1],["マデの仕事は？",["ホテル","日本食レストラン","学校","市場"],1]]},
+{t:"Belanja（買い物）", text:"Saya mau membeli baju baru. Baju putih itu bagus, tapi mahal. Saya bertanya, 'Berapa harganya?' Ada diskon, jadi saya membeli baju itu.",
+ jp:"新しい服を買いたいです。あの白い服は素敵だけど高い。「いくらですか？」と聞きました。割引があったので、その服を買いました。",
+ q:[["何を買いたい？",["靴","かばん","服","帽子"],2],["なぜ買えた？",["安かったから","割引があったから","友達が払ったから","買わなかった"],1]]},
+{t:"Liburan（休暇）", text:"Bulan depan saya akan pergi ke Bali. Saya mau melihat pantai dan gunung. Saya juga mau makan makanan lokal. Saya sudah membeli tiket pesawat.",
+ jp:"来月バリへ行きます。ビーチと山を見たい。地元の料理も食べたい。飛行機のチケットはもう買いました。",
+ q:[["いつバリへ行く？",["今週","来週","来月","来年"],2],["もう買ったものは？",["ホテル","飛行機のチケット","地図","かばん"],1]]},
+{t:"Di restoran（レストランで）", text:"Selamat malam. Saya mau pesan nasi goreng dan es teh. Tidak terlalu pedas, ya. Terima kasih.",
+ jp:"こんばんは。ナシゴレンとアイスティーを注文したいです。あまり辛くしないでくださいね。ありがとう。",
+ q:[["注文したのは？",["ミーゴレンとコーヒー","ナシゴレンとアイスティー","サテと水","スープ"],1],["お願いしたことは？",["早くして","あまり辛くしないで","大盛りで","持ち帰りで"],1]]},
+{t:"Bekerja（仕事）", text:"Saya bekerja di kafe kecil. Setiap hari saya membuat kopi. Kadang-kadang ada tamu dari Indonesia. Saya senang bisa berbicara bahasa Indonesia dengan mereka.",
+ jp:"小さなカフェで働いています。毎日コーヒーを淹れます。時々インドネシアからのお客さんが来ます。彼らとインドネシア語で話せてうれしいです。",
+ q:[["毎日何を作る？",["ケーキ","コーヒー","パン","ジュース"],1],["何がうれしい？",["給料が高い","休みが多い","インドネシア語で話せる","店が大きい"],2]]},
+{t:"Tiga bulan（3ヶ月）", text:"Saya sudah belajar bahasa Indonesia selama tiga bulan. Sekarang saya bisa berbicara sedikit. Bahasa Indonesia tidak terlalu sulit. Saya mau terus belajar setiap hari.",
+ jp:"インドネシア語を3ヶ月勉強しました。今は少し話せます。インドネシア語はそれほど難しくありません。毎日学習を続けたいです。",
+ q:[["どのくらい勉強した？",["1ヶ月","3ヶ月","半年","1年"],1],["筆者はどう感じている？",["難しすぎる","それほど難しくない","つまらない","もうやめたい"],1]]},
+],
+};
+
+/* 90日・週別ロードマップ */
 const ROADMAP = [
-["基礎固め","あいさつと基本表現を両言語で身につける"],
-["日常動詞","毎日の行動を英語とインドネシア語で言えるように"],
-["気持ちを伝える","感情・形容詞の表現を増やす"],
-["食事を楽しむ","レストランや食べ物の語彙をマスター"],
-["旅行の準備","移動・宿泊・道案内の表現を覚える"],
-["復習月間","前半の総復習。忘れかけの単語を潰す"],
-["会話力アップ","質問と受け答えのフレーズを強化"],
-["仕事で使う","ビジネス基本表現（英語中心）に挑戦"],
-["数字と時間","買い物・予定の表現をスムーズに"],
-["長い文に挑戦","覚えたフレーズを組み合わせて話す"],
-["実践月間","音声を聞いてすぐ声に出す練習を強化"],
-["総仕上げ","1年の総復習。全単語マスターを目指す"],
+["あいさつ・自己紹介","出会いの表現を反射で言えるように"],
+["基本動詞と語順","「誰が何をする」を両言語で作れるように"],
+["質問する力","疑問文で会話を自分から始める"],
+["数字・お金・買い物","値段のやり取りができるように"],
+["食事・注文","レストランで困らないように"],
+["過去を話す","昨日あったことを説明できるように"],
+["予定と未来","明日の予定を話せるように"],
+["移動・道案内","旅先で自力で移動できるように"],
+["気持ちと意見","感想をひと言添えられるように"],
+["依頼・お願い","人にものを頼めるように"],
+["会話をつなぐ","あいづち・聞き返しで会話を続ける"],
+["総仕上げ","日常会話の実戦テスト。全単語の総復習"],
 ];
 
 const BADGES = [
-["はじめの一歩", s => totalDone(s) >= 1],
+["はじめの一歩", s => totalCards(s) >= 1],
 ["3日連続", s => s.bestStreak >= 3],
 ["7日連続", s => s.bestStreak >= 7],
-["30日連続", s => s.bestStreak >= 30],
-["100日連続", s => s.bestStreak >= 100],
-["365日連続", s => s.bestStreak >= 365],
-["10語マスター", s => masteredCount() >= 10],
-["50語マスター", s => masteredCount() >= 50],
+["21日連続", s => s.bestStreak >= 21],
+["45日連続", s => s.bestStreak >= 45],
+["90日完走", s => s.bestStreak >= 90],
+["パーフェクト10日", s => perfectDays(s) >= 10],
 ["100語マスター", s => masteredCount() >= 100],
-["200語マスター", s => masteredCount() >= 200],
-["レベル5到達", s => level(s.xp) >= 5],
-["レベル10到達", s => level(s.xp) >= 10],
+["300語マスター", s => masteredCount() >= 300],
+["文法30課修了", s => s.gram.en.next >= GRAMMAR.en.length && s.gram.id.next >= GRAMMAR.id.length],
+["読破24本", s => s.read.en + s.read.id >= 24],
+["レベル20到達", s => level(s.xp) >= 20],
 ];
 
 const INTERVALS = [0, 1, 3, 7, 14, 30, 60, 120]; // box → 日数
 const LANG_NAME = { en: 'English', id: 'Indonesia' };
+const LANG_JP = { en: '英語', id: 'インドネシア語' };
 
 /* =====================================================
    状態管理
 ===================================================== */
-const KEY = 'mignon-lingo-v1';
+const KEY = 'mignon-lingo-v2';
+const OLD_KEY = 'mignon-lingo-v1';
 let state = load();
 
-function load() {
-  try {
-    const s = JSON.parse(localStorage.getItem(KEY));
-    if (s && s.startDate) return s;
-  } catch (e) {}
+function freshState() {
   return {
     startDate: todayStr(),
     xp: 0,
@@ -493,11 +776,39 @@ function load() {
     bestStreak: 0,
     lastGoalDate: null,
     srs: {},           // id -> {box, due, reps, lapses}
-    log: {},           // date -> {done, newEn, newId}
+    log: {},           // date -> {cards, newEn, newId, g, r, s}
+    gram: { en: { next: 0 }, id: { next: 0 } },
+    read: { en: 0, id: 0 },
     custom: [],        // [id, lang, word, meaning]
     customSeq: 0,
-    settings: { newPerDay: 5, dailyGoal: 20 },
+    settings: { newPerDay: 8, cardsGoal: 40, vocabLang: 'mix', rate: 0.95 },
   };
+}
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY));
+    if (s && s.startDate) return s;
+  } catch (e) {}
+  // v1からの引き継ぎ
+  try {
+    const old = JSON.parse(localStorage.getItem(OLD_KEY));
+    if (old && old.startDate) {
+      const s = freshState();
+      s.startDate = old.startDate;
+      s.xp = old.xp || 0;
+      s.streak = old.streak || 0;
+      s.bestStreak = old.bestStreak || 0;
+      s.lastGoalDate = old.lastGoalDate || null;
+      s.srs = old.srs || {};
+      s.custom = old.custom || [];
+      s.customSeq = old.customSeq || 0;
+      Object.keys(old.log || {}).forEach(d => {
+        s.log[d] = { cards: old.log[d].done || 0, newEn: old.log[d].newEn || 0, newId: old.log[d].newId || 0, g: false, r: false, s: false };
+      });
+      return s;
+    }
+  } catch (e) {}
+  return freshState();
 }
 function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
 
@@ -508,16 +819,22 @@ function todayStr(offset = 0) {
 }
 function dayNumber() {
   const ms = new Date(todayStr()) - new Date(state.startDate);
-  return Math.min(365, Math.floor(ms / 86400000) + 1);
+  return Math.floor(ms / 86400000) + 1;
 }
 function todayLog() {
   const t = todayStr();
-  if (!state.log[t]) state.log[t] = { done: 0, newEn: 0, newId: 0 };
+  if (!state.log[t]) state.log[t] = { cards: 0, newEn: 0, newId: 0, g: false, r: false, s: false };
   return state.log[t];
 }
 function level(xp) { return Math.floor(Math.sqrt(xp / 60)) + 1; }
 function xpForLevel(lv) { return (lv - 1) * (lv - 1) * 60; }
-function totalDone(s) { return Object.values(s.log).reduce((a, d) => a + d.done, 0); }
+function totalCards(s) { return Object.values(s.log).reduce((a, d) => a + (d.cards || 0), 0); }
+function perfectDays(s) {
+  return Object.values(s.log).filter(d => d.cards >= s.settings.cardsGoal && d.g && d.r && d.s).length;
+}
+/* 今日の文法・リーディングの言語（毎日交互、両言語に毎日触れる） */
+function grammarLangToday() { return dayNumber() % 2 === 1 ? 'en' : 'id'; }
+function readingLangToday() { return dayNumber() % 2 === 1 ? 'id' : 'en'; }
 
 /* 全カード（内蔵 + カスタム） */
 function allCards() {
@@ -563,7 +880,12 @@ function showView(name) {
   if (name === 'record') renderRecord();
   window.scrollTo(0, 0);
 }
-
+function showStudyView() {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-study').classList.add('active');
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('on'));
+  window.scrollTo(0, 0);
+}
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -573,72 +895,125 @@ function esc(s) {
 ===================================================== */
 function renderHome() {
   const day = dayNumber();
-  const month = Math.min(11, Math.floor((day - 1) / 30.5));
-  const theme = ROADMAP[month];
+  const week = Math.min(11, Math.floor((day - 1) / 7));
+  const theme = ROADMAP[week];
   const log = todayLog();
-  const goal = state.settings.dailyGoal;
-  const pct = Math.min(100, Math.round(log.done / goal * 100));
+  const goal = state.settings.cardsGoal;
+  const vocabDone = log.cards >= goal;
+  const allDone = vocabDone && log.g && log.r && log.s;
+  const doneCount = [vocabDone, log.g, log.r, log.s].filter(Boolean).length;
 
-  const dueEn = dueCards('en').length, dueId = dueCards('id').length;
-  const newEn = Math.min(newRemainingToday('en'), newCards('en').length);
-  const newId = Math.min(newRemainingToday('id'), newCards('id').length);
+  const gLang = grammarLangToday(), rLang = readingLangToday();
+  const dueAll = dueCards('mix').length;
 
   document.getElementById('view-home').innerHTML = `
     <div class="section">
       <div class="day-row">
-        <div class="day-num">Day ${day} <small>/ 365</small></div>
+        <div class="day-num">Day ${day}${day <= 90 ? ' <small>/ 90</small>' : ''}</div>
         <div class="streak-num"><b>${state.streak}</b><br>days streak</div>
       </div>
-      <div class="hairbar"><div style="width:${(day/365*100).toFixed(1)}%"></div></div>
-      <div class="note">${month + 1}ヶ月目のテーマ <b>「${theme[0]}」</b><br>${theme[1]}</div>
+      <div class="hairbar"><div style="width:${Math.min(100, day/90*100).toFixed(1)}%"></div></div>
+      <div class="note">第${week + 1}週テーマ <b>「${theme[0]}」</b><br>${theme[1]}</div>
     </div>
 
     <div class="section">
-      <div class="section-title">Today</div>
-      <div class="today-row">
-        <div class="today-count">${log.done} <small>/ ${goal}</small></div>
-        <div class="today-msg ${pct >= 100 ? 'done' : ''}">${pct >= 100 ? '本日の目標達成' : 'あと' + (goal - log.done) + '枚'}</div>
+      <div class="section-title">Today's Program <small>約60分・${doneCount}/4</small></div>
+      <div class="task-list">
+        <button class="task-row ${vocabDone ? 'donetask' : ''}" onclick="startSession(state.settings.vocabLang)">
+          <span class="nm">単語トレーニング<small>SRS復習＋新規 — 約25分</small></span>
+          <span class="st">${vocabDone ? '完了' : `<b>${log.cards}</b> / ${goal}枚${dueAll > 0 ? `<br>復習待ち ${dueAll}` : ''}`}</span>
+        </button>
+        <button class="task-row ${log.g ? 'donetask' : ''}" onclick="startGrammar('${gLang}')">
+          <span class="nm">文法レッスン<small>1課＋確認クイズ — 約15分</small></span>
+          <span class="st">${log.g ? '完了' : `<b>本日: ${LANG_JP[gLang]}</b>`}</span>
+        </button>
+        <button class="task-row ${log.r ? 'donetask' : ''}" onclick="startReading('${rLang}')">
+          <span class="nm">リーディング<small>短文読解＋設問 — 約10分</small></span>
+          <span class="st">${log.r ? '完了' : `<b>本日: ${LANG_JP[rLang]}</b>`}</span>
+        </button>
+        <button class="task-row ${log.s ? 'donetask' : ''}" onclick="startSpeaking()">
+          <span class="nm">音読・スピーキング<small>フレーズ10本を声に出す — 約10分</small></span>
+          <span class="st">${log.s ? '完了' : '<b>EN 5 + ID 5</b>'}</span>
+        </button>
       </div>
-      <div class="hairbar"><div style="width:${pct}%"></div></div>
+      ${allDone ? '<div class="alldone">本日のプログラム完了。よくやりました。</div>' : ''}
     </div>
 
     <div class="section">
-      <div class="section-title">Learn</div>
-      <div class="lang-list">
-        <button class="lang-row" onclick="startSession('en')">
-          <span class="nm">英語<small>English</small></span>
-          <span class="ct">復習 ${dueEn}　新規 ${newEn}</span>
-        </button>
-        <button class="lang-row" onclick="startSession('id')">
-          <span class="nm">インドネシア語<small>Bahasa Indonesia</small></span>
-          <span class="ct">復習 ${dueId}　新規 ${newId}</span>
-        </button>
-        <button class="lang-row" onclick="startSession('mix')">
-          <span class="nm">ミックス<small>Mix</small></span>
-          <span class="ct">復習 ${dueEn+dueId}　新規 ${newEn+newId}</span>
-        </button>
+      <div class="section-title">Extra <small>追加でやり込む</small></div>
+      <div class="chip-row">
+        <button class="chip" onclick="startSession('en')">単語: 英語のみ</button>
+        <button class="chip" onclick="startSession('id')">単語: インドネシア語のみ</button>
+        <button class="chip" onclick="startGrammar('${gLang === 'en' ? 'id' : 'en'}')">文法: もう1課</button>
+        <button class="chip" onclick="startReading('${rLang === 'en' ? 'id' : 'en'}')">読解: もう1本</button>
       </div>
     </div>
 
     <div class="section">
       <div class="section-title">Settings</div>
       <div class="set-row">
-        <span>1日の新しい単語（言語ごと）</span>
-        <select onchange="state.settings.newPerDay=Number(this.value);save();renderHome()">
-          ${[3,5,8,12].map(n => `<option value="${n}" ${state.settings.newPerDay===n?'selected':''}>${n}語</option>`).join('')}
+        <span>1日の目標カード数</span>
+        <select onchange="state.settings.cardsGoal=Number(this.value);save();renderHome()">
+          ${[20,40,60,80].map(n => `<option value="${n}" ${state.settings.cardsGoal===n?'selected':''}>${n}枚</option>`).join('')}
         </select>
       </div>
       <div class="set-row">
-        <span>1日の目標カード数</span>
-        <select onchange="state.settings.dailyGoal=Number(this.value);save();renderHome()">
-          ${[10,20,30,50].map(n => `<option value="${n}" ${state.settings.dailyGoal===n?'selected':''}>${n}枚</option>`).join('')}
+        <span>1日の新しい単語（言語ごと）</span>
+        <select onchange="state.settings.newPerDay=Number(this.value);save();renderHome()">
+          ${[5,8,12,16].map(n => `<option value="${n}" ${state.settings.newPerDay===n?'selected':''}>${n}語</option>`).join('')}
+        </select>
+      </div>
+      <div class="set-row">
+        <span>単語トレーニングの言語</span>
+        <select onchange="state.settings.vocabLang=this.value;save();renderHome()">
+          ${[['mix','ミックス'],['en','英語'],['id','インドネシア語']].map(([v,l]) => `<option value="${v}" ${state.settings.vocabLang===v?'selected':''}>${l}</option>`).join('')}
+        </select>
+      </div>
+      <div class="set-row">
+        <span>音声の速さ</span>
+        <select onchange="state.settings.rate=Number(this.value);save()">
+          ${[[0.7,'ゆっくり'],[0.85,'すこしゆっくり'],[0.95,'ふつう'],[1.1,'はやい']].map(([v,l]) => `<option value="${v}" ${state.settings.rate===v?'selected':''}>${l}</option>`).join('')}
         </select>
       </div>
     </div>`;
 }
 
 /* =====================================================
-   学習セッション
+   タスク共通
+===================================================== */
+function completeTask(flag, xp) {
+  const log = todayLog();
+  const first = !log[flag];
+  log[flag] = true;
+  state.xp += xp;
+  checkGoalAndStreak();
+  save();
+  return first;
+}
+function checkGoalAndStreak() {
+  const t = todayStr();
+  const log = todayLog();
+  const allDone = log.cards >= state.settings.cardsGoal && log.g && log.r && log.s;
+  if (allDone && state.lastGoalDate !== t) {
+    if (state.lastGoalDate === todayStr(-1)) state.streak++;
+    else state.streak = 1;
+    state.bestStreak = Math.max(state.bestStreak, state.streak);
+    state.lastGoalDate = t;
+    state.xp += 30;
+    toast(`本日の全タスク完了 — ${state.streak}日連続`);
+  }
+}
+function studyHeader(label, current, total) {
+  return `
+    <div class="study-top">
+      <span>${label}${total ? `　${current} / ${total}` : ''}</span>
+      <button onclick="showView('home')">中断</button>
+    </div>
+    <div class="qline"><div style="width:${total ? Math.round((current-1)/total*100) : 0}%"></div></div>`;
+}
+
+/* =====================================================
+   1. 単語トレーニング（SRS）
 ===================================================== */
 let session = null;
 
@@ -653,15 +1028,12 @@ function startSession(lang) {
   }
   const queue = due.concat(shuffle(news));
   if (queue.length === 0) {
-    toast('今日の分は完了しました。また明日。');
+    toast('復習も新規もありません。明日また復習カードが届きます');
     return;
   }
   session = { lang, queue, index: 0, total: queue.length, xpGain: 0, correct: 0, revealed: false };
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('on'));
+  showStudyView();
   showStudyCard();
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-study').classList.add('active');
-  window.scrollTo(0, 0);
 }
 
 function showStudyCard() {
@@ -671,8 +1043,6 @@ function showStudyCard() {
   const card = session.queue[session.index];
   const rec = state.srs[card.id];
   const isNew = !rec;
-  const progress = Math.round(session.index / session.queue.length * 100);
-  // 一度以上正解しているカードは時々4択に（定着チェック）
   const asQuiz = rec && rec.reps >= 1 && Math.random() < 0.5;
 
   let cardHtml;
@@ -680,7 +1050,7 @@ function showStudyCard() {
     const pool = allCards().filter(c => c.lang === card.lang && c.id !== card.id);
     const choices = shuffle([card].concat(shuffle(pool).slice(0, 3)));
     cardHtml = `
-      <div class="flashcard" style="min-height:200px;padding-bottom:30px">
+      <div class="flashcard" style="min-height:190px;padding-bottom:28px">
         <div class="lang-tag">${LANG_NAME[card.lang]}</div>
         <div class="word q">「${esc(card.meaning)}」は？</div>
       </div>
@@ -700,14 +1070,7 @@ function showStudyCard() {
       </div>`;
   }
 
-  v.innerHTML = `
-    <div class="study-top">
-      <span>${session.index + 1} / ${session.queue.length}</span>
-      <button onclick="quitSession()">中断</button>
-    </div>
-    <div class="qline"><div style="width:${progress}%"></div></div>
-    ${cardHtml}`;
-
+  v.innerHTML = studyHeader('単語', session.index + 1, session.queue.length) + cardHtml;
   if (!asQuiz) speak(card.id);
   session.revealed = false;
 }
@@ -745,7 +1108,6 @@ function grade(rating, silent) {
     rec.box = 1;
     rec.lapses++;
     rec.due = todayStr();
-    // セッション内で数枚あとに再出題
     session.queue.splice(Math.min(session.index + 3, session.queue.length), 0, card);
   } else if (rating === 'hard') {
     rec.box = Math.max(1, rec.box);
@@ -759,7 +1121,7 @@ function grade(rating, silent) {
   state.srs[card.id] = rec;
 
   const log = todayLog();
-  log.done++;
+  log.cards++;
   if (wasNew) { card.lang === 'en' ? log.newEn++ : log.newId++; }
   session.xpGain += 5;
   state.xp += rating === 'again' ? 2 : 5;
@@ -770,34 +1132,217 @@ function grade(rating, silent) {
   showStudyCard();
 }
 
-function checkGoalAndStreak() {
-  const t = todayStr();
-  if (todayLog().done >= state.settings.dailyGoal && state.lastGoalDate !== t) {
-    if (state.lastGoalDate === todayStr(-1)) state.streak++;
-    else state.streak = 1;
-    state.bestStreak = Math.max(state.bestStreak, state.streak);
-    state.lastGoalDate = t;
-    toast(`本日の目標達成 — ${state.streak}日連続`);
-  }
-}
-
 function finishSession() {
   const acc = session.total ? Math.round(session.correct / session.total * 100) : 0;
-  state.xp += 15; // セッション完了ボーナス
+  state.xp += 15;
   save();
+  const log = todayLog();
+  const remaining = Math.max(0, state.settings.cardsGoal - log.cards);
   document.getElementById('view-study').innerHTML = `
     <div class="done-card">
       <div class="ttl">Complete</div>
-      <p>${session.total}枚のカードを学習しました<br>正答率 ${acc}%</p>
+      <p>${session.total}枚のカードを学習しました　正答率 ${acc}%<br>${remaining > 0 ? `本日の目標まであと${remaining}枚` : '本日の単語ノルマ達成'}</p>
       <div class="xp-gain">+ ${session.xpGain + 15} XP</div>
-      <button class="primary-btn" onclick="showView('home')">ホームへ</button>
+      <div class="center-row">
+        ${remaining > 0 ? `<button class="primary-btn" onclick="startSession(state.settings.vocabLang)">続けて学習</button><br>` : ''}
+        <button class="${remaining > 0 ? 'ghost-btn' : 'primary-btn'}" onclick="showView('home')">ホームへ</button>
+      </div>
     </div>`;
   session = null;
 }
 
-function quitSession() {
-  session = null;
-  showView('home');
+/* =====================================================
+   2. 文法レッスン
+===================================================== */
+let gsession = null;
+
+function startGrammar(lang) {
+  const lessons = GRAMMAR[lang];
+  const idx = state.gram[lang].next;
+  const isReview = idx >= lessons.length;
+  const lesson = isReview ? lessons[Math.floor(Math.random() * lessons.length)] : lessons[idx];
+  gsession = { lang, lesson, isReview, lessonNo: isReview ? null : idx + 1, qIndex: 0, correct: 0 };
+  showStudyView();
+  renderLessonIntro();
+}
+
+function renderLessonIntro() {
+  const g = gsession;
+  document.getElementById('view-study').innerHTML =
+    studyHeader(`文法 — ${LANG_JP[g.lang]}`, 0, 0) + `
+    <div class="lesson-head">
+      <div class="lt">${g.isReview ? 'Review' : 'Lesson ' + g.lessonNo + ' / ' + GRAMMAR[g.lang].length}</div>
+      <h3>${esc(g.lesson.t)}</h3>
+      <div class="lesson-exp">${esc(g.lesson.e)}</div>
+    </div>
+    <div style="margin-top:28px">
+      ${g.lesson.ex.map((e, i) => `
+        <div class="example">
+          <div><div class="t">${esc(e[0])}</div><div class="j">${esc(e[1])}</div></div>
+          <button class="pl" onclick="speakText(${JSON.stringify(e[0]).replace(/"/g,'&quot;')}, '${g.lang}')">&#9654;</button>
+        </div>`).join('')}
+    </div>
+    <div class="center-row">
+      <button class="primary-btn" onclick="renderGrammarQ()">確認クイズへ</button>
+    </div>`;
+}
+
+function renderGrammarQ() {
+  const g = gsession;
+  if (g.qIndex >= g.lesson.q.length) { finishGrammar(); return; }
+  const [stem, choices, ans] = g.lesson.q[g.qIndex];
+  document.getElementById('view-study').innerHTML =
+    studyHeader(`文法 — ${LANG_JP[g.lang]}`, g.qIndex + 1, g.lesson.q.length) + `
+    <div class="q-stem"><small>QUESTION ${g.qIndex + 1}</small>${esc(stem)}</div>
+    <div>${choices.map((c, i) => `<button class="choice-btn" data-i="${i}" onclick="answerGrammar(this, ${ans})">${esc(c)}</button>`).join('')}</div>`;
+}
+
+function answerGrammar(btn, ans) {
+  document.querySelectorAll('.choice-btn').forEach(b => {
+    b.disabled = true;
+    if (Number(b.dataset.i) === ans) b.classList.add('correct');
+  });
+  const ok = Number(btn.dataset.i) === ans;
+  if (!ok) btn.classList.add('wrong');
+  if (ok) gsession.correct++;
+  setTimeout(() => { gsession.qIndex++; renderGrammarQ(); }, ok ? 700 : 1500);
+}
+
+function finishGrammar() {
+  const g = gsession;
+  if (!g.isReview) state.gram[g.lang].next++;
+  completeTask('g', 20);
+  const total = g.lesson.q.length;
+  document.getElementById('view-study').innerHTML = `
+    <div class="done-card">
+      <div class="ttl">Grammar Complete</div>
+      <p>「${esc(g.lesson.t)}」<br>クイズ ${g.correct} / ${total} 正解${g.correct < total ? '　—　間違えた形はもう一度例文を音読しましょう' : ''}</p>
+      <div class="xp-gain">+ 20 XP</div>
+      <div class="center-row">
+        <button class="primary-btn" onclick="showView('home')">ホームへ</button><br>
+        <button class="ghost-btn" onclick="startGrammar('${g.lang === 'en' ? 'id' : 'en'}')">もう1課（${LANG_JP[g.lang === 'en' ? 'id' : 'en']}）</button>
+      </div>
+    </div>`;
+  gsession = null;
+}
+
+/* =====================================================
+   3. リーディング
+===================================================== */
+let rsession = null;
+
+function startReading(lang) {
+  const list = READINGS[lang];
+  const idx = state.read[lang] % list.length;
+  rsession = { lang, passage: list[idx], no: state.read[lang] + 1, qIndex: 0, correct: 0 };
+  showStudyView();
+  renderPassage();
+}
+
+function renderPassage() {
+  const r = rsession;
+  document.getElementById('view-study').innerHTML =
+    studyHeader(`読解 — ${LANG_JP[r.lang]}`, 0, 0) + `
+    <div class="lesson-head">
+      <div class="lt">Reading</div>
+      <h3>${esc(r.passage.t)}</h3>
+    </div>
+    <div class="passage">${esc(r.passage.text)}</div>
+    <button class="speak-btn" style="margin:10px 0 0" onclick="speakText(${JSON.stringify(rsession.passage.text).replace(/"/g,'&quot;')}, '${r.lang}')">&#9654;</button>
+    <div class="note">まず日本語を見ずに読み、音声でも聞いてみましょう。<br>意味がつかめたら設問へ。</div>
+    <div class="center-row">
+      <button class="primary-btn" onclick="renderReadingQ()">設問へ</button>
+    </div>`;
+}
+
+function renderReadingQ() {
+  const r = rsession;
+  if (r.qIndex >= r.passage.q.length) { finishReading(); return; }
+  const [stem, choices, ans] = r.passage.q[r.qIndex];
+  document.getElementById('view-study').innerHTML =
+    studyHeader(`読解 — ${LANG_JP[r.lang]}`, r.qIndex + 1, r.passage.q.length) + `
+    <div class="passage" style="font-size:0.85rem;line-height:2;color:var(--text)">${esc(r.passage.text)}</div>
+    <div class="q-stem" style="padding-top:24px"><small>QUESTION ${r.qIndex + 1}</small>${esc(stem)}</div>
+    <div>${choices.map((c, i) => `<button class="choice-btn" data-i="${i}" onclick="answerReading(this, ${ans})">${esc(c)}</button>`).join('')}</div>`;
+}
+
+function answerReading(btn, ans) {
+  document.querySelectorAll('.choice-btn').forEach(b => {
+    b.disabled = true;
+    if (Number(b.dataset.i) === ans) b.classList.add('correct');
+  });
+  const ok = Number(btn.dataset.i) === ans;
+  if (!ok) btn.classList.add('wrong');
+  if (ok) rsession.correct++;
+  setTimeout(() => { rsession.qIndex++; renderReadingQ(); }, ok ? 700 : 1500);
+}
+
+function finishReading() {
+  const r = rsession;
+  state.read[r.lang]++;
+  completeTask('r', 15);
+  document.getElementById('view-study').innerHTML = `
+    <div class="done-card" style="padding-top:40px">
+      <div class="ttl">Reading Complete</div>
+      <p>設問 ${r.correct} / ${r.passage.q.length} 正解</p>
+      <div class="passage" style="text-align:left">${esc(r.passage.text)}</div>
+      <div class="passage-jp" style="text-align:left">${esc(r.passage.jp)}</div>
+      <p style="margin-top:8px">訳を確認したら、もう一度音声を聞いて音読すると効果的です。</p>
+      <div class="xp-gain">+ 15 XP</div>
+      <div class="center-row">
+        <button class="primary-btn" onclick="showView('home')">ホームへ</button><br>
+        <button class="ghost-btn" onclick="startReading('${r.lang === 'en' ? 'id' : 'en'}')">もう1本（${LANG_JP[r.lang === 'en' ? 'id' : 'en']}）</button>
+      </div>
+    </div>`;
+  rsession = null;
+}
+
+/* =====================================================
+   4. 音読・スピーキング
+===================================================== */
+let ssession = null;
+
+function startSpeaking() {
+  const phrases = lang => shuffle(allCards().filter(c =>
+    c.lang === lang && (c.word.includes(' ') || /[?!.]$/.test(c.word))
+  )).slice(0, 5);
+  const queue = shuffle(phrases('en').concat(phrases('id')));
+  if (queue.length === 0) { toast('フレーズがありません'); return; }
+  ssession = { queue, index: 0 };
+  showStudyView();
+  showSpeakCard();
+}
+
+function showSpeakCard() {
+  const s = ssession;
+  if (s.index >= s.queue.length) { finishSpeaking(); return; }
+  const card = s.queue[s.index];
+  document.getElementById('view-study').innerHTML =
+    studyHeader('音読', s.index + 1, s.queue.length) + `
+    <div class="flashcard">
+      <div class="lang-tag">${LANG_NAME[card.lang]}</div>
+      <div class="word">${esc(card.word)}</div>
+      <div class="meaning" style="visibility:visible">${esc(card.meaning)}</div>
+      <button class="speak-btn" onclick="speak('${card.id}')">&#9654;</button>
+      <div class="note" style="text-align:center">音声を聞いて、同じように<b>声に出して</b>言ってみましょう。<br>口が覚えるまで2〜3回。</div>
+    </div>
+    <div class="btn-row">
+      <button class="abtn" onclick="speak('${card.id}')">もう一度聞く</button>
+      <button class="abtn good" onclick="ssession.index++;showSpeakCard()">言えた<small>次へ</small></button>
+    </div>`;
+  speak(card.id);
+}
+
+function finishSpeaking() {
+  completeTask('s', 10);
+  document.getElementById('view-study').innerHTML = `
+    <div class="done-card">
+      <div class="ttl">Speaking Complete</div>
+      <p>10フレーズを音読しました。<br>声に出した分だけ、会話で口から出るようになります。</p>
+      <div class="xp-gain">+ 10 XP</div>
+      <div class="center-row"><button class="primary-btn" onclick="showView('home')">ホームへ</button></div>
+    </div>`;
+  ssession = null;
 }
 
 /* =====================================================
@@ -830,7 +1375,7 @@ function renderWords() {
       ${cats.map(c => `<button class="chip ${wordFilter.cat===c?'on':''}" onclick="wordFilter.cat='${esc(c)}';renderWords()">${esc(c)}</button>`).join('')}
     </div>
 
-    <div class="legend">○ 未学習　◐ 学習中　● マスター　—　${cards.length}語</div>
+    <div class="legend">○ 未学習　◐ 学習中　● マスター　—　${cards.length}語　（タップで発音）</div>
     <div>
     ${cards.map(c => `
       <div class="word-item" onclick="speak('${c.id}')">
@@ -868,9 +1413,9 @@ function renderRecord() {
   const cur = xpForLevel(lv), next = xpForLevel(lv + 1);
   const lvPct = Math.round((state.xp - cur) / (next - cur) * 100);
   const day = dayNumber();
-  const month = Math.min(11, Math.floor((day - 1) / 30.5));
-  const studiedDays = Object.keys(state.log).filter(d => state.log[d].done > 0).length;
-  const started = Object.keys(state.srs).length;
+  const week = Math.min(11, Math.floor((day - 1) / 7));
+  const studiedDays = Object.keys(state.log).filter(d => state.log[d].cards > 0 || state.log[d].g || state.log[d].r || state.log[d].s).length;
+  const gramDone = Math.min(state.gram.en.next, GRAMMAR.en.length) + Math.min(state.gram.id.next, GRAMMAR.id.length);
 
   document.getElementById('view-record').innerHTML = `
     <div class="section">
@@ -884,10 +1429,13 @@ function renderRecord() {
       <div class="stat-grid">
         <div class="stat"><div class="v">${state.streak}</div><div class="k">連続日数</div></div>
         <div class="stat"><div class="v">${state.bestStreak}</div><div class="k">最長記録</div></div>
+        <div class="stat"><div class="v">${perfectDays(state)}</div><div class="k">全タスク完了日</div></div>
         <div class="stat"><div class="v">${studiedDays}</div><div class="k">学習日数</div></div>
-        <div class="stat"><div class="v">${started}</div><div class="k">学習した単語</div></div>
-        <div class="stat"><div class="v">${masteredCount()}</div><div class="k">マスター</div></div>
-        <div class="stat"><div class="v">${totalDone(state)}</div><div class="k">累計カード</div></div>
+        <div class="stat"><div class="v">${masteredCount()}</div><div class="k">マスター単語</div></div>
+        <div class="stat"><div class="v">${totalCards(state)}</div><div class="k">累計カード</div></div>
+        <div class="stat"><div class="v">${gramDone}<span style="font-size:0.7rem;color:var(--sub)"> / ${GRAMMAR.en.length + GRAMMAR.id.length}</span></div><div class="k">文法レッスン</div></div>
+        <div class="stat"><div class="v">${state.read.en + state.read.id}</div><div class="k">読んだ本文</div></div>
+        <div class="stat"><div class="v">${Object.keys(state.srs).length}</div><div class="k">学習した単語</div></div>
       </div>
     </div>
 
@@ -899,28 +1447,61 @@ function renderRecord() {
     </div>
 
     <div class="section">
-      <div class="section-title">Roadmap — 365 days</div>
+      <div class="section-title">Roadmap <small>90 days — 12 weeks</small></div>
       ${ROADMAP.map((r, i) => `
-        <div class="roadmap-item ${i === month ? 'now' : ''}">
-          <span class="mo">${i + 1}ヶ月目</span>
+        <div class="roadmap-item ${i === week ? 'now' : ''}">
+          <span class="mo">第${i + 1}週</span>
           <span class="tx"><b>${r[0]}</b><small>${r[1]}</small></span>
         </div>`).join('')}
     </div>`;
 }
 
 /* =====================================================
-   ユーティリティ
+   音声（TTS）
 ===================================================== */
-function speak(id) {
-  const card = cardById(id);
-  if (!card || !window.speechSynthesis) return;
+let VOICES = [];
+function refreshVoices() {
+  if (window.speechSynthesis) VOICES = speechSynthesis.getVoices() || [];
+}
+if (window.speechSynthesis) {
+  refreshVoices();
+  speechSynthesis.onvoiceschanged = refreshVoices;
+}
+function pickVoice(lang) {
+  if (!VOICES.length) refreshVoices();
+  const targets = lang === 'en' ? ['en-us', 'en-gb', 'en'] : ['id-id', 'id', 'ms-my', 'ms'];
+  for (const t of targets) {
+    // ローカル音声を優先（品質が安定しやすい）
+    const match = v => v.lang && v.lang.replace('_', '-').toLowerCase().startsWith(t);
+    const v = VOICES.find(v => match(v) && v.localService) || VOICES.find(match);
+    if (v) return v;
+  }
+  return null;
+}
+let idVoiceWarned = false;
+function speakText(text, lang) {
+  if (!window.speechSynthesis) return;
   speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(card.word.replace(/\.\.\./g, ''));
-  u.lang = card.lang === 'en' ? 'en-US' : 'id-ID';
-  u.rate = 0.9;
+  const u = new SpeechSynthesisUtterance(String(text).replace(/\.\.\./g, ' ').replace(/[「」]/g, ''));
+  const v = pickVoice(lang);
+  if (v) u.voice = v;
+  else if (lang === 'id' && !idVoiceWarned) {
+    idVoiceWarned = true;
+    toast('この端末にインドネシア語の音声がないため発音が不正確な場合があります');
+  }
+  u.lang = lang === 'en' ? 'en-US' : 'id-ID';
+  u.rate = state.settings.rate || 0.95;
+  u.pitch = 1;
   speechSynthesis.speak(u);
 }
+function speak(id) {
+  const card = cardById(id);
+  if (card) speakText(card.word, card.lang);
+}
 
+/* =====================================================
+   ユーティリティ
+===================================================== */
 function shuffle(arr) {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -936,7 +1517,7 @@ function toast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
 }
 
 /* 起動 */
