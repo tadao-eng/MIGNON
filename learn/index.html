@@ -3,149 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>MIGNON LINGO — 英語 × インドネシア語 1年チャレンジ</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700;900&display=swap" rel="stylesheet">
+<title>MIGNON LINGO</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --primary: #000033;
-  --accent: #FF6B4A;
-  --en: #2563EB;
-  --id: #DC2626;
-  --mix: #7C3AED;
-  --bg: #FAF7F2;
-  --card: #FFFFFF;
-  --text: #333333;
-  --sub: #999999;
-  --border: #EEE8E0;
-  --good: #16A34A;
-}
+:root { --primary: #000033; --bg: #FFFFFF; --text: #333333; --sub: #AAAAAA; --border: #E5E5E5; }
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'Inter','Noto Sans JP',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-#app { max-width: 520px; margin: 0 auto; padding: 0 16px 90px; }
+#app { max-width: 500px; margin: 0 auto; padding: 0 20px 110px; }
 
-header { text-align: center; padding: 28px 0 6px; }
-header h1 { font-weight: 300; letter-spacing: 0.35em; font-size: 0.95rem; color: var(--primary); text-transform: uppercase; }
-header .tagline { font-size: 0.65rem; color: var(--sub); letter-spacing: 0.15em; margin-top: 6px; }
+header { text-align: center; padding: 70px 0 10px; }
+header h1 { font-weight: 300; letter-spacing: 0.35em; font-size: 1rem; color: var(--primary); text-transform: uppercase; }
+header .tagline { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.25em; margin-top: 10px; text-transform: uppercase; }
 
 .view { display: none; }
-.view.active { display: block; animation: fadein .25s ease; }
-@keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.view.active { display: block; animation: fadein .3s ease; }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
 
-/* ---- cards ---- */
-.panel { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin-top: 14px; box-shadow: 0 2px 8px rgba(0,0,51,0.04); }
-.panel h2 { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; color: var(--primary); margin-bottom: 12px; }
+.section { padding: 36px 0; border-bottom: 1px solid var(--border); }
+.section:last-child { border-bottom: none; }
+.section-title { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.25em; color: var(--primary); text-transform: uppercase; margin-bottom: 22px; }
 
-/* ---- day banner ---- */
-.day-banner { display: flex; justify-content: space-between; align-items: center; }
-.day-banner .big { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
-.day-banner .big small { font-size: 0.8rem; font-weight: 400; color: var(--sub); }
-.streak { text-align: right; }
-.streak .flame { font-size: 1.4rem; }
-.streak .num { font-size: 1.3rem; font-weight: 800; color: var(--accent); }
-.streak .lbl { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.1em; }
-.yearbar { height: 8px; background: var(--border); border-radius: 4px; margin-top: 12px; overflow: hidden; }
-.yearbar > div { height: 100%; background: linear-gradient(90deg, var(--en), var(--mix), var(--id)); border-radius: 4px; transition: width .5s; }
-.theme-line { margin-top: 10px; font-size: 0.78rem; color: var(--text); }
-.theme-line b { color: var(--mix); }
+/* ---- home ---- */
+.day-row { display: flex; justify-content: space-between; align-items: baseline; }
+.day-num { font-size: 2.2rem; font-weight: 300; color: var(--primary); letter-spacing: 0.05em; }
+.day-num small { font-size: 0.8rem; color: var(--sub); font-weight: 300; letter-spacing: 0.1em; }
+.streak-num { font-size: 0.7rem; color: var(--primary); letter-spacing: 0.15em; text-align: right; }
+.streak-num b { font-size: 1.2rem; font-weight: 400; }
+.hairbar { height: 1px; background: var(--border); margin-top: 24px; position: relative; }
+.hairbar > div { position: absolute; top: -1px; left: 0; height: 3px; background: var(--primary); transition: width .5s; }
+.note { font-size: 0.72rem; color: var(--sub); margin-top: 18px; line-height: 1.9; }
+.note b { color: var(--text); font-weight: 400; }
 
-/* ---- goal ring ---- */
-.goal-row { display: flex; align-items: center; gap: 16px; }
-.ring { position: relative; width: 84px; height: 84px; flex-shrink: 0; }
-.ring svg { transform: rotate(-90deg); }
-.ring .pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; color: var(--primary); }
-.goal-info { font-size: 0.8rem; line-height: 1.7; }
-.goal-info b { color: var(--accent); }
+.today-row { display: flex; justify-content: space-between; align-items: baseline; }
+.today-count { font-size: 1.6rem; font-weight: 300; color: var(--primary); }
+.today-count small { font-size: 0.75rem; color: var(--sub); }
+.today-msg { font-size: 0.7rem; color: var(--sub); letter-spacing: 0.05em; }
+.today-msg.done { color: var(--primary); }
 
-/* ---- language buttons ---- */
-.lang-btn { display: flex; justify-content: space-between; align-items: center; width: 100%; border: none; border-radius: 16px; padding: 16px 18px; margin-top: 10px; cursor: pointer; color: white; font-family: inherit; text-align: left; transition: transform .1s; }
-.lang-btn:active { transform: scale(0.98); }
-.lang-btn.en { background: linear-gradient(135deg, #2563EB, #1D4ED8); }
-.lang-btn.id { background: linear-gradient(135deg, #DC2626, #B91C1C); }
-.lang-btn.mix { background: linear-gradient(135deg, #7C3AED, #6D28D9); }
-.lang-btn .name { font-size: 1rem; font-weight: 700; }
-.lang-btn .name small { display: block; font-size: 0.65rem; font-weight: 300; opacity: 0.85; margin-top: 3px; }
-.lang-btn .count { font-size: 0.7rem; background: rgba(255,255,255,0.2); padding: 6px 10px; border-radius: 10px; text-align: center; line-height: 1.5; }
+.lang-list { border-top: 1px solid var(--border); }
+.lang-row { display: flex; justify-content: space-between; align-items: center; width: 100%; background: none; border: none; border-bottom: 1px solid var(--border); padding: 22px 2px; cursor: pointer; font-family: inherit; text-align: left; }
+.lang-row:active { background: #FAFAFA; }
+.lang-row .nm { font-size: 0.9rem; color: var(--primary); font-weight: 400; letter-spacing: 0.05em; }
+.lang-row .nm small { display: block; font-size: 0.58rem; color: var(--sub); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 5px; }
+.lang-row .ct { font-size: 0.65rem; color: var(--sub); letter-spacing: 0.1em; text-align: right; line-height: 1.8; flex-shrink: 0; }
+
+.set-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; font-size: 0.78rem; color: var(--text); }
+.set-row select { border: none; border-bottom: 1px solid var(--border); padding: 6px 2px; font-family: inherit; background: transparent; font-size: 0.78rem; outline: none; color: var(--primary); border-radius: 0; }
 
 /* ---- study ---- */
-.study-top { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; font-size: 0.7rem; color: var(--sub); }
-.study-top button { background: none; border: none; color: var(--sub); font-size: 0.7rem; cursor: pointer; letter-spacing: 0.1em; font-family: inherit; }
-.qbar { height: 6px; background: var(--border); border-radius: 3px; margin-top: 8px; overflow: hidden; }
-.qbar > div { height: 100%; background: var(--accent); border-radius: 3px; transition: width .3s; }
+.study-top { display: flex; justify-content: space-between; align-items: center; padding-top: 26px; font-size: 0.65rem; color: var(--sub); letter-spacing: 0.15em; }
+.study-top button { background: none; border: none; color: var(--sub); font-size: 0.65rem; cursor: pointer; letter-spacing: 0.15em; font-family: inherit; padding: 4px; }
+.qline { height: 1px; background: var(--border); margin-top: 14px; position: relative; }
+.qline > div { position: absolute; top: 0; left: 0; height: 1px; background: var(--primary); transition: width .3s; }
 
-.flashcard { background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 40px 22px; margin-top: 16px; text-align: center; min-height: 280px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 4px 14px rgba(0,0,51,0.06); }
-.flashcard .flag { font-size: 1.2rem; }
-.flashcard .catg { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.15em; margin-top: 4px; }
-.flashcard .word { font-size: 1.7rem; font-weight: 800; color: var(--primary); margin: 18px 0 6px; line-height: 1.4; word-break: break-word; }
-.flashcard .meaning { font-size: 1.15rem; color: var(--text); margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border); line-height: 1.6; }
-.flashcard .newtag { display: inline-block; font-size: 0.6rem; background: #FEF3C7; color: #B45309; border-radius: 8px; padding: 3px 10px; letter-spacing: 0.1em; margin: 0 auto; }
-.speak-btn { background: none; border: 1px solid var(--border); border-radius: 50%; width: 44px; height: 44px; font-size: 1.1rem; cursor: pointer; margin: 14px auto 0; display: block; }
+.flashcard { padding: 60px 10px 40px; text-align: center; min-height: 300px; display: flex; flex-direction: column; justify-content: center; }
+.flashcard .lang-tag { font-size: 0.58rem; color: var(--sub); letter-spacing: 0.3em; text-transform: uppercase; }
+.flashcard .catg { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.1em; margin-top: 8px; }
+.flashcard .newtag { font-size: 0.55rem; color: var(--primary); letter-spacing: 0.3em; margin-bottom: 14px; }
+.flashcard .word { font-size: 1.6rem; font-weight: 300; color: var(--primary); margin: 26px 0 4px; line-height: 1.5; word-break: break-word; letter-spacing: 0.02em; }
+.flashcard .word.q { font-size: 1.15rem; font-weight: 400; }
+.flashcard .meaning { font-size: 1rem; font-weight: 300; color: var(--text); margin-top: 26px; padding-top: 26px; border-top: 1px solid var(--border); line-height: 1.8; }
+.speak-btn { background: none; border: 1px solid var(--border); border-radius: 50%; width: 42px; height: 42px; font-size: 0.7rem; color: var(--primary); cursor: pointer; margin: 20px auto 0; display: block; font-family: inherit; }
 
-.btn-row { display: flex; gap: 10px; margin-top: 16px; }
-.abtn { flex: 1; border: none; border-radius: 14px; padding: 16px 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; font-family: inherit; color: white; transition: transform .1s; }
-.abtn:active { transform: scale(0.97); }
-.abtn small { display: block; font-size: 0.6rem; font-weight: 300; margin-top: 3px; opacity: 0.85; }
-.abtn.show { background: var(--primary); }
-.abtn.again { background: #EF4444; }
-.abtn.hard { background: #F59E0B; }
-.abtn.good { background: var(--good); }
+.btn-row { display: flex; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.abtn { flex: 1; border: none; padding: 18px 6px; font-size: 0.75rem; cursor: pointer; font-family: inherit; background: var(--bg); color: var(--text); font-weight: 400; letter-spacing: 0.1em; }
+.abtn:active { background: #FAFAFA; }
+.abtn small { display: block; font-size: 0.55rem; color: var(--sub); margin-top: 5px; letter-spacing: 0.05em; }
+.abtn.show { background: var(--primary); color: white; letter-spacing: 0.25em; padding: 20px; }
+.abtn.good { background: var(--primary); color: white; }
+.abtn.good small { color: rgba(255,255,255,0.6); }
 
-.choice-btn { display: block; width: 100%; background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 15px 16px; margin-top: 10px; font-size: 0.95rem; text-align: left; cursor: pointer; font-family: inherit; color: var(--text); transition: all .15s; }
-.choice-btn:active { transform: scale(0.98); }
-.choice-btn.correct { border-color: var(--good); background: #F0FDF4; color: var(--good); font-weight: 700; }
-.choice-btn.wrong { border-color: #EF4444; background: #FEF2F2; color: #EF4444; }
+.choice-btn { display: block; width: 100%; background: var(--bg); border: none; border-bottom: 1px solid var(--border); padding: 18px 4px; font-size: 0.88rem; font-weight: 300; text-align: left; cursor: pointer; font-family: inherit; color: var(--text); }
+.choice-btn:first-of-type { border-top: 1px solid var(--border); }
+.choice-btn:active { background: #FAFAFA; }
+.choice-btn.correct { background: var(--primary); color: white; }
+.choice-btn.wrong { color: var(--sub); text-decoration: line-through; }
 
-.done-card { text-align: center; padding: 50px 20px; }
-.done-card .emoji { font-size: 3rem; }
-.done-card h3 { color: var(--primary); margin: 14px 0 8px; font-size: 1.1rem; }
-.done-card p { font-size: 0.8rem; color: var(--sub); line-height: 1.8; }
-.done-card .xp-gain { font-size: 1rem; color: var(--accent); font-weight: 800; margin-top: 10px; }
-.primary-btn { background: var(--primary); color: white; border: none; border-radius: 14px; padding: 16px 30px; font-size: 0.8rem; letter-spacing: 0.2em; cursor: pointer; margin-top: 24px; font-family: inherit; font-weight: 600; }
+.done-card { text-align: center; padding: 90px 20px 60px; }
+.done-card .ttl { font-size: 0.8rem; letter-spacing: 0.4em; color: var(--primary); text-transform: uppercase; }
+.done-card p { font-size: 0.72rem; color: var(--sub); line-height: 2.1; margin-top: 20px; }
+.done-card .xp-gain { font-size: 0.7rem; color: var(--primary); letter-spacing: 0.2em; margin-top: 14px; }
+.primary-btn { background: var(--primary); color: white; border: none; padding: 20px 50px; font-size: 0.7rem; letter-spacing: 0.3em; cursor: pointer; margin-top: 40px; font-family: inherit; font-weight: 600; }
 
-/* ---- words view ---- */
-.filter-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
-.chip { border: 1px solid var(--border); background: var(--card); border-radius: 20px; padding: 7px 14px; font-size: 0.72rem; cursor: pointer; font-family: inherit; color: var(--sub); }
-.chip.on { background: var(--primary); color: white; border-color: var(--primary); }
-.word-item { display: flex; justify-content: space-between; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; margin-top: 8px; }
-.word-item .w { font-weight: 700; font-size: 0.9rem; color: var(--primary); }
-.word-item .m { font-size: 0.75rem; color: var(--sub); margin-top: 2px; }
-.word-item .lvl { font-size: 0.85rem; flex-shrink: 0; margin-left: 10px; }
-.add-form input, .add-form select { width: 100%; border: 1px solid var(--border); border-radius: 10px; padding: 12px; font-size: 0.9rem; margin-top: 8px; font-family: inherit; background: var(--card); outline: none; }
+/* ---- words ---- */
+.filter-row { display: flex; gap: 20px; flex-wrap: wrap; padding-top: 26px; }
+.filter-row.sub { padding-top: 14px; gap: 16px; }
+.chip { border: none; background: none; padding: 4px 0; font-size: 0.68rem; cursor: pointer; font-family: inherit; color: var(--sub); letter-spacing: 0.1em; border-bottom: 1px solid transparent; }
+.chip.on { color: var(--primary); border-bottom-color: var(--primary); }
+.word-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding: 16px 2px; cursor: pointer; }
+.word-item .w { font-weight: 400; font-size: 0.88rem; color: var(--primary); }
+.word-item .w .lg { font-size: 0.55rem; color: var(--sub); letter-spacing: 0.2em; margin-right: 8px; }
+.word-item .m { font-size: 0.7rem; color: var(--sub); margin-top: 4px; font-weight: 300; }
+.word-item .lvl { font-size: 0.7rem; color: var(--primary); flex-shrink: 0; margin-left: 12px; }
+.legend { font-size: 0.6rem; color: var(--sub); letter-spacing: 0.05em; padding: 22px 0 4px; }
+.add-form input, .add-form select { width: 100%; border: none; border-bottom: 1px solid var(--border); padding: 12px 0; font-size: 0.95rem; margin-top: 14px; font-family: inherit; background: transparent; outline: none; border-radius: 0; font-weight: 300; }
+.add-form .primary-btn { width: 100%; margin-top: 30px; }
 
-/* ---- progress ---- */
-.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.stat { background: var(--bg); border-radius: 14px; padding: 14px 8px; text-align: center; }
-.stat .v { font-size: 1.25rem; font-weight: 800; color: var(--primary); }
-.stat .k { font-size: 0.58rem; color: var(--sub); letter-spacing: 0.1em; margin-top: 4px; }
-.levelbar { height: 10px; background: var(--border); border-radius: 5px; margin-top: 10px; overflow: hidden; }
-.levelbar > div { height: 100%; background: linear-gradient(90deg, #F59E0B, var(--accent)); border-radius: 5px; }
-.badge-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-.badge { text-align: center; padding: 10px 4px; border-radius: 14px; background: var(--bg); opacity: 0.35; filter: grayscale(1); }
-.badge.got { opacity: 1; filter: none; background: #FFF7ED; border: 1px solid #FED7AA; }
-.badge .ico { font-size: 1.5rem; }
-.badge .nm { font-size: 0.55rem; color: var(--text); margin-top: 5px; line-height: 1.4; }
-.roadmap-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--border); font-size: 0.78rem; align-items: baseline; }
+/* ---- record ---- */
+.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px 10px; }
+.stat { text-align: center; }
+.stat .v { font-size: 1.5rem; font-weight: 300; color: var(--primary); }
+.stat .k { font-size: 0.55rem; color: var(--sub); letter-spacing: 0.15em; margin-top: 6px; }
+.badge-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; }
+.badge { font-size: 0.72rem; color: var(--sub); letter-spacing: 0.05em; font-weight: 300; }
+.badge::before { content: '○'; margin-right: 10px; font-size: 0.6rem; }
+.badge.got { color: var(--primary); font-weight: 400; }
+.badge.got::before { content: '●'; }
+.roadmap-item { display: flex; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--border); font-size: 0.74rem; align-items: baseline; }
 .roadmap-item:last-child { border-bottom: none; }
-.roadmap-item .mo { font-weight: 800; color: var(--sub); flex-shrink: 0; width: 46px; }
-.roadmap-item.now .mo { color: var(--accent); }
-.roadmap-item.now .tx b { color: var(--accent); }
-.roadmap-item .tx b { color: var(--primary); }
-.roadmap-item .tx small { display: block; color: var(--sub); margin-top: 2px; }
+.roadmap-item .mo { color: var(--sub); flex-shrink: 0; width: 52px; font-size: 0.62rem; letter-spacing: 0.05em; }
+.roadmap-item .tx b { color: var(--text); font-weight: 400; }
+.roadmap-item .tx small { display: block; color: var(--sub); margin-top: 3px; font-weight: 300; }
+.roadmap-item.now .mo, .roadmap-item.now .tx b { color: var(--primary); font-weight: 700; }
 
-/* ---- settings ---- */
-.set-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; font-size: 0.82rem; }
-.set-row select { border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; font-family: inherit; background: var(--card); font-size: 0.82rem; outline: none; }
+/* ---- nav ---- */
+nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); border-top: 1px solid var(--border); display: flex; justify-content: center; gap: 12vw; padding: 20px 0 max(22px, env(safe-area-inset-bottom)); z-index: 100; }
+nav button { background: none; border: none; font-family: inherit; font-size: 0.62rem; color: var(--sub); cursor: pointer; letter-spacing: 0.25em; text-transform: uppercase; padding: 4px 2px; border-bottom: 1px solid transparent; }
+nav button.on { color: var(--primary); border-bottom-color: var(--primary); }
 
-/* ---- tabs ---- */
-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0 max(10px, env(safe-area-inset-bottom)); z-index: 100; }
-nav button { background: none; border: none; font-family: inherit; font-size: 0.6rem; color: var(--sub); cursor: pointer; padding: 4px 16px; letter-spacing: 0.08em; }
-nav button .ico { display: block; font-size: 1.25rem; margin-bottom: 3px; }
-nav button.on { color: var(--primary); font-weight: 700; }
-
-/* ---- confetti ---- */
-.confetti { position: fixed; top: -30px; font-size: 1.3rem; z-index: 999; pointer-events: none; animation: fall linear forwards; }
-@keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0.6; } }
-
-.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 12px 22px; border-radius: 30px; font-size: 0.78rem; z-index: 500; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
+.toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 14px 26px; font-size: 0.68rem; letter-spacing: 0.15em; z-index: 500; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
 .toast.show { opacity: 1; }
 </style>
 </head>
@@ -153,26 +129,19 @@ nav button.on { color: var(--primary); font-weight: 700; }
 <div id="app">
   <header>
     <h1>MIGNON LINGO</h1>
-    <div class="tagline">ENGLISH × BAHASA INDONESIA — 365 DAY CHALLENGE</div>
+    <div class="tagline">English &times; Bahasa Indonesia &mdash; 365 days</div>
   </header>
 
-  <!-- ============ HOME ============ -->
   <div id="view-home" class="view active"></div>
-
-  <!-- ============ STUDY ============ -->
   <div id="view-study" class="view"></div>
-
-  <!-- ============ WORDS ============ -->
   <div id="view-words" class="view"></div>
-
-  <!-- ============ PROGRESS ============ -->
-  <div id="view-progress" class="view"></div>
+  <div id="view-record" class="view"></div>
 </div>
 
 <nav>
-  <button id="tab-home" onclick="showView('home')" class="on"><span class="ico">🏠</span>ホーム</button>
-  <button id="tab-words" onclick="showView('words')"><span class="ico">📚</span>単語帳</button>
-  <button id="tab-progress" onclick="showView('progress')"><span class="ico">🏆</span>実績</button>
+  <button id="tab-home" onclick="showView('home')" class="on">Home</button>
+  <button id="tab-words" onclick="showView('words')">Words</button>
+  <button id="tab-record" onclick="showView('record')">Record</button>
 </nav>
 
 <div id="toast" class="toast"></div>
@@ -481,22 +450,22 @@ const ROADMAP = [
 ];
 
 const BADGES = [
-["🌱","はじめの一歩", s => totalDone(s) >= 1],
-["🔥","3日連続", s => s.bestStreak >= 3],
-["🎯","7日連続", s => s.bestStreak >= 7],
-["💪","30日連続", s => s.bestStreak >= 30],
-["🏆","100日連続", s => s.bestStreak >= 100],
-["👑","365日連続", s => s.bestStreak >= 365],
-["📖","10語マスター", s => masteredCount() >= 10],
-["📚","50語マスター", s => masteredCount() >= 50],
-["🎓","100語マスター", s => masteredCount() >= 100],
-["🧠","200語マスター", s => masteredCount() >= 200],
-["⭐","レベル5到達", s => level(s.xp) >= 5],
-["🌟","レベル10到達", s => level(s.xp) >= 10],
+["はじめの一歩", s => totalDone(s) >= 1],
+["3日連続", s => s.bestStreak >= 3],
+["7日連続", s => s.bestStreak >= 7],
+["30日連続", s => s.bestStreak >= 30],
+["100日連続", s => s.bestStreak >= 100],
+["365日連続", s => s.bestStreak >= 365],
+["10語マスター", s => masteredCount() >= 10],
+["50語マスター", s => masteredCount() >= 50],
+["100語マスター", s => masteredCount() >= 100],
+["200語マスター", s => masteredCount() >= 200],
+["レベル5到達", s => level(s.xp) >= 5],
+["レベル10到達", s => level(s.xp) >= 10],
 ];
 
-const CHEERS = ["いい調子！","ナイス！","Bagus sekali!","Great job!","その調子！","コツコツが実を結ぶ！","Semangat!","Keep going!"];
 const INTERVALS = [0, 1, 3, 7, 14, 30, 60, 120]; // box → 日数
+const LANG_NAME = { en: 'English', id: 'Indonesia' };
 
 /* =====================================================
    状態管理
@@ -583,7 +552,7 @@ function showView(name) {
   if (tab) tab.classList.add('on');
   if (name === 'home') renderHome();
   if (name === 'words') renderWords();
-  if (name === 'progress') renderProgress();
+  if (name === 'record') renderRecord();
   window.scrollTo(0, 0);
 }
 
@@ -601,60 +570,50 @@ function renderHome() {
   const log = todayLog();
   const goal = state.settings.dailyGoal;
   const pct = Math.min(100, Math.round(log.done / goal * 100));
-  const r = 36, circ = 2 * Math.PI * r;
 
   const dueEn = dueCards('en').length, dueId = dueCards('id').length;
   const newEn = Math.min(newRemainingToday('en'), newCards('en').length);
   const newId = Math.min(newRemainingToday('id'), newCards('id').length);
 
   document.getElementById('view-home').innerHTML = `
-    <div class="panel day-banner-wrap">
-      <div class="day-banner">
-        <div class="big">Day ${day} <small>/ 365</small></div>
-        <div class="streak"><span class="flame">🔥</span> <span class="num">${state.streak}</span><div class="lbl">日連続</div></div>
+    <div class="section">
+      <div class="day-row">
+        <div class="day-num">Day ${day} <small>/ 365</small></div>
+        <div class="streak-num"><b>${state.streak}</b><br>days streak</div>
       </div>
-      <div class="yearbar"><div style="width:${(day/365*100).toFixed(1)}%"></div></div>
-      <div class="theme-line">今月のテーマ: <b>${month+1}ヶ月目「${theme[0]}」</b> — ${theme[1]}</div>
+      <div class="hairbar"><div style="width:${(day/365*100).toFixed(1)}%"></div></div>
+      <div class="note">${month + 1}ヶ月目のテーマ <b>「${theme[0]}」</b><br>${theme[1]}</div>
     </div>
 
-    <div class="panel">
-      <h2>TODAY'S GOAL</h2>
-      <div class="goal-row">
-        <div class="ring">
-          <svg width="84" height="84">
-            <circle cx="42" cy="42" r="${r}" fill="none" stroke="#EEE8E0" stroke-width="8"/>
-            <circle cx="42" cy="42" r="${r}" fill="none" stroke="#FF6B4A" stroke-width="8" stroke-linecap="round"
-              stroke-dasharray="${circ}" stroke-dashoffset="${circ * (1 - pct/100)}"/>
-          </svg>
-          <div class="pct">${pct}%</div>
-        </div>
-        <div class="goal-info">
-          今日のカード: <b>${log.done} / ${goal} 枚</b><br>
-          ${pct >= 100
-            ? '🎉 今日の目標達成！素晴らしい！'
-            : `あと <b>${goal - log.done}枚</b> で目標達成。<br>1日5分でも、続けることが力になる💪`}
-        </div>
+    <div class="section">
+      <div class="section-title">Today</div>
+      <div class="today-row">
+        <div class="today-count">${log.done} <small>/ ${goal}</small></div>
+        <div class="today-msg ${pct >= 100 ? 'done' : ''}">${pct >= 100 ? '本日の目標達成' : 'あと' + (goal - log.done) + '枚'}</div>
+      </div>
+      <div class="hairbar"><div style="width:${pct}%"></div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Learn</div>
+      <div class="lang-list">
+        <button class="lang-row" onclick="startSession('en')">
+          <span class="nm">英語<small>English</small></span>
+          <span class="ct">復習 ${dueEn}　新規 ${newEn}</span>
+        </button>
+        <button class="lang-row" onclick="startSession('id')">
+          <span class="nm">インドネシア語<small>Bahasa Indonesia</small></span>
+          <span class="ct">復習 ${dueId}　新規 ${newId}</span>
+        </button>
+        <button class="lang-row" onclick="startSession('mix')">
+          <span class="nm">ミックス<small>Mix</small></span>
+          <span class="ct">復習 ${dueEn+dueId}　新規 ${newEn+newId}</span>
+        </button>
       </div>
     </div>
 
-    <div class="panel">
-      <h2>START LEARNING</h2>
-      <button class="lang-btn en" onclick="startSession('en')">
-        <span class="name">🇬🇧 英語 <small>English</small></span>
-        <span class="count">復習 ${dueEn}<br>新規 ${newEn}</span>
-      </button>
-      <button class="lang-btn id" onclick="startSession('id')">
-        <span class="name">🇮🇩 インドネシア語 <small>Bahasa Indonesia</small></span>
-        <span class="count">復習 ${dueId}<br>新規 ${newId}</span>
-      </button>
-      <button class="lang-btn mix" onclick="startSession('mix')">
-        <span class="name">🌏 ミックス <small>両方まぜて学習</small></span>
-        <span class="count">復習 ${dueEn+dueId}<br>新規 ${newEn+newId}</span>
-      </button>
-    </div>
-
-    <div class="panel">
-      <h2>SETTINGS</h2>
+    <div class="section">
+      <div class="section-title">Settings</div>
       <div class="set-row">
         <span>1日の新しい単語（言語ごと）</span>
         <select onchange="state.settings.newPerDay=Number(this.value);save();renderHome()">
@@ -686,7 +645,7 @@ function startSession(lang) {
   }
   const queue = due.concat(shuffle(news));
   if (queue.length === 0) {
-    toast('今日の分は完了！明日また復習カードが届きます 🌙');
+    toast('今日の分は完了しました。また明日。');
     return;
   }
   session = { lang, queue, index: 0, total: queue.length, xpGain: 0, correct: 0, revealed: false };
@@ -704,9 +663,8 @@ function showStudyCard() {
   const card = session.queue[session.index];
   const rec = state.srs[card.id];
   const isNew = !rec;
-  const flag = card.lang === 'en' ? '🇬🇧' : '🇮🇩';
   const progress = Math.round(session.index / session.queue.length * 100);
-  // 2回以上正解しているカードは時々4択クイズに（楽しさ＆定着チェック）
+  // 一度以上正解しているカードは時々4択に（定着チェック）
   const asQuiz = rec && rec.reps >= 1 && Math.random() < 0.5;
 
   let cardHtml;
@@ -714,20 +672,19 @@ function showStudyCard() {
     const pool = allCards().filter(c => c.lang === card.lang && c.id !== card.id);
     const choices = shuffle([card].concat(shuffle(pool).slice(0, 3)));
     cardHtml = `
-      <div class="flashcard">
-        <div class="flag">${flag} QUIZ</div>
-        <div class="catg">${esc(card.cat)}</div>
-        <div class="word" style="font-size:1.25rem">「${esc(card.meaning)}」は？</div>
+      <div class="flashcard" style="min-height:200px;padding-bottom:30px">
+        <div class="lang-tag">${LANG_NAME[card.lang]}</div>
+        <div class="word q">「${esc(card.meaning)}」は？</div>
       </div>
-      ${choices.map(c => `<button class="choice-btn" data-id="${c.id}" onclick="answerQuiz(this,'${card.id}')">${esc(c.word)}</button>`).join('')}`;
+      <div>${choices.map(c => `<button class="choice-btn" data-id="${c.id}" onclick="answerQuiz(this,'${card.id}')">${esc(c.word)}</button>`).join('')}</div>`;
   } else {
     cardHtml = `
       <div class="flashcard">
-        ${isNew ? '<span class="newtag">✨ NEW</span>' : ''}
-        <div class="flag">${flag}</div>
+        ${isNew ? '<div class="newtag">NEW</div>' : ''}
+        <div class="lang-tag">${LANG_NAME[card.lang]}</div>
         <div class="catg">${esc(card.cat)}</div>
         <div class="word">${esc(card.word)}</div>
-        <button class="speak-btn" onclick="speak('${card.id}')">🔊</button>
+        <button class="speak-btn" onclick="speak('${card.id}')">&#9654;</button>
         <div class="meaning" id="meaning" style="visibility:hidden">${esc(card.meaning)}</div>
       </div>
       <div class="btn-row" id="answer-btns">
@@ -737,10 +694,10 @@ function showStudyCard() {
 
   v.innerHTML = `
     <div class="study-top">
-      <span>${session.index + 1} / ${session.queue.length}枚</span>
-      <button onclick="quitSession()">✕ 中断する</button>
+      <span>${session.index + 1} / ${session.queue.length}</span>
+      <button onclick="quitSession()">中断</button>
     </div>
-    <div class="qbar"><div style="width:${progress}%"></div></div>
+    <div class="qline"><div style="width:${progress}%"></div></div>
     ${cardHtml}`;
 
   if (!asQuiz) speak(card.id);
@@ -752,9 +709,9 @@ function reveal() {
   session.revealed = true;
   document.getElementById('meaning').style.visibility = 'visible';
   document.getElementById('answer-btns').innerHTML = `
-    <button class="abtn again" onclick="grade('again')">もう一度<small>すぐ再出題</small></button>
-    <button class="abtn hard" onclick="grade('hard')">あいまい<small>明日また</small></button>
-    <button class="abtn good" onclick="grade('good')">覚えた！<small>間隔をあける</small></button>`;
+    <button class="abtn" onclick="grade('again')">もう一度<small>すぐ再出題</small></button>
+    <button class="abtn" onclick="grade('hard')">あいまい<small>明日また</small></button>
+    <button class="abtn good" onclick="grade('good')">覚えた<small>間隔をあける</small></button>`;
 }
 
 function answerQuiz(btn, correctId) {
@@ -802,7 +759,6 @@ function grade(rating, silent) {
   checkGoalAndStreak();
   save();
   session.index++;
-  if (!silent && Math.random() < 0.25) toast(CHEERS[Math.floor(Math.random() * CHEERS.length)]);
   showStudyCard();
 }
 
@@ -813,8 +769,7 @@ function checkGoalAndStreak() {
     else state.streak = 1;
     state.bestStreak = Math.max(state.bestStreak, state.streak);
     state.lastGoalDate = t;
-    confetti();
-    toast(`🔥 目標達成！${state.streak}日連続！`);
+    toast(`本日の目標達成 — ${state.streak}日連続`);
   }
 }
 
@@ -822,14 +777,12 @@ function finishSession() {
   const acc = session.total ? Math.round(session.correct / session.total * 100) : 0;
   state.xp += 15; // セッション完了ボーナス
   save();
-  confetti();
   document.getElementById('view-study').innerHTML = `
-    <div class="panel done-card">
-      <div class="emoji">🎉</div>
-      <h3>セッション完了！</h3>
+    <div class="done-card">
+      <div class="ttl">Complete</div>
       <p>${session.total}枚のカードを学習しました<br>正答率 ${acc}%</p>
-      <div class="xp-gain">+${session.xpGain + 15} XP</div>
-      <button class="primary-btn" onclick="showView('home')">ホームへ戻る</button>
+      <div class="xp-gain">+ ${session.xpGain + 15} XP</div>
+      <button class="primary-btn" onclick="showView('home')">ホームへ</button>
     </div>`;
   session = null;
 }
@@ -853,36 +806,38 @@ function renderWords() {
     .filter(c => wordFilter.lang === 'all' || c.lang === wordFilter.lang)
     .map(c => c.cat))];
 
-  const stars = c => {
+  const mark = c => {
     const r = state.srs[c.id];
-    if (!r) return '⚪';
-    return r.box >= 5 ? '🌟' : r.box >= 3 ? '⭐' : '🌱';
+    if (!r) return '<span style="color:var(--border)">○</span>';
+    return r.box >= 3 ? '●' : '◐';
   };
 
   document.getElementById('view-words').innerHTML = `
     <div class="filter-row">
-      ${[['all','すべて'],['en','🇬🇧 英語'],['id','🇮🇩 インドネシア語']].map(([v,l]) =>
+      ${[['all','すべて'],['en','English'],['id','Indonesia']].map(([v,l]) =>
         `<button class="chip ${wordFilter.lang===v?'on':''}" onclick="wordFilter.lang='${v}';wordFilter.cat='all';renderWords()">${l}</button>`).join('')}
     </div>
-    <div class="filter-row">
+    <div class="filter-row sub">
       <button class="chip ${wordFilter.cat==='all'?'on':''}" onclick="wordFilter.cat='all';renderWords()">全カテゴリ</button>
       ${cats.map(c => `<button class="chip ${wordFilter.cat===c?'on':''}" onclick="wordFilter.cat='${esc(c)}';renderWords()">${esc(c)}</button>`).join('')}
     </div>
 
-    <div class="panel add-form">
-      <h2>＋ 自分の単語を追加</h2>
-      <select id="add-lang"><option value="en">🇬🇧 英語</option><option value="id">🇮🇩 インドネシア語</option></select>
-      <input id="add-word" placeholder="単語・フレーズ（例: How's it going?）">
-      <input id="add-meaning" placeholder="意味（例: 調子どう？）">
-      <button class="primary-btn" style="width:100%;margin-top:12px" onclick="addCustomWord()">追加する</button>
-    </div>
-
-    <p style="font-size:0.65rem;color:var(--sub);margin-top:14px">⚪未学習 🌱学習中 ⭐定着してきた 🌟マスター — ${cards.length}語</p>
+    <div class="legend">○ 未学習　◐ 学習中　● マスター　—　${cards.length}語</div>
+    <div>
     ${cards.map(c => `
       <div class="word-item" onclick="speak('${c.id}')">
-        <div><div class="w">${c.lang==='en'?'🇬🇧':'🇮🇩'} ${esc(c.word)}</div><div class="m">${esc(c.meaning)}</div></div>
-        <div class="lvl">${stars(c)}</div>
-      </div>`).join('')}`;
+        <div><div class="w"><span class="lg">${c.lang.toUpperCase()}</span>${esc(c.word)}</div><div class="m">${esc(c.meaning)}</div></div>
+        <div class="lvl">${mark(c)}</div>
+      </div>`).join('')}
+    </div>
+
+    <div class="section add-form" style="border-bottom:none">
+      <div class="section-title">Add Word</div>
+      <select id="add-lang"><option value="en">English — 英語</option><option value="id">Indonesia — インドネシア語</option></select>
+      <input id="add-word" placeholder="単語・フレーズ">
+      <input id="add-meaning" placeholder="意味">
+      <button class="primary-btn" onclick="addCustomWord()">追加する</button>
+    </div>`;
 }
 
 function addCustomWord() {
@@ -893,14 +848,14 @@ function addCustomWord() {
   state.customSeq++;
   state.custom.push(['c' + state.customSeq, lang, word, meaning]);
   save();
-  toast('追加しました！次の学習で出題されます ✨');
+  toast('追加しました');
   renderWords();
 }
 
 /* =====================================================
-   実績・進捗
+   記録
 ===================================================== */
-function renderProgress() {
+function renderRecord() {
   const lv = level(state.xp);
   const cur = xpForLevel(lv), next = xpForLevel(lv + 1);
   const lvPct = Math.round((state.xp - cur) / (next - cur) * 100);
@@ -909,38 +864,37 @@ function renderProgress() {
   const studiedDays = Object.keys(state.log).filter(d => state.log[d].done > 0).length;
   const started = Object.keys(state.srs).length;
 
-  document.getElementById('view-progress').innerHTML = `
-    <div class="panel">
-      <h2>LEVEL ${lv}</h2>
-      <div class="levelbar"><div style="width:${lvPct}%"></div></div>
-      <p style="font-size:0.68rem;color:var(--sub);margin-top:8px">${state.xp} XP — 次のレベルまであと ${next - state.xp} XP</p>
+  document.getElementById('view-record').innerHTML = `
+    <div class="section">
+      <div class="section-title">Level ${lv}</div>
+      <div class="hairbar" style="margin-top:0"><div style="width:${lvPct}%"></div></div>
+      <div class="note">${state.xp} XP — 次のレベルまで ${next - state.xp} XP</div>
     </div>
 
-    <div class="panel">
-      <h2>STATS</h2>
+    <div class="section">
+      <div class="section-title">Stats</div>
       <div class="stat-grid">
-        <div class="stat"><div class="v">🔥${state.streak}</div><div class="k">連続日数</div></div>
+        <div class="stat"><div class="v">${state.streak}</div><div class="k">連続日数</div></div>
         <div class="stat"><div class="v">${state.bestStreak}</div><div class="k">最長記録</div></div>
         <div class="stat"><div class="v">${studiedDays}</div><div class="k">学習日数</div></div>
         <div class="stat"><div class="v">${started}</div><div class="k">学習した単語</div></div>
-        <div class="stat"><div class="v">${masteredCount()}</div><div class="k">マスター単語</div></div>
+        <div class="stat"><div class="v">${masteredCount()}</div><div class="k">マスター</div></div>
         <div class="stat"><div class="v">${totalDone(state)}</div><div class="k">累計カード</div></div>
       </div>
     </div>
 
-    <div class="panel">
-      <h2>BADGES</h2>
-      <div class="badge-grid">
-        ${BADGES.map(([ico, nm, fn]) => `
-          <div class="badge ${fn(state) ? 'got' : ''}"><div class="ico">${ico}</div><div class="nm">${nm}</div></div>`).join('')}
+    <div class="section">
+      <div class="section-title">Badges</div>
+      <div class="badge-list">
+        ${BADGES.map(([nm, fn]) => `<div class="badge ${fn(state) ? 'got' : ''}">${nm}</div>`).join('')}
       </div>
     </div>
 
-    <div class="panel">
-      <h2>1年間ロードマップ</h2>
+    <div class="section">
+      <div class="section-title">Roadmap — 365 days</div>
       ${ROADMAP.map((r, i) => `
         <div class="roadmap-item ${i === month ? 'now' : ''}">
-          <span class="mo">${i + 1}ヶ月目${i === month ? ' 📍' : ''}</span>
+          <span class="mo">${i + 1}ヶ月目</span>
           <span class="tx"><b>${r[0]}</b><small>${r[1]}</small></span>
         </div>`).join('')}
     </div>`;
@@ -975,20 +929,6 @@ function toast(msg) {
   t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
-}
-
-function confetti() {
-  const emojis = ['🎉','✨','🌟','🎊','💛','🧡'];
-  for (let i = 0; i < 36; i++) {
-    const el = document.createElement('span');
-    el.className = 'confetti';
-    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-    el.style.left = Math.random() * 100 + 'vw';
-    el.style.animationDuration = (1.6 + Math.random() * 1.6) + 's';
-    el.style.animationDelay = Math.random() * 0.4 + 's';
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 4000);
-  }
 }
 
 /* 起動 */
