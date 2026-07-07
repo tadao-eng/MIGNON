@@ -24,7 +24,9 @@ MIGNON/  (GitHub: tadao-eng/MIGNON)
     ├── manifest.json     ← PWAマニフェスト
     ├── icon-192.png / icon-512.png / apple-touch-icon.png  ← アプリアイコン(紺地に「ML LINGO」)
     ├── words.json        ← 単語データの書き出し(LINEボット等の外部ツール用)
-    ├── export-words.mjs  ← index.html → words.json 生成スクリプト
+    ├── curriculum.json   ← 90日分の日別配信カリキュラム(LINEボット用。毎日10語+文法1課)
+    ├── line-bot-guide.md ← LINE AI秘書の設定ガイド(配信フロー・貼り付け用プロンプト)
+    ├── export-words.mjs  ← index.html → words.json / curriculum.json 生成スクリプト
     ├── README.md         ← ユーザー向け説明
     └── HANDOFF.md        ← このファイル
 ```
@@ -60,7 +62,8 @@ MIGNON/  (GitHub: tadao-eng/MIGNON)
 | 音読・スピーキング | フレーズ10本(EN5+ID5)をTTSに続けて発声 | 約10分 | `s === true` |
 
 - 言語の日替わり: `grammarLangToday()` = 奇数日en/偶数日id、`readingLangToday()` はその逆(毎日両言語に触れる設計)
-- Extra(追加学習): 会話ダイアログ練習(英/イ)、苦手単語特訓(lapses≥2の単語15枚)、言語別単語セッション、文法/読解のおかわり
+- Extra(追加学習): **実力テスト20問**(下記)、会話ダイアログ練習(英/イ)、苦手単語特訓(lapses≥2の単語15枚)、言語別単語セッション、文法/読解のおかわり
+- **実力テスト**: 学習済み単語(12語未満なら全単語)から20問をランダム出題。単語→意味40% / 意味→単語40% / リスニング20%。**SRSやタスク進捗に影響せず何度でも反復可**。結果画面にスコア・間違い一覧・「LINEに結果を報告」ボタン(`startTest()` / `tsession`)
 
 ### 4.2 SRS(間隔反復)仕様
 
@@ -104,7 +107,9 @@ ROADMAP: [[週テーマ, 説明]] ×12週
 BADGES: [[名前, 条件関数]] ×12
 ```
 
-現在の収録量: 単語 EN325/ID298、文法 各25課、読解 各12本、会話 各6場面。
+現在の収録量: 単語 **EN510/ID500**、文法 **各35課**、読解 各12本、会話 各6場面。
+(2026-07-06 増量: ユーザーの「90日にとらわれず、やる気があれば1日倍学べる量に」との要望による。
+curriculum.json は180日分+各日 `extra`(先取り分)を持ち、倍ペース=20語+文法2課/日に対応)
 
 ### 4.5 音声(TTS)
 
@@ -131,12 +136,15 @@ Google Fonts の読み込みエラー(ERR_CONNECTION系)はオフライン環境
 
 ## 5. 外部連携
 
-### 5.1 words.json(実装済み)
+### 5.1 words.json / curriculum.json(実装済み)
 
-- LINEボット等が単語・週テーマを読むためのファイル。公開URL:
+- LINEボット等が読むためのファイル。公開URL:
   `https://tadao-eng.github.io/MIGNON/learn/words.json`
-  (raw: `https://raw.githubusercontent.com/tadao-eng/MIGNON/main/learn/words.json`)
-- **正本は index.html 内の配列**。単語を変更したら `node learn/export-words.mjs` で再生成してコミットすること
+  `https://tadao-eng.github.io/MIGNON/learn/curriculum.json`
+- **curriculum.json が本命**: 90日分の日別割り当て(毎日 英5語+イ5語+文法1課、要点・例文入り)。
+  ボット側は開始日を保持して経過日数で `days[]` を引くだけ。一巡後は `review: true` で復習に回る。
+  詳細な構造・配信フロー・LLM用プロンプトは **line-bot-guide.md** を参照
+- **正本は index.html 内の配列**。教材を変更したら `node learn/export-words.mjs` で両ファイルを再生成してコミットすること
 
 ### 5.2 LINE報告ボタン(実装済み)
 
@@ -181,3 +189,11 @@ Google Fonts の読み込みエラー(ERR_CONNECTION系)はオフライン環境
 | #2 | 90日集中プログラム化(4タスク制)、文法30課・読解24本追加、TTS音声選択バグ修正、SHIRO風ミニマルUIへ全面刷新 |
 | #3 | バックアップ/復元、リスニング出題、90日ヒートマップ、会話ダイアログ12本、苦手特訓、オフライン対応(sw.js)、単語の変化形表示、文法50課へ・単語増量 |
 | #4 | LINE報告ボタン、words.json + 生成スクリプト、この引き継ぎ資料 |
+| #5 | 実力テスト(20問・反復可)、curriculum.json(90日配信カリキュラム)、line-bot-guide.md |
+| #6 | 単語を各言語500語超に増量(EN510/ID500)、文法を各35課に、curriculum 180日+extra(倍ペース対応)、アプリのペース設定拡張(新規24語・目標120枚まで) |
+
+## 9. 方針メモ(2026-07-06 ユーザー決定)
+
+- **新出の単語・文法の摂取はLINE配信を主軸にする**(1日最低10語+文法1課)。アプリは反復テスト・SRS・読解・音読の「定着の場」
+- **90日に縛られない**。90日は最初のマイルストーンで、カリキュラムは180日分。やる気のある日は倍ペース(20語+文法2課)で進められること
+- LINEボットの実装方式は未確認のまま。確認できたら line-bot-guide.md の最終節に具体実装を追記すること
