@@ -40,9 +40,10 @@ writeFileSync(new URL('./words.json', import.meta.url), JSON.stringify(words, nu
    先取りした場合、翌日の通常配信は自然に復習になる。
    新出が尽きたら先頭から復習に回る(review: true)。 */
 const PER_DAY = 5;
-const TOTAL_DAYS = 180;
 const enDays = Math.ceil(EN.length / PER_DAY);
 const idDays = Math.ceil(ID.length / PER_DAY);
+// 全単語が一巡しきるまでの日数を7の倍数に切り上げ(最低180日)
+const TOTAL_DAYS = Math.max(180, Math.ceil(Math.max(enDays, idDays) / 7) * 7);
 
 function wordsForDay(list, dayCount, d) {
   const idx = (d - 1) % dayCount;
