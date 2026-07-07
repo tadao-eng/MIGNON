@@ -1,7 +1,7 @@
 {
-  "name": "MIGNON LINGO",
-  "short_name": "LINGO",
-  "description": "英語 × インドネシア語 365日学習アプリ",
+  "name": "OPOYO Learning",
+  "short_name": "OPOYO",
+  "description": "英語 × インドネシア語 学習アプリ（AI秘書 OPOYO 連携）",
   "lang": "ja",
   "start_url": "./",
   "scope": "./",

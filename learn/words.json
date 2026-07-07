@@ -5184,6 +5184,654 @@
    "word": "how much",
    "meaning": "いくら・どのくらい（量）",
    "category": "疑問詞"
+  },
+  {
+   "word": "company",
+   "meaning": "会社",
+   "category": "ビジネス"
+  },
+  {
+   "word": "office",
+   "meaning": "事務所・オフィス",
+   "category": "ビジネス"
+  },
+  {
+   "word": "department",
+   "meaning": "部署",
+   "category": "ビジネス"
+  },
+  {
+   "word": "manager",
+   "meaning": "部長・管理者",
+   "category": "ビジネス"
+  },
+  {
+   "word": "staff",
+   "meaning": "スタッフ・職員",
+   "category": "ビジネス"
+  },
+  {
+   "word": "team",
+   "meaning": "チーム",
+   "category": "ビジネス"
+  },
+  {
+   "word": "project",
+   "meaning": "プロジェクト",
+   "category": "ビジネス"
+  },
+  {
+   "word": "goal",
+   "meaning": "目標",
+   "category": "ビジネス"
+  },
+  {
+   "word": "result",
+   "meaning": "結果",
+   "category": "ビジネス"
+  },
+  {
+   "word": "success",
+   "meaning": "成功",
+   "category": "ビジネス",
+   "forms": "successful（成功した）"
+  },
+  {
+   "word": "failure",
+   "meaning": "失敗",
+   "category": "ビジネス",
+   "forms": "動詞: fail"
+  },
+  {
+   "word": "presentation",
+   "meaning": "プレゼン",
+   "category": "ビジネス"
+  },
+  {
+   "word": "document",
+   "meaning": "書類",
+   "category": "ビジネス"
+  },
+  {
+   "word": "agreement",
+   "meaning": "合意・契約",
+   "category": "ビジネス"
+  },
+  {
+   "word": "decision",
+   "meaning": "決定",
+   "category": "ビジネス",
+   "forms": "make a decision（決める）"
+  },
+  {
+   "word": "responsibility",
+   "meaning": "責任",
+   "category": "ビジネス"
+  },
+  {
+   "word": "experience",
+   "meaning": "経験",
+   "category": "ビジネス"
+  },
+  {
+   "word": "skill",
+   "meaning": "技能・スキル",
+   "category": "ビジネス"
+  },
+  {
+   "word": "training",
+   "meaning": "研修",
+   "category": "ビジネス"
+  },
+  {
+   "word": "interview",
+   "meaning": "面接",
+   "category": "ビジネス"
+  },
+  {
+   "word": "resume",
+   "meaning": "履歴書",
+   "category": "ビジネス",
+   "forms": "英国: CV"
+  },
+  {
+   "word": "career",
+   "meaning": "キャリア・経歴",
+   "category": "ビジネス"
+  },
+  {
+   "word": "position",
+   "meaning": "役職・立場",
+   "category": "ビジネス"
+  },
+  {
+   "word": "promotion",
+   "meaning": "昇進",
+   "category": "ビジネス"
+  },
+  {
+   "word": "partner",
+   "meaning": "提携先・相棒",
+   "category": "ビジネス"
+  },
+  {
+   "word": "service",
+   "meaning": "サービス・接客",
+   "category": "ビジネス"
+  },
+  {
+   "word": "profit",
+   "meaning": "利益",
+   "category": "ビジネス",
+   "forms": "反対: loss（損失）"
+  },
+  {
+   "word": "loss",
+   "meaning": "損失",
+   "category": "ビジネス"
+  },
+  {
+   "word": "market",
+   "meaning": "市場",
+   "category": "ビジネス"
+  },
+  {
+   "word": "sales",
+   "meaning": "売上・販売",
+   "category": "ビジネス"
+  },
+  {
+   "word": "email",
+   "meaning": "メール",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "profile",
+   "meaning": "プロフィール",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "update",
+   "meaning": "更新・更新する",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "download",
+   "meaning": "ダウンロード（する）",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "upload",
+   "meaning": "アップロード（する）",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "install",
+   "meaning": "インストールする",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "app",
+   "meaning": "アプリ",
+   "category": "IT・オンライン",
+   "forms": "application の略"
+  },
+  {
+   "word": "screen",
+   "meaning": "画面",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "click",
+   "meaning": "クリックする",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "link",
+   "meaning": "リンク",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "online",
+   "meaning": "オンラインの",
+   "category": "IT・オンライン",
+   "forms": "反対: offline"
+  },
+  {
+   "word": "network",
+   "meaning": "ネットワーク",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "data",
+   "meaning": "データ",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "battery",
+   "meaning": "電池・バッテリー",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "charge",
+   "meaning": "充電する・請求する",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "signal",
+   "meaning": "電波・信号",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "device",
+   "meaning": "端末・機器",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "social media",
+   "meaning": "SNS",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "post",
+   "meaning": "投稿・投稿する",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "comment",
+   "meaning": "コメント",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "government",
+   "meaning": "政府",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "president",
+   "meaning": "大統領",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "election",
+   "meaning": "選挙",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "law",
+   "meaning": "法律",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "police",
+   "meaning": "警察",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "crime",
+   "meaning": "犯罪",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "war",
+   "meaning": "戦争",
+   "category": "社会・ニュース",
+   "forms": "反対: peace（平和）"
+  },
+  {
+   "word": "peace",
+   "meaning": "平和",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "economy",
+   "meaning": "経済",
+   "category": "社会・ニュース",
+   "forms": "economic（経済の）"
+  },
+  {
+   "word": "society",
+   "meaning": "社会",
+   "category": "社会・ニュース",
+   "forms": "social（社会の）"
+  },
+  {
+   "word": "population",
+   "meaning": "人口",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "environment",
+   "meaning": "環境",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "pollution",
+   "meaning": "汚染",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "climate",
+   "meaning": "気候",
+   "category": "社会・ニュース",
+   "forms": "climate change（気候変動）"
+  },
+  {
+   "word": "energy",
+   "meaning": "エネルギー",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "technology",
+   "meaning": "技術・テクノロジー",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "research",
+   "meaning": "研究",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "development",
+   "meaning": "発展・開発",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "problem",
+   "meaning": "問題",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "solution",
+   "meaning": "解決策",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "effect",
+   "meaning": "影響・効果",
+   "category": "社会・ニュース",
+   "forms": "have an effect on 〜"
+  },
+  {
+   "word": "cause",
+   "meaning": "原因・引き起こす",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "increase",
+   "meaning": "増える・増加",
+   "category": "社会・ニュース",
+   "forms": "反対: decrease"
+  },
+  {
+   "word": "decrease",
+   "meaning": "減る・減少",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "look after",
+   "meaning": "世話をする",
+   "category": "句動詞2",
+   "forms": "= take care of"
+  },
+  {
+   "word": "look up",
+   "meaning": "（辞書などで）調べる",
+   "category": "句動詞2",
+   "forms": "look up a word"
+  },
+  {
+   "word": "look into",
+   "meaning": "調査する",
+   "category": "句動詞2"
+  },
+  {
+   "word": "get up",
+   "meaning": "起きる",
+   "category": "句動詞2"
+  },
+  {
+   "word": "get off",
+   "meaning": "（乗り物を）降りる",
+   "category": "句動詞2",
+   "forms": "反対: get on"
+  },
+  {
+   "word": "get on",
+   "meaning": "（乗り物に）乗る",
+   "category": "句動詞2"
+  },
+  {
+   "word": "get back",
+   "meaning": "戻る・取り戻す",
+   "category": "句動詞2",
+   "forms": "get back to you（後で連絡する）"
+  },
+  {
+   "word": "get over",
+   "meaning": "（病気・つらさを）乗り越える",
+   "category": "句動詞2"
+  },
+  {
+   "word": "put off",
+   "meaning": "延期する",
+   "category": "句動詞2",
+   "forms": "= postpone"
+  },
+  {
+   "word": "put away",
+   "meaning": "片付ける",
+   "category": "句動詞2"
+  },
+  {
+   "word": "put up with",
+   "meaning": "我慢する",
+   "category": "句動詞2"
+  },
+  {
+   "word": "take out",
+   "meaning": "取り出す・持ち帰る",
+   "category": "句動詞2"
+  },
+  {
+   "word": "take over",
+   "meaning": "引き継ぐ",
+   "category": "句動詞2"
+  },
+  {
+   "word": "bring up",
+   "meaning": "育てる・話題に出す",
+   "category": "句動詞2"
+  },
+  {
+   "word": "call off",
+   "meaning": "中止する",
+   "category": "句動詞2"
+  },
+  {
+   "word": "carry out",
+   "meaning": "実行する",
+   "category": "句動詞2"
+  },
+  {
+   "word": "check in",
+   "meaning": "チェックインする",
+   "category": "句動詞2",
+   "forms": "反対: check out"
+  },
+  {
+   "word": "check out",
+   "meaning": "チェックアウトする・確認する",
+   "category": "句動詞2"
+  },
+  {
+   "word": "fill out",
+   "meaning": "記入する",
+   "category": "句動詞2",
+   "forms": "= fill in"
+  },
+  {
+   "word": "give back",
+   "meaning": "返す",
+   "category": "句動詞2"
+  },
+  {
+   "word": "hand in",
+   "meaning": "提出する",
+   "category": "句動詞2"
+  },
+  {
+   "word": "hold on",
+   "meaning": "（電話で）待つ・つかまる",
+   "category": "句動詞2"
+  },
+  {
+   "word": "move in",
+   "meaning": "引っ越してくる",
+   "category": "句動詞2",
+   "forms": "反対: move out"
+  },
+  {
+   "word": "pass away",
+   "meaning": "亡くなる",
+   "category": "句動詞2",
+   "forms": "die の婉曲表現"
+  },
+  {
+   "word": "turn down",
+   "meaning": "断る・（音量を）下げる",
+   "category": "句動詞2"
+  },
+  {
+   "word": "turn up",
+   "meaning": "現れる・（音量を）上げる",
+   "category": "句動詞2"
+  },
+  {
+   "word": "work out",
+   "meaning": "運動する・うまくいく",
+   "category": "句動詞2"
+  },
+  {
+   "word": "come across",
+   "meaning": "偶然出会う・見つける",
+   "category": "句動詞2"
+  },
+  {
+   "word": "break down",
+   "meaning": "故障する・（精神的に）まいる",
+   "category": "句動詞2"
+  },
+  {
+   "word": "make up",
+   "meaning": "仲直りする・でっち上げる・化粧する",
+   "category": "句動詞2"
+  },
+  {
+   "word": "It's not a big deal.",
+   "meaning": "大したことないよ",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "Keep it up.",
+   "meaning": "その調子で続けて",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "Give it a try.",
+   "meaning": "試してみて",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "No hard feelings.",
+   "meaning": "悪く思わないでね",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "It's worth a try.",
+   "meaning": "やってみる価値はある",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "Let's call it a day.",
+   "meaning": "今日はここまでにしよう",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "Better late than never.",
+   "meaning": "遅くてもやらないよりまし",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "Easier said than done.",
+   "meaning": "言うは易く行うは難し",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "Just in case.",
+   "meaning": "念のため",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "Sooner or later.",
+   "meaning": "遅かれ早かれ",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "That's life.",
+   "meaning": "それが人生さ",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "Fingers crossed.",
+   "meaning": "うまくいくといいね",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "Long story short",
+   "meaning": "手短に言うと",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "a piece of cake",
+   "meaning": "朝飯前・とても簡単",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "once in a while",
+   "meaning": "たまに",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "on second thought",
+   "meaning": "考え直すと",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "as soon as possible",
+   "meaning": "できるだけ早く",
+   "category": "イディオム・慣用",
+   "forms": "略: ASAP"
+  },
+  {
+   "word": "more or less",
+   "meaning": "だいたい・多かれ少なかれ",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "in the long run",
+   "meaning": "長い目で見れば",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "all of a sudden",
+   "meaning": "突然",
+   "category": "イディオム・慣用"
+  },
+  {
+   "word": "No pain, no gain.",
+   "meaning": "苦労なくして得るものなし",
+   "category": "イディオム・慣用"
   }
  ],
  "id": [
@@ -9969,6 +10617,735 @@
    "meaning": "（ヒンドゥー・仏教の）遺跡寺院",
    "category": "文化・宗教",
    "forms": "Candi Borobudur（ボロブドゥール）"
+  },
+  {
+   "word": "perusahaan",
+   "meaning": "会社",
+   "category": "ビジネス",
+   "forms": "語根: usaha（努力・事業）"
+  },
+  {
+   "word": "bagian",
+   "meaning": "部署・部分",
+   "category": "ビジネス"
+  },
+  {
+   "word": "manajer",
+   "meaning": "マネージャー・部長",
+   "category": "ビジネス"
+  },
+  {
+   "word": "karyawan",
+   "meaning": "従業員",
+   "category": "ビジネス"
+  },
+  {
+   "word": "tim",
+   "meaning": "チーム",
+   "category": "ビジネス"
+  },
+  {
+   "word": "tujuan",
+   "meaning": "目標・目的地",
+   "category": "ビジネス",
+   "forms": "語根: tuju"
+  },
+  {
+   "word": "rencana",
+   "meaning": "計画",
+   "category": "ビジネス",
+   "forms": "berencana（計画する）"
+  },
+  {
+   "word": "hasil",
+   "meaning": "結果・成果",
+   "category": "ビジネス"
+  },
+  {
+   "word": "keberhasilan",
+   "meaning": "成功",
+   "category": "ビジネス",
+   "forms": "語根: hasil"
+  },
+  {
+   "word": "kegagalan",
+   "meaning": "失敗",
+   "category": "ビジネス",
+   "forms": "語根: gagal"
+  },
+  {
+   "word": "presentasi",
+   "meaning": "プレゼン",
+   "category": "ビジネス"
+  },
+  {
+   "word": "dokumen",
+   "meaning": "書類",
+   "category": "ビジネス"
+  },
+  {
+   "word": "perjanjian",
+   "meaning": "契約・協定",
+   "category": "ビジネス",
+   "forms": "語根: janji（約束）"
+  },
+  {
+   "word": "keputusan",
+   "meaning": "決定",
+   "category": "ビジネス",
+   "forms": "語根: putus / mengambil keputusan（決断する）"
+  },
+  {
+   "word": "tanggung jawab",
+   "meaning": "責任",
+   "category": "ビジネス"
+  },
+  {
+   "word": "pengalaman",
+   "meaning": "経験",
+   "category": "ビジネス",
+   "forms": "語根: alam"
+  },
+  {
+   "word": "keahlian",
+   "meaning": "専門技能",
+   "category": "ビジネス",
+   "forms": "語根: ahli（専門家）"
+  },
+  {
+   "word": "pelatihan",
+   "meaning": "研修",
+   "category": "ビジネス",
+   "forms": "語根: latih"
+  },
+  {
+   "word": "wawancara",
+   "meaning": "面接・インタビュー",
+   "category": "ビジネス"
+  },
+  {
+   "word": "lamaran",
+   "meaning": "応募・求職",
+   "category": "ビジネス",
+   "forms": "melamar kerja（就職の応募をする）"
+  },
+  {
+   "word": "karier",
+   "meaning": "キャリア・経歴",
+   "category": "ビジネス"
+  },
+  {
+   "word": "jabatan",
+   "meaning": "役職",
+   "category": "ビジネス"
+  },
+  {
+   "word": "promosi",
+   "meaning": "昇進・宣伝",
+   "category": "ビジネス"
+  },
+  {
+   "word": "mitra",
+   "meaning": "提携先・パートナー",
+   "category": "ビジネス"
+  },
+  {
+   "word": "pelayanan",
+   "meaning": "サービス・接客",
+   "category": "ビジネス",
+   "forms": "語根: layan"
+  },
+  {
+   "word": "keuntungan",
+   "meaning": "利益",
+   "category": "ビジネス",
+   "forms": "語根: untung"
+  },
+  {
+   "word": "kerugian",
+   "meaning": "損失",
+   "category": "ビジネス",
+   "forms": "語根: rugi"
+  },
+  {
+   "word": "penjualan",
+   "meaning": "売上・販売",
+   "category": "ビジネス",
+   "forms": "語根: jual"
+  },
+  {
+   "word": "akun",
+   "meaning": "アカウント",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "profil",
+   "meaning": "プロフィール",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "memperbarui",
+   "meaning": "更新する",
+   "category": "IT・オンライン",
+   "forms": "語根: baru / 口語: update"
+  },
+  {
+   "word": "mengunduh",
+   "meaning": "ダウンロードする",
+   "category": "IT・オンライン",
+   "forms": "口語: download"
+  },
+  {
+   "word": "mengunggah",
+   "meaning": "アップロードする",
+   "category": "IT・オンライン",
+   "forms": "口語: upload"
+  },
+  {
+   "word": "memasang",
+   "meaning": "インストールする・取り付ける",
+   "category": "IT・オンライン",
+   "forms": "語根: pasang"
+  },
+  {
+   "word": "aplikasi",
+   "meaning": "アプリ",
+   "category": "IT・オンライン",
+   "forms": "口語: aplikasi / apps"
+  },
+  {
+   "word": "layar",
+   "meaning": "画面",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "tautan",
+   "meaning": "リンク",
+   "category": "IT・オンライン",
+   "forms": "口語: link"
+  },
+  {
+   "word": "daring",
+   "meaning": "オンラインの",
+   "category": "IT・オンライン",
+   "forms": "dalam jaringan の略。口語: online"
+  },
+  {
+   "word": "jaringan",
+   "meaning": "ネットワーク・回線",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "baterai",
+   "meaning": "電池・バッテリー",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "sinyal",
+   "meaning": "電波・信号",
+   "category": "IT・オンライン",
+   "forms": "Sinyalnya jelek.（電波が悪い）"
+  },
+  {
+   "word": "media sosial",
+   "meaning": "SNS",
+   "category": "IT・オンライン",
+   "forms": "口語: medsos"
+  },
+  {
+   "word": "unggahan",
+   "meaning": "投稿",
+   "category": "IT・オンライン",
+   "forms": "語根: unggah"
+  },
+  {
+   "word": "mengikuti",
+   "meaning": "フォローする・従う",
+   "category": "IT・オンライン",
+   "forms": "語根: ikut"
+  },
+  {
+   "word": "komentar",
+   "meaning": "コメント",
+   "category": "IT・オンライン"
+  },
+  {
+   "word": "pemerintah",
+   "meaning": "政府",
+   "category": "社会・ニュース",
+   "forms": "語根: perintah（命令）"
+  },
+  {
+   "word": "presiden",
+   "meaning": "大統領",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "pemilu",
+   "meaning": "選挙",
+   "category": "社会・ニュース",
+   "forms": "pemilihan umum の略"
+  },
+  {
+   "word": "hukum",
+   "meaning": "法律",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "polisi",
+   "meaning": "警察",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "kejahatan",
+   "meaning": "犯罪",
+   "category": "社会・ニュース",
+   "forms": "語根: jahat（悪い）"
+  },
+  {
+   "word": "perang",
+   "meaning": "戦争",
+   "category": "社会・ニュース",
+   "forms": "反対: damai（平和）"
+  },
+  {
+   "word": "damai",
+   "meaning": "平和",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "ekonomi",
+   "meaning": "経済",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "masyarakat",
+   "meaning": "社会・地域住民",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "penduduk",
+   "meaning": "人口・住民",
+   "category": "社会・ニュース",
+   "forms": "語根: duduk"
+  },
+  {
+   "word": "lingkungan",
+   "meaning": "環境・周辺",
+   "category": "社会・ニュース",
+   "forms": "語根: lingkung"
+  },
+  {
+   "word": "polusi",
+   "meaning": "汚染",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "iklim",
+   "meaning": "気候",
+   "category": "社会・ニュース",
+   "forms": "perubahan iklim（気候変動）"
+  },
+  {
+   "word": "teknologi",
+   "meaning": "技術・テクノロジー",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "penelitian",
+   "meaning": "研究",
+   "category": "社会・ニュース",
+   "forms": "語根: teliti"
+  },
+  {
+   "word": "pembangunan",
+   "meaning": "開発・建設",
+   "category": "社会・ニュース",
+   "forms": "語根: bangun"
+  },
+  {
+   "word": "masalah",
+   "meaning": "問題",
+   "category": "社会・ニュース",
+   "forms": "Tidak masalah.（問題ない）"
+  },
+  {
+   "word": "solusi",
+   "meaning": "解決策",
+   "category": "社会・ニュース"
+  },
+  {
+   "word": "pengaruh",
+   "meaning": "影響",
+   "category": "社会・ニュース",
+   "forms": "berpengaruh（影響力のある）"
+  },
+  {
+   "word": "penyebab",
+   "meaning": "原因",
+   "category": "社会・ニュース",
+   "forms": "語根: sebab（理由）"
+  },
+  {
+   "word": "meningkat",
+   "meaning": "増加する",
+   "category": "社会・ニュース",
+   "forms": "語根: tingkat（レベル）"
+  },
+  {
+   "word": "menurun",
+   "meaning": "減少する",
+   "category": "社会・ニュース",
+   "forms": "語根: turun（下がる）"
+  },
+  {
+   "word": "Gimana kalau ...?",
+   "meaning": "〜はどう？",
+   "category": "口語表現2",
+   "forms": "提案の口語 = Bagaimana kalau"
+  },
+  {
+   "word": "Kok bisa?",
+   "meaning": "え、なんでそうなるの？",
+   "category": "口語表現2"
+  },
+  {
+   "word": "Ya ampun!",
+   "meaning": "なんてこった！",
+   "category": "口語表現2",
+   "forms": "驚き・呆れ"
+  },
+  {
+   "word": "Capek deh.",
+   "meaning": "もう疲れたよ（うんざり）",
+   "category": "口語表現2"
+  },
+  {
+   "word": "Terserah.",
+   "meaning": "どうでもいい・お任せ",
+   "category": "口語表現2"
+  },
+  {
+   "word": "Cape banget.",
+   "meaning": "超疲れた",
+   "category": "口語表現2",
+   "forms": "cape = capek の口語"
+  },
+  {
+   "word": "Gak papa.",
+   "meaning": "大丈夫だよ",
+   "category": "口語表現2",
+   "forms": "= tidak apa-apa"
+  },
+  {
+   "word": "Beneran?",
+   "meaning": "マジで？",
+   "category": "口語表現2",
+   "forms": "= benar-benar?"
+  },
+  {
+   "word": "Serius?",
+   "meaning": "本気？",
+   "category": "口語表現2"
+  },
+  {
+   "word": "Gitu ya.",
+   "meaning": "そうなんだ",
+   "category": "口語表現2",
+   "forms": "= begitu ya"
+  },
+  {
+   "word": "Lumayan lah.",
+   "meaning": "まあまあかな",
+   "category": "口語表現2",
+   "forms": "lah は語気を和らげる"
+  },
+  {
+   "word": "Nanti aja.",
+   "meaning": "あとでいいや",
+   "category": "口語表現2"
+  },
+  {
+   "word": "Yaudah.",
+   "meaning": "もういいや・じゃあそれで",
+   "category": "口語表現2",
+   "forms": "= ya sudah"
+  },
+  {
+   "word": "Bentar.",
+   "meaning": "ちょっと待って",
+   "category": "口語表現2",
+   "forms": "= sebentar"
+  },
+  {
+   "word": "Buruan!",
+   "meaning": "急いで！",
+   "category": "口語表現2",
+   "forms": "語根: buru"
+  },
+  {
+   "word": "Jangan gitu.",
+   "meaning": "そんなこと言わないで",
+   "category": "口語表現2"
+  },
+  {
+   "word": "Kasihan deh.",
+   "meaning": "かわいそうに",
+   "category": "口語表現2"
+  },
+  {
+   "word": "Mantul!",
+   "meaning": "最高！",
+   "category": "口語表現2",
+   "forms": "mantap betul の略（スラング）"
+  },
+  {
+   "word": "Gaskeun!",
+   "meaning": "やっちゃえ！行こう！",
+   "category": "口語表現2",
+   "forms": "スラング。gas（アクセル）から"
+  },
+  {
+   "word": "Baper.",
+   "meaning": "感情的になる・情緒不安定",
+   "category": "口語表現2",
+   "forms": "bawa perasaan の略（スラング）"
+  },
+  {
+   "word": "hemat",
+   "meaning": "節約する・倹約な",
+   "category": "お金2",
+   "forms": "hemat uang（お金を節約する）"
+  },
+  {
+   "word": "boros",
+   "meaning": "浪費する・無駄遣いの",
+   "category": "お金2",
+   "forms": "反対: hemat"
+  },
+  {
+   "word": "utang",
+   "meaning": "借金",
+   "category": "お金2",
+   "forms": "punya utang（借金がある）"
+  },
+  {
+   "word": "cicilan",
+   "meaning": "分割払い",
+   "category": "お金2",
+   "forms": "語根: cicil"
+  },
+  {
+   "word": "bunga bank",
+   "meaning": "（銀行の）利子",
+   "category": "お金2",
+   "forms": "bunga には「花」の意味もある"
+  },
+  {
+   "word": "gaji pokok",
+   "meaning": "基本給",
+   "category": "お金2",
+   "forms": "pokok（基本・幹）"
+  },
+  {
+   "word": "bonus",
+   "meaning": "ボーナス",
+   "category": "お金2"
+  },
+  {
+   "word": "transfer",
+   "meaning": "振込・送金",
+   "category": "お金2",
+   "forms": "transfer bank（銀行振込）"
+  },
+  {
+   "word": "saldo",
+   "meaning": "残高",
+   "category": "お金2",
+   "forms": "cek saldo（残高照会）"
+  },
+  {
+   "word": "dompet digital",
+   "meaning": "電子ウォレット",
+   "category": "お金2",
+   "forms": "GoPay, OVO, DANA など"
+  },
+  {
+   "word": "QRIS",
+   "meaning": "QRコード決済",
+   "category": "お金2",
+   "forms": "インドネシアの統一QR決済"
+  },
+  {
+   "word": "struk",
+   "meaning": "レシート",
+   "category": "お金2"
+  },
+  {
+   "word": "Ada apa nih?",
+   "meaning": "どうしたの？何かあった？",
+   "category": "会話フレーズ5",
+   "forms": "nih は口語の語気"
+  },
+  {
+   "word": "Lagi apa?",
+   "meaning": "何してるの？",
+   "category": "会話フレーズ5"
+  },
+  {
+   "word": "Mau ikut?",
+   "meaning": "一緒に来る？",
+   "category": "会話フレーズ5",
+   "forms": "語根: ikut"
+  },
+  {
+   "word": "Boleh ikut?",
+   "meaning": "一緒に行ってもいい？",
+   "category": "会話フレーズ5"
+  },
+  {
+   "word": "Duluan ya.",
+   "meaning": "お先に",
+   "category": "会話フレーズ5",
+   "forms": "duluan（先に）"
+  },
+  {
+   "word": "Titip ya.",
+   "meaning": "（買い物などを）お願いね・預けるね",
+   "category": "会話フレーズ5",
+   "forms": "nitip（頼む・預ける）"
+  },
+  {
+   "word": "Jangan lupa makan.",
+   "meaning": "ちゃんと食べてね",
+   "category": "会話フレーズ5",
+   "forms": "気づかいの定番"
+  },
+  {
+   "word": "Semoga cepat sembuh.",
+   "meaning": "早く良くなりますように",
+   "category": "会話フレーズ5",
+   "forms": "sembuh（回復する）"
+  },
+  {
+   "word": "Turut berduka cita.",
+   "meaning": "お悔やみ申し上げます",
+   "category": "会話フレーズ5"
+  },
+  {
+   "word": "Selamat menempuh hidup baru.",
+   "meaning": "ご結婚おめでとう",
+   "category": "会話フレーズ5",
+   "forms": "結婚祝いの定番"
+  },
+  {
+   "word": "Jaga diri baik-baik.",
+   "meaning": "体に気をつけてね",
+   "category": "会話フレーズ5",
+   "forms": "jaga diri（自分を大事に）"
+  },
+  {
+   "word": "Makasih ya.",
+   "meaning": "ありがとね",
+   "category": "会話フレーズ5",
+   "forms": "= terima kasih の口語"
+  },
+  {
+   "word": "Sama-sama, ya.",
+   "meaning": "どういたしまして",
+   "category": "会話フレーズ5"
+  },
+  {
+   "word": "Salam kenal.",
+   "meaning": "はじめまして（よろしく）",
+   "category": "会話フレーズ5",
+   "forms": "SNSやチャットの初対面で頻出"
+  },
+  {
+   "word": "Boleh minta tolong?",
+   "meaning": "お願いしてもいい？",
+   "category": "会話フレーズ5"
+  },
+  {
+   "word": "Ada waktu sebentar?",
+   "meaning": "ちょっと時間ある？",
+   "category": "会話フレーズ5"
+  },
+  {
+   "word": "Kapan-kapan main ya.",
+   "meaning": "今度遊ぼうね",
+   "category": "会話フレーズ5",
+   "forms": "kapan-kapan（いつか）/ main（遊ぶ）"
+  },
+  {
+   "word": "Hati-hati di jalan ya.",
+   "meaning": "気をつけて帰ってね",
+   "category": "会話フレーズ5"
+  },
+  {
+   "word": "Sukses selalu!",
+   "meaning": "ずっと成功しますように！",
+   "category": "会話フレーズ5",
+   "forms": "応援の定番"
+  },
+  {
+   "word": "ada gula ada semut",
+   "meaning": "甘い所に人が集まる",
+   "category": "ことわざ・慣用",
+   "forms": "砂糖があればアリが来る"
+  },
+  {
+   "word": "sedia payung sebelum hujan",
+   "meaning": "備えあれば憂いなし",
+   "category": "ことわざ・慣用",
+   "forms": "雨の前に傘を用意する"
+  },
+  {
+   "word": "tak kenal maka tak sayang",
+   "meaning": "知らなければ好きにもなれない",
+   "category": "ことわざ・慣用",
+   "forms": "まず知ることが大切"
+  },
+  {
+   "word": "sekali dayung dua tiga pulau terlampaui",
+   "meaning": "一石二鳥",
+   "category": "ことわざ・慣用",
+   "forms": "一漕ぎで島を2、3越える"
+  },
+  {
+   "word": "bagai pinang dibelah dua",
+   "meaning": "うり二つ",
+   "category": "ことわざ・慣用",
+   "forms": "ビンロウの実を2つに割ったよう"
+  },
+  {
+   "word": "berat sama dipikul",
+   "meaning": "苦楽を共にする",
+   "category": "ことわざ・慣用",
+   "forms": "重い物を一緒に担ぐ"
+  },
+  {
+   "word": "di mana bumi dipijak di situ langit dijunjung",
+   "meaning": "郷に入っては郷に従え",
+   "category": "ことわざ・慣用"
+  },
+  {
+   "word": "pelan-pelan asal selamat",
+   "meaning": "急がば回れ",
+   "category": "ことわざ・慣用",
+   "forms": "ゆっくりでも無事なのが一番"
+  },
+  {
+   "word": "sambil menyelam minum air",
+   "meaning": "一挙両得",
+   "category": "ことわざ・慣用",
+   "forms": "潜りながら水を飲む"
+  },
+  {
+   "word": "nasi sudah menjadi bubur",
+   "meaning": "覆水盆に返らず",
+   "category": "ことわざ・慣用",
+   "forms": "ご飯がお粥になってしまった"
   }
  ]
 }

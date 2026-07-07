@@ -1,13 +1,13 @@
 # LINE AI秘書 連携ガイド
 
-MIGNON LINGO の「毎日の単語10個+文法1課」をLINEで配信し、反復テストで定着させるための設定資料。
+OPOYO Learning の「毎日の単語10個+文法1課」をLINEで配信し、反復テストで定着させるための設定資料。
 
 ## データの場所
 
 | ファイル | 内容 | URL |
 |---|---|---|
 | `curriculum.json` | **日別カリキュラム**(毎日: 英語5語+イ語5語+文法1課、+先取り分`extra`。要点・例文入り。日数は全単語が一巡するまで自動延長) | `https://tadao-eng.github.io/MIGNON/learn/curriculum.json` |
-| `words.json` | 全単語(英963/イ882、順次拡張)+週テーマ | `https://tadao-eng.github.io/MIGNON/learn/words.json` |
+| `words.json` | 全単語(英1088/イ1011、順次拡張)+週テーマ | `https://tadao-eng.github.io/MIGNON/learn/words.json` |
 
 GitHub raw でも取得可: `https://raw.githubusercontent.com/tadao-eng/MIGNON/main/learn/<ファイル名>`
 
@@ -53,7 +53,7 @@ GitHub raw でも取得可: `https://raw.githubusercontent.com/tadao-eng/MIGNON/
 ユーザーがアプリから送る報告のフォーマット(パースする場合の参考):
 
 ```
-📚 MIGNON LINGO Day 12/90
+📚 OPOYO Learning Day 12/90
 タスク 4/4（単語42枚 文法✅ 読解✅ 音読✅）
 🔥 12日連続
 苦手: postpone / berapa / lurus
@@ -76,7 +76,7 @@ GitHub raw でも取得可: `https://raw.githubusercontent.com/tadao-eng/MIGNON/
 - 「もっと」「倍」と言われたら: その日の extra(追加10語+文法1課)を出す。やる気を必ず褒める。
 - 「テスト」と言われたら: 直近3日分の単語から4択クイズを1問ずつ、計10問出す。
   1問ごとに正誤判定と短い解説。最後にスコアと間違えた単語のまとめ。
-- ユーザーから「📚 MIGNON LINGO Day…」の報告が来たら: 内容を記録し、短く具体的に褒める。
+- ユーザーから「📚 OPOYO Learning Day…」の報告が来たら: 内容を記録し、短く具体的に褒める。
   「苦手:」の単語があれば翌日のテストに必ず含める。
 - 22時までに報告がない日は「今日の報告がまだです。ストリークが切れます🔥」と催促する。
 - 英語・インドネシア語の質問には例文つきで答え、新しく教えた単語は
