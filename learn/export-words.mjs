@@ -34,10 +34,13 @@ const words = {
 };
 writeFileSync(new URL('./words.json', import.meta.url), JSON.stringify(words, null, 1), 'utf8');
 
-/* ---------- curriculum.json: 90日分の配信カリキュラム ----------
+/* ---------- curriculum.json: 180日分の配信カリキュラム ----------
    毎日: 英語5語 + インドネシア語5語(計10語) + 文法1課(英/イ交互)。
+   さらに各日に extra(翌日分の先取り)を持ち、やる気のある日は倍(20語+文法2課)学べる。
+   先取りした場合、翌日の通常配信は自然に復習になる。
    新出が尽きたら先頭から復習に回る(review: true)。 */
 const PER_DAY = 5;
+const TOTAL_DAYS = 180;
 const enDays = Math.ceil(EN.length / PER_DAY);
 const idDays = Math.ceil(ID.length / PER_DAY);
 
@@ -48,37 +51,43 @@ function wordsForDay(list, dayCount, d) {
     list: list.slice(idx * PER_DAY, idx * PER_DAY + PER_DAY).map(toObj),
   };
 }
-
-const days = [];
-for (let d = 1; d <= 90; d++) {
+function grammarForDay(d) {
   const gLang = d % 2 === 1 ? 'en' : 'id';
   const seq = Math.floor((d - 1) / 2);
   const lessons = GRAMMAR[gLang];
   const lesson = lessons[seq % lessons.length];
+  return {
+    lang: gLang,
+    no: (seq % lessons.length) + 1,
+    review: seq >= lessons.length,
+    title: lesson.t,
+    point: lesson.e,
+    examples: lesson.ex.map(e => ({ text: e[0], jp: e[1] })),
+  };
+}
+function contentForDay(d) {
+  return {
+    words: { en: wordsForDay(EN, enDays, d), id: wordsForDay(ID, idDays, d) },
+    grammar: grammarForDay(d),
+  };
+}
+
+const days = [];
+for (let d = 1; d <= TOTAL_DAYS; d++) {
   days.push({
     day: d,
-    week: Math.min(12, Math.floor((d - 1) / 7) + 1),
+    week: Math.floor((d - 1) / 7) + 1,
     theme: ROADMAP[Math.min(11, Math.floor((d - 1) / 7))][0],
-    words: {
-      en: wordsForDay(EN, enDays, d),
-      id: wordsForDay(ID, idDays, d),
-    },
-    grammar: {
-      lang: gLang,
-      no: (seq % lessons.length) + 1,
-      review: seq >= lessons.length,
-      title: lesson.t,
-      point: lesson.e,
-      examples: lesson.ex.map(e => ({ text: e[0], jp: e[1] })),
-    },
+    ...contentForDay(d),
+    extra: contentForDay(d + 1), // やる気のある日の追加分(翌日の先取り)
   });
 }
 
 const curriculum = {
   app: 'MIGNON LINGO',
   updated: new Date().toISOString().slice(0, 10),
-  note: 'LINEボット配信用の90日カリキュラム。day 1 の日付(start_date)はボット側で保持し、経過日数で days[] を引くこと。',
-  per_day: { words: PER_DAY * 2, grammar: 1 },
+  note: 'LINEボット配信用カリキュラム(180日)。day 1 の日付(start_date)はボット側で保持し、経過日数で days[] を引く。extra はその日の追加学習分(翌日の先取り。先取りした翌日は同内容が復習として流れる)。90日は最初のマイルストーンで、学習は継続する。',
+  per_day: { words: PER_DAY * 2, grammar: 1, with_extra: { words: PER_DAY * 4, grammar: 2 } },
   days,
 };
 writeFileSync(new URL('./curriculum.json', import.meta.url), JSON.stringify(curriculum), 'utf8');
