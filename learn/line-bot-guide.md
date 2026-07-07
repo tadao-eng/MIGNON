@@ -7,7 +7,7 @@ OPOYO Learning の「毎日の単語10個+文法1課」をLINEで配信し、反
 | ファイル | 内容 | URL |
 |---|---|---|
 | `curriculum.json` | **日別カリキュラム**(毎日: 英語5語+イ語5語+文法1課、+先取り分`extra`。要点・例文入り。日数は全単語が一巡するまで自動延長) | `https://tadao-eng.github.io/MIGNON/learn/curriculum.json` |
-| `words.json` | 全単語(英1088/イ1011、順次拡張)+週テーマ | `https://tadao-eng.github.io/MIGNON/learn/words.json` |
+| `words.json` | 全単語(英1248/イ1155、順次拡張)+週テーマ | `https://tadao-eng.github.io/MIGNON/learn/words.json` |
 
 GitHub raw でも取得可: `https://raw.githubusercontent.com/tadao-eng/MIGNON/main/learn/<ファイル名>`
 

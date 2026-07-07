@@ -5832,6 +5832,840 @@
    "word": "No pain, no gain.",
    "meaning": "苦労なくして得るものなし",
    "category": "イディオム・慣用"
+  },
+  {
+   "word": "nod",
+   "meaning": "うなずく",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "point",
+   "meaning": "指さす",
+   "category": "動作・しぐさ",
+   "forms": "point at 〜"
+  },
+  {
+   "word": "bow",
+   "meaning": "おじぎする",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "shake hands",
+   "meaning": "握手する",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "hug",
+   "meaning": "抱きしめる",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "blink",
+   "meaning": "まばたきする",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "stare",
+   "meaning": "じっと見つめる",
+   "category": "動作・しぐさ",
+   "forms": "stare at 〜"
+  },
+  {
+   "word": "frown",
+   "meaning": "眉をひそめる",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "yawn",
+   "meaning": "あくびする",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "whisper",
+   "meaning": "ささやく",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "breathe",
+   "meaning": "呼吸する",
+   "category": "動作・しぐさ",
+   "forms": "名詞: breath（息）"
+  },
+  {
+   "word": "swallow",
+   "meaning": "飲み込む",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "bite",
+   "meaning": "かむ",
+   "category": "動作・しぐさ",
+   "forms": "変化: bite – bit – bitten"
+  },
+  {
+   "word": "lick",
+   "meaning": "なめる",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "kick",
+   "meaning": "蹴る",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "squeeze",
+   "meaning": "ぎゅっと握る・しぼる",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "grab",
+   "meaning": "つかむ",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "drop",
+   "meaning": "落とす",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "lift",
+   "meaning": "持ち上げる",
+   "category": "動作・しぐさ"
+  },
+  {
+   "word": "stir",
+   "meaning": "かき混ぜる",
+   "category": "料理・味2"
+  },
+  {
+   "word": "slice",
+   "meaning": "薄く切る",
+   "category": "料理・味2"
+  },
+  {
+   "word": "spread",
+   "meaning": "塗り広げる・広がる",
+   "category": "料理・味2",
+   "forms": "変化: spread – spread – spread"
+  },
+  {
+   "word": "freeze",
+   "meaning": "凍る・冷凍する",
+   "category": "料理・味2",
+   "forms": "変化: freeze – froze – frozen"
+  },
+  {
+   "word": "melt",
+   "meaning": "溶ける・溶かす",
+   "category": "料理・味2"
+  },
+  {
+   "word": "steam",
+   "meaning": "蒸す・蒸気",
+   "category": "料理・味2"
+  },
+  {
+   "word": "roast",
+   "meaning": "（肉を）ローストする",
+   "category": "料理・味2"
+  },
+  {
+   "word": "sour",
+   "meaning": "すっぱい",
+   "category": "料理・味2"
+  },
+  {
+   "word": "rotten",
+   "meaning": "腐った",
+   "category": "料理・味2"
+  },
+  {
+   "word": "ripe",
+   "meaning": "熟した",
+   "category": "料理・味2"
+  },
+  {
+   "word": "raw",
+   "meaning": "生の",
+   "category": "料理・味2"
+  },
+  {
+   "word": "greasy",
+   "meaning": "脂っこい",
+   "category": "料理・味2"
+  },
+  {
+   "word": "crispy",
+   "meaning": "カリカリした",
+   "category": "料理・味2"
+  },
+  {
+   "word": "tender",
+   "meaning": "やわらかい（肉が）",
+   "category": "料理・味2"
+  },
+  {
+   "word": "tough",
+   "meaning": "かたい（肉が）・タフな",
+   "category": "料理・味2"
+  },
+  {
+   "word": "flavor",
+   "meaning": "風味",
+   "category": "料理・味2"
+  },
+  {
+   "word": "recipe",
+   "meaning": "レシピ",
+   "category": "料理・味2"
+  },
+  {
+   "word": "ingredient",
+   "meaning": "材料",
+   "category": "料理・味2"
+  },
+  {
+   "word": "portion",
+   "meaning": "一人前・分量",
+   "category": "料理・味2"
+  },
+  {
+   "word": "anxious",
+   "meaning": "不安な",
+   "category": "感情・機微"
+  },
+  {
+   "word": "calm",
+   "meaning": "落ち着いた",
+   "category": "感情・機微"
+  },
+  {
+   "word": "relieved",
+   "meaning": "ほっとした",
+   "category": "感情・機微"
+  },
+  {
+   "word": "embarrassed",
+   "meaning": "恥ずかしい",
+   "category": "感情・機微"
+  },
+  {
+   "word": "guilty",
+   "meaning": "罪悪感のある",
+   "category": "感情・機微"
+  },
+  {
+   "word": "grateful",
+   "meaning": "感謝している",
+   "category": "感情・機微",
+   "forms": "= thankful"
+  },
+  {
+   "word": "curious",
+   "meaning": "好奇心のある",
+   "category": "感情・機微"
+  },
+  {
+   "word": "confused",
+   "meaning": "混乱した",
+   "category": "感情・機微"
+  },
+  {
+   "word": "frustrated",
+   "meaning": "いらだった",
+   "category": "感情・機微"
+  },
+  {
+   "word": "upset",
+   "meaning": "動揺した・怒った",
+   "category": "感情・機微"
+  },
+  {
+   "word": "moved",
+   "meaning": "感動した",
+   "category": "感情・機微",
+   "forms": "be moved（心を動かされる）"
+  },
+  {
+   "word": "impressed",
+   "meaning": "感心した",
+   "category": "感情・機微"
+  },
+  {
+   "word": "worried",
+   "meaning": "心配した",
+   "category": "感情・機微",
+   "forms": "worried about 〜"
+  },
+  {
+   "word": "awkward",
+   "meaning": "気まずい・ぎこちない",
+   "category": "感情・機微"
+  },
+  {
+   "word": "eager",
+   "meaning": "熱心な・したくてたまらない",
+   "category": "感情・機微"
+  },
+  {
+   "word": "reluctant",
+   "meaning": "気が進まない",
+   "category": "感情・機微"
+  },
+  {
+   "word": "content",
+   "meaning": "満足した",
+   "category": "感情・機微",
+   "forms": "名詞では「中身」"
+  },
+  {
+   "word": "overwhelmed",
+   "meaning": "圧倒された・いっぱいいっぱいの",
+   "category": "感情・機微"
+  },
+  {
+   "word": "slightly",
+   "meaning": "わずかに",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "fairly",
+   "meaning": "かなり・まあまあ",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "pretty",
+   "meaning": "かなり（口語）",
+   "category": "程度・頻度3",
+   "forms": "pretty good（なかなかいい）"
+  },
+  {
+   "word": "quite",
+   "meaning": "かなり",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "extremely",
+   "meaning": "極めて",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "completely",
+   "meaning": "完全に",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "totally",
+   "meaning": "まったく・完全に",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "barely",
+   "meaning": "かろうじて・ほとんど〜ない",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "hardly",
+   "meaning": "ほとんど〜ない",
+   "category": "程度・頻度3",
+   "forms": "hardly ever（めったにない）"
+  },
+  {
+   "word": "nearly",
+   "meaning": "ほぼ・もう少しで",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "mostly",
+   "meaning": "たいてい・主に",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "mainly",
+   "meaning": "主に",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "partly",
+   "meaning": "部分的に",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "gradually",
+   "meaning": "徐々に",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "immediately",
+   "meaning": "すぐに",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "eventually",
+   "meaning": "最終的に・そのうち",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "constantly",
+   "meaning": "絶えず",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "seldom",
+   "meaning": "めったに〜ない（文語）",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "frequently",
+   "meaning": "頻繁に",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "stapler",
+   "meaning": "ホチキス",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "scissors",
+   "meaning": "はさみ",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "glue",
+   "meaning": "のり・接着剤",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "tape",
+   "meaning": "テープ",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "eraser",
+   "meaning": "消しゴム",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "pencil",
+   "meaning": "鉛筆",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "pen",
+   "meaning": "ペン",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "marker",
+   "meaning": "マーカー",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "envelope",
+   "meaning": "封筒",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "stamp",
+   "meaning": "切手・スタンプ",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "calendar",
+   "meaning": "カレンダー",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "clock",
+   "meaning": "時計（置き・掛け）",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "charger",
+   "meaning": "充電器",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "cable",
+   "meaning": "ケーブル",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "tissue",
+   "meaning": "ティッシュ",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "keychain",
+   "meaning": "キーホルダー",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "thunder",
+   "meaning": "雷（音）",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "lightning",
+   "meaning": "稲妻",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "fog",
+   "meaning": "霧",
+   "category": "天気・自然3",
+   "forms": "foggy（霧の）"
+  },
+  {
+   "word": "humid",
+   "meaning": "湿気の多い",
+   "category": "天気・自然3",
+   "forms": "humidity（湿度）"
+  },
+  {
+   "word": "dry",
+   "meaning": "乾いた",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "freezing",
+   "meaning": "凍えるほど寒い",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "boiling",
+   "meaning": "うだるほど暑い",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "breeze",
+   "meaning": "そよ風",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "shade",
+   "meaning": "日陰",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "sunlight",
+   "meaning": "日光",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "flood",
+   "meaning": "洪水",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "drought",
+   "meaning": "干ばつ",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "forecast",
+   "meaning": "予報",
+   "category": "天気・自然3",
+   "forms": "weather forecast（天気予報）"
+  },
+  {
+   "word": "temperature",
+   "meaning": "気温・温度",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "degree",
+   "meaning": "度（温度・角度）",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "harvest",
+   "meaning": "収穫",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "seed",
+   "meaning": "種",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "root",
+   "meaning": "根",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "branch",
+   "meaning": "枝",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "relationship",
+   "meaning": "関係",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "friendship",
+   "meaning": "友情",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "trust",
+   "meaning": "信頼・信頼する",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "argue",
+   "meaning": "口論する",
+   "category": "人間関係・性格3",
+   "forms": "argument（口論）"
+  },
+  {
+   "word": "apologize",
+   "meaning": "謝る",
+   "category": "人間関係・性格3",
+   "forms": "apology（謝罪）"
+  },
+  {
+   "word": "forgive",
+   "meaning": "許す",
+   "category": "人間関係・性格3",
+   "forms": "変化: forgive – forgave – forgiven"
+  },
+  {
+   "word": "gossip",
+   "meaning": "うわさ話",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "favor",
+   "meaning": "親切な行為・頼み",
+   "category": "人間関係・性格3",
+   "forms": "do me a favor（お願いを聞く）"
+  },
+  {
+   "word": "generous",
+   "meaning": "気前のいい",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "selfish",
+   "meaning": "わがままな",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "reliable",
+   "meaning": "頼りになる",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "stubborn",
+   "meaning": "頑固な",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "cheerful",
+   "meaning": "陽気な",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "gentle",
+   "meaning": "優しい・穏やかな",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "strict",
+   "meaning": "厳しい",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "mature",
+   "meaning": "大人びた・成熟した",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "childish",
+   "meaning": "子どもっぽい",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "situation",
+   "meaning": "状況",
+   "category": "抽象・思考"
+  },
+  {
+   "word": "condition",
+   "meaning": "状態・条件",
+   "category": "抽象・思考"
+  },
+  {
+   "word": "chance",
+   "meaning": "機会・見込み",
+   "category": "抽象・思考",
+   "forms": "= opportunity"
+  },
+  {
+   "word": "opportunity",
+   "meaning": "機会",
+   "category": "抽象・思考"
+  },
+  {
+   "word": "choice",
+   "meaning": "選択",
+   "category": "抽象・思考"
+  },
+  {
+   "word": "purpose",
+   "meaning": "目的",
+   "category": "抽象・思考",
+   "forms": "on purpose（わざと）"
+  },
+  {
+   "word": "difference",
+   "meaning": "違い",
+   "category": "抽象・思考",
+   "forms": "make a difference（違いを生む）"
+  },
+  {
+   "word": "fact",
+   "meaning": "事実",
+   "category": "抽象・思考",
+   "forms": "in fact（実際は）"
+  },
+  {
+   "word": "idea",
+   "meaning": "考え・アイデア",
+   "category": "抽象・思考"
+  },
+  {
+   "word": "belief",
+   "meaning": "信念",
+   "category": "抽象・思考",
+   "forms": "動詞: believe"
+  },
+  {
+   "word": "memory",
+   "meaning": "記憶・思い出",
+   "category": "抽象・思考"
+  },
+  {
+   "word": "mind",
+   "meaning": "心・気にする",
+   "category": "抽象・思考",
+   "forms": "change one's mind（気が変わる）"
+  },
+  {
+   "word": "thought",
+   "meaning": "考え",
+   "category": "抽象・思考",
+   "forms": "動詞 think の名詞形"
+  },
+  {
+   "word": "habit",
+   "meaning": "習慣",
+   "category": "抽象・思考"
+  },
+  {
+   "word": "effort",
+   "meaning": "努力",
+   "category": "抽象・思考",
+   "forms": "make an effort（努力する）"
+  },
+  {
+   "word": "progress",
+   "meaning": "進歩",
+   "category": "抽象・思考",
+   "forms": "make progress（上達する）"
+  },
+  {
+   "word": "measure",
+   "meaning": "測る・対策",
+   "category": "身の回り2"
+  },
+  {
+   "word": "weigh",
+   "meaning": "重さをはかる",
+   "category": "身の回り2",
+   "forms": "weight（重さ）"
+  },
+  {
+   "word": "fold",
+   "meaning": "たたむ",
+   "category": "身の回り2"
+  },
+  {
+   "word": "hang",
+   "meaning": "掛ける・つるす",
+   "category": "身の回り2",
+   "forms": "変化: hang – hung – hung"
+  },
+  {
+   "word": "tie",
+   "meaning": "結ぶ・ネクタイ",
+   "category": "身の回り2"
+  },
+  {
+   "word": "lock",
+   "meaning": "鍵をかける",
+   "category": "身の回り2",
+   "forms": "反対: unlock"
+  },
+  {
+   "word": "press",
+   "meaning": "押す",
+   "category": "身の回り2"
+  },
+  {
+   "word": "adjust",
+   "meaning": "調整する",
+   "category": "身の回り2"
+  },
+  {
+   "word": "wrap",
+   "meaning": "包む",
+   "category": "身の回り2",
+   "forms": "wrap up（包む・まとめる）"
+  },
+  {
+   "word": "pile",
+   "meaning": "積み重ね・積む",
+   "category": "身の回り2"
+  },
+  {
+   "word": "scratch",
+   "meaning": "ひっかく・かく",
+   "category": "身の回り2"
+  },
+  {
+   "word": "polish",
+   "meaning": "磨く",
+   "category": "身の回り2"
+  },
+  {
+   "word": "sweep",
+   "meaning": "掃く",
+   "category": "身の回り2",
+   "forms": "変化: sweep – swept – swept"
+  },
+  {
+   "word": "vacuum",
+   "meaning": "掃除機をかける",
+   "category": "身の回り2"
+  },
+  {
+   "word": "laundry",
+   "meaning": "洗濯物",
+   "category": "身の回り2",
+   "forms": "do the laundry（洗濯する）"
+  },
+  {
+   "word": "chore",
+   "meaning": "雑用・家事",
+   "category": "身の回り2"
+  },
+  {
+   "word": "leak",
+   "meaning": "漏れる・漏れ",
+   "category": "身の回り2"
   }
  ],
  "id": [
@@ -11346,6 +12180,806 @@
    "meaning": "覆水盆に返らず",
    "category": "ことわざ・慣用",
    "forms": "ご飯がお粥になってしまった"
+  },
+  {
+   "word": "mengangguk",
+   "meaning": "うなずく",
+   "category": "動作・しぐさ",
+   "forms": "語根: angguk"
+  },
+  {
+   "word": "menggeleng",
+   "meaning": "（首を横に振って）否定する",
+   "category": "動作・しぐさ",
+   "forms": "語根: geleng"
+  },
+  {
+   "word": "melambai",
+   "meaning": "手を振る",
+   "category": "動作・しぐさ",
+   "forms": "語根: lambai"
+  },
+  {
+   "word": "menunjuk",
+   "meaning": "指さす",
+   "category": "動作・しぐさ",
+   "forms": "語根: tunjuk"
+  },
+  {
+   "word": "membungkuk",
+   "meaning": "おじぎする・かがむ",
+   "category": "動作・しぐさ",
+   "forms": "語根: bungkuk"
+  },
+  {
+   "word": "berjabat tangan",
+   "meaning": "握手する",
+   "category": "動作・しぐさ",
+   "forms": "jabat + tangan（手）"
+  },
+  {
+   "word": "memeluk",
+   "meaning": "抱きしめる",
+   "category": "動作・しぐさ",
+   "forms": "語根: peluk"
+  },
+  {
+   "word": "bernapas",
+   "meaning": "呼吸する",
+   "category": "動作・しぐさ",
+   "forms": "語根: napas（息）"
+  },
+  {
+   "word": "menelan",
+   "meaning": "飲み込む",
+   "category": "動作・しぐさ",
+   "forms": "語根: telan"
+  },
+  {
+   "word": "menggigit",
+   "meaning": "かむ",
+   "category": "動作・しぐさ",
+   "forms": "語根: gigit（歯）"
+  },
+  {
+   "word": "menjilat",
+   "meaning": "なめる",
+   "category": "動作・しぐさ",
+   "forms": "語根: jilat"
+  },
+  {
+   "word": "menendang",
+   "meaning": "蹴る",
+   "category": "動作・しぐさ",
+   "forms": "語根: tendang"
+  },
+  {
+   "word": "memegang",
+   "meaning": "つかむ・持つ",
+   "category": "動作・しぐさ",
+   "forms": "語根: pegang"
+  },
+  {
+   "word": "menjatuhkan",
+   "meaning": "落とす",
+   "category": "動作・しぐさ",
+   "forms": "語根: jatuh（落ちる）"
+  },
+  {
+   "word": "mengangkat",
+   "meaning": "持ち上げる・（電話に）出る",
+   "category": "動作・しぐさ",
+   "forms": "語根: angkat"
+  },
+  {
+   "word": "berbisik",
+   "meaning": "ささやく",
+   "category": "動作・しぐさ",
+   "forms": "語根: bisik"
+  },
+  {
+   "word": "menguap",
+   "meaning": "あくびする",
+   "category": "動作・しぐさ",
+   "forms": "語根: uap"
+  },
+  {
+   "word": "mengaduk",
+   "meaning": "かき混ぜる",
+   "category": "料理・味2",
+   "forms": "語根: aduk"
+  },
+  {
+   "word": "mengiris",
+   "meaning": "薄く切る",
+   "category": "料理・味2",
+   "forms": "語根: iris"
+  },
+  {
+   "word": "membekukan",
+   "meaning": "冷凍する",
+   "category": "料理・味2",
+   "forms": "語根: beku（凍る）"
+  },
+  {
+   "word": "mencair",
+   "meaning": "溶ける",
+   "category": "料理・味2",
+   "forms": "語根: cair（液体の）"
+  },
+  {
+   "word": "mengukus",
+   "meaning": "蒸す",
+   "category": "料理・味2",
+   "forms": "語根: kukus"
+  },
+  {
+   "word": "asam",
+   "meaning": "すっぱい",
+   "category": "料理・味2",
+   "forms": "類語: kecut"
+  },
+  {
+   "word": "basi",
+   "meaning": "（食べ物が）傷んだ",
+   "category": "料理・味2"
+  },
+  {
+   "word": "busuk",
+   "meaning": "腐った",
+   "category": "料理・味2"
+  },
+  {
+   "word": "matang",
+   "meaning": "熟した・（火が）通った",
+   "category": "料理・味2",
+   "forms": "反対: mentah"
+  },
+  {
+   "word": "mentah",
+   "meaning": "生の・未熟な",
+   "category": "料理・味2"
+  },
+  {
+   "word": "berminyak",
+   "meaning": "脂っこい",
+   "category": "料理・味2",
+   "forms": "minyak（油）"
+  },
+  {
+   "word": "renyah",
+   "meaning": "カリカリした",
+   "category": "料理・味2"
+  },
+  {
+   "word": "empuk",
+   "meaning": "やわらかい",
+   "category": "料理・味2"
+  },
+  {
+   "word": "keras",
+   "meaning": "かたい・厳しい",
+   "category": "料理・味2"
+  },
+  {
+   "word": "rasa",
+   "meaning": "味・感じ",
+   "category": "料理・味2",
+   "forms": "rasanya（その味は）"
+  },
+  {
+   "word": "resep",
+   "meaning": "レシピ・処方箋",
+   "category": "料理・味2"
+  },
+  {
+   "word": "bahan",
+   "meaning": "材料",
+   "category": "料理・味2"
+  },
+  {
+   "word": "porsi",
+   "meaning": "一人前・分量",
+   "category": "料理・味2"
+  },
+  {
+   "word": "bumbu",
+   "meaning": "調味料・スパイス",
+   "category": "料理・味2"
+  },
+  {
+   "word": "gugup",
+   "meaning": "緊張した",
+   "category": "感情・機微"
+  },
+  {
+   "word": "cemas",
+   "meaning": "不安な",
+   "category": "感情・機微"
+  },
+  {
+   "word": "tenang",
+   "meaning": "落ち着いた",
+   "category": "感情・機微",
+   "forms": "Tenang saja.（落ち着いて）"
+  },
+  {
+   "word": "lega",
+   "meaning": "ほっとした",
+   "category": "感情・機微"
+  },
+  {
+   "word": "bersalah",
+   "meaning": "罪悪感のある",
+   "category": "感情・機微",
+   "forms": "語根: salah"
+  },
+  {
+   "word": "bersyukur",
+   "meaning": "感謝している",
+   "category": "感情・機微",
+   "forms": "語根: syukur"
+  },
+  {
+   "word": "penasaran",
+   "meaning": "気になる・好奇心のある",
+   "category": "感情・機微"
+  },
+  {
+   "word": "bingung",
+   "meaning": "混乱した・迷った",
+   "category": "感情・機微"
+  },
+  {
+   "word": "frustrasi",
+   "meaning": "いらだった",
+   "category": "感情・機微"
+  },
+  {
+   "word": "kesal",
+   "meaning": "むかつく・いらいらした",
+   "category": "感情・機微"
+  },
+  {
+   "word": "terharu",
+   "meaning": "感動した",
+   "category": "感情・機微",
+   "forms": "語根: haru"
+  },
+  {
+   "word": "terkesan",
+   "meaning": "感心した・印象づけられた",
+   "category": "感情・機微",
+   "forms": "語根: kesan（印象）"
+  },
+  {
+   "word": "khawatir",
+   "meaning": "心配した",
+   "category": "感情・機微",
+   "forms": "Jangan khawatir.（心配しないで）"
+  },
+  {
+   "word": "canggung",
+   "meaning": "気まずい・ぎこちない",
+   "category": "感情・機微"
+  },
+  {
+   "word": "semangat",
+   "meaning": "やる気・元気",
+   "category": "感情・機微",
+   "forms": "Semangat!（がんばって！）"
+  },
+  {
+   "word": "kewalahan",
+   "meaning": "手に負えない・いっぱいいっぱい",
+   "category": "感情・機微"
+  },
+  {
+   "word": "lumayan",
+   "meaning": "まあまあ",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "amat",
+   "meaning": "非常に",
+   "category": "程度・頻度3",
+   "forms": "やや文語的"
+  },
+  {
+   "word": "benar-benar",
+   "meaning": "本当に・完全に",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "sepenuhnya",
+   "meaning": "完全に",
+   "category": "程度・頻度3",
+   "forms": "語根: penuh（満ちた）"
+  },
+  {
+   "word": "nyaris",
+   "meaning": "かろうじて・危うく",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "kebanyakan",
+   "meaning": "たいてい・大部分",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "terutama",
+   "meaning": "特に・主に",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "sebagian",
+   "meaning": "部分的に・一部",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "perlahan",
+   "meaning": "徐々に・ゆっくり",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "terus-menerus",
+   "meaning": "絶えず",
+   "category": "程度・頻度3"
+  },
+  {
+   "word": "stapler",
+   "meaning": "ホチキス",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "gunting",
+   "meaning": "はさみ",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "lem",
+   "meaning": "のり・接着剤",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "selotip",
+   "meaning": "セロテープ",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "penghapus",
+   "meaning": "消しゴム",
+   "category": "文房具・小物",
+   "forms": "語根: hapus"
+  },
+  {
+   "word": "pensil",
+   "meaning": "鉛筆",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "pulpen",
+   "meaning": "ボールペン",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "spidol",
+   "meaning": "マーカー",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "amplop",
+   "meaning": "封筒",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "perangko",
+   "meaning": "切手",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "map",
+   "meaning": "紙挟み・フォルダ",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "kalender",
+   "meaning": "カレンダー",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "jam dinding",
+   "meaning": "掛け時計",
+   "category": "文房具・小物",
+   "forms": "dinding（壁）"
+  },
+  {
+   "word": "pengisi daya",
+   "meaning": "充電器",
+   "category": "文房具・小物",
+   "forms": "口語: charger"
+  },
+  {
+   "word": "kabel",
+   "meaning": "ケーブル",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "tisu",
+   "meaning": "ティッシュ",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "gantungan kunci",
+   "meaning": "キーホルダー",
+   "category": "文房具・小物"
+  },
+  {
+   "word": "petir",
+   "meaning": "雷",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "kilat",
+   "meaning": "稲妻",
+   "category": "天気・自然3",
+   "forms": "secepat kilat（電光石火）"
+  },
+  {
+   "word": "lembap",
+   "meaning": "湿気の多い",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "kering",
+   "meaning": "乾いた",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "sejuk",
+   "meaning": "涼しい・さわやかな",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "angin sepoi-sepoi",
+   "meaning": "そよ風",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "teduh",
+   "meaning": "日陰の・涼しげな",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "sinar matahari",
+   "meaning": "日光",
+   "category": "天気・自然3",
+   "forms": "sinar（光）"
+  },
+  {
+   "word": "kekeringan",
+   "meaning": "干ばつ",
+   "category": "天気・自然3",
+   "forms": "語根: kering"
+  },
+  {
+   "word": "prakiraan cuaca",
+   "meaning": "天気予報",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "suhu",
+   "meaning": "気温・温度",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "derajat",
+   "meaning": "度（温度）",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "musim",
+   "meaning": "季節",
+   "category": "天気・自然3",
+   "forms": "musim hujan（雨季）/ musim kemarau（乾季）"
+  },
+  {
+   "word": "panen",
+   "meaning": "収穫",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "benih",
+   "meaning": "種",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "akar",
+   "meaning": "根",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "ranting",
+   "meaning": "小枝",
+   "category": "天気・自然3"
+  },
+  {
+   "word": "hubungan",
+   "meaning": "関係",
+   "category": "人間関係・性格3",
+   "forms": "語根: hubung"
+  },
+  {
+   "word": "persahabatan",
+   "meaning": "友情",
+   "category": "人間関係・性格3",
+   "forms": "語根: sahabat（親友）"
+  },
+  {
+   "word": "kepercayaan",
+   "meaning": "信頼・信念",
+   "category": "人間関係・性格3",
+   "forms": "語根: percaya"
+  },
+  {
+   "word": "berdebat",
+   "meaning": "口論する・議論する",
+   "category": "人間関係・性格3",
+   "forms": "語根: debat"
+  },
+  {
+   "word": "meminta maaf",
+   "meaning": "謝る",
+   "category": "人間関係・性格3",
+   "forms": "直訳「許しを請う」"
+  },
+  {
+   "word": "memaafkan",
+   "meaning": "許す",
+   "category": "人間関係・性格3",
+   "forms": "語根: maaf"
+  },
+  {
+   "word": "dermawan",
+   "meaning": "気前のいい・慈善家",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "egois",
+   "meaning": "わがままな",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "bisa diandalkan",
+   "meaning": "頼りになる",
+   "category": "人間関係・性格3",
+   "forms": "語根: andal"
+  },
+  {
+   "word": "keras kepala",
+   "meaning": "頑固な",
+   "category": "人間関係・性格3",
+   "forms": "直訳「頭がかたい」"
+  },
+  {
+   "word": "ceria",
+   "meaning": "陽気な",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "lembut",
+   "meaning": "優しい・やわらかい",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "tegas",
+   "meaning": "厳しい・きっぱりした",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "dewasa",
+   "meaning": "大人びた・成熟した",
+   "category": "人間関係・性格3"
+  },
+  {
+   "word": "kekanak-kanakan",
+   "meaning": "子どもっぽい",
+   "category": "人間関係・性格3",
+   "forms": "語根: kanak（子ども）"
+  },
+  {
+   "word": "situasi",
+   "meaning": "状況",
+   "category": "抽象・思考"
+  },
+  {
+   "word": "kondisi",
+   "meaning": "状態・条件",
+   "category": "抽象・思考"
+  },
+  {
+   "word": "kesempatan",
+   "meaning": "機会・チャンス",
+   "category": "抽象・思考",
+   "forms": "語根: sempat"
+  },
+  {
+   "word": "pilihan",
+   "meaning": "選択・選択肢",
+   "category": "抽象・思考",
+   "forms": "語根: pilih"
+  },
+  {
+   "word": "akibat",
+   "meaning": "結果・影響",
+   "category": "抽象・思考",
+   "forms": "akibatnya（その結果）"
+  },
+  {
+   "word": "perbedaan",
+   "meaning": "違い",
+   "category": "抽象・思考",
+   "forms": "語根: beda"
+  },
+  {
+   "word": "fakta",
+   "meaning": "事実",
+   "category": "抽象・思考"
+  },
+  {
+   "word": "gagasan",
+   "meaning": "考え・アイデア",
+   "category": "抽象・思考",
+   "forms": "= ide"
+  },
+  {
+   "word": "keyakinan",
+   "meaning": "信念・確信",
+   "category": "抽象・思考",
+   "forms": "語根: yakin（確信した）"
+  },
+  {
+   "word": "ingatan",
+   "meaning": "記憶",
+   "category": "抽象・思考",
+   "forms": "語根: ingat"
+  },
+  {
+   "word": "kenangan",
+   "meaning": "思い出",
+   "category": "抽象・思考",
+   "forms": "語根: kenang"
+  },
+  {
+   "word": "pikiran",
+   "meaning": "考え・思考",
+   "category": "抽象・思考",
+   "forms": "語根: pikir"
+  },
+  {
+   "word": "kebiasaan",
+   "meaning": "習慣",
+   "category": "抽象・思考",
+   "forms": "語根: biasa"
+  },
+  {
+   "word": "usaha",
+   "meaning": "努力・事業",
+   "category": "抽象・思考",
+   "forms": "berusaha（努力する）"
+  },
+  {
+   "word": "kemajuan",
+   "meaning": "進歩",
+   "category": "抽象・思考",
+   "forms": "語根: maju（前進する）"
+  },
+  {
+   "word": "makna",
+   "meaning": "意味・意義",
+   "category": "抽象・思考",
+   "forms": "類語: arti"
+  },
+  {
+   "word": "menimbang",
+   "meaning": "重さをはかる・熟考する",
+   "category": "身の回り2",
+   "forms": "語根: timbang"
+  },
+  {
+   "word": "melipat",
+   "meaning": "たたむ",
+   "category": "身の回り2",
+   "forms": "語根: lipat"
+  },
+  {
+   "word": "menggantung",
+   "meaning": "掛ける・つるす",
+   "category": "身の回り2",
+   "forms": "語根: gantung"
+  },
+  {
+   "word": "mengikat",
+   "meaning": "結ぶ・縛る",
+   "category": "身の回り2",
+   "forms": "語根: ikat"
+  },
+  {
+   "word": "mengunci",
+   "meaning": "鍵をかける",
+   "category": "身の回り2",
+   "forms": "語根: kunci"
+  },
+  {
+   "word": "menyesuaikan",
+   "meaning": "調整する・合わせる",
+   "category": "身の回り2",
+   "forms": "語根: sesuai（合う）"
+  },
+  {
+   "word": "membungkus",
+   "meaning": "包む",
+   "category": "身の回り2",
+   "forms": "語根: bungkus"
+  },
+  {
+   "word": "menumpuk",
+   "meaning": "積み重ねる",
+   "category": "身の回り2",
+   "forms": "語根: tumpuk"
+  },
+  {
+   "word": "menggaruk",
+   "meaning": "かく（かゆい所を）",
+   "category": "身の回り2",
+   "forms": "語根: garuk"
+  },
+  {
+   "word": "menyapu",
+   "meaning": "掃く",
+   "category": "身の回り2",
+   "forms": "語根: sapu（ほうき）"
+  },
+  {
+   "word": "menyedot debu",
+   "meaning": "掃除機をかける",
+   "category": "身の回り2",
+   "forms": "sedot（吸う）+ debu（ほこり）"
+  },
+  {
+   "word": "mencuci baju",
+   "meaning": "洗濯する",
+   "category": "身の回り2",
+   "forms": "直訳「服を洗う」"
+  },
+  {
+   "word": "pekerjaan rumah",
+   "meaning": "家事・宿題",
+   "category": "身の回り2",
+   "forms": "文脈で判断（略: PR）"
+  },
+  {
+   "word": "membuang sampah",
+   "meaning": "ゴミを出す",
+   "category": "身の回り2",
+   "forms": "buang（捨てる）"
+  },
+  {
+   "word": "bocor",
+   "meaning": "漏れる",
+   "category": "身の回り2",
+   "forms": "Atapnya bocor.（屋根が雨漏りする）"
+  },
+  {
+   "word": "rusak",
+   "meaning": "壊れた",
+   "category": "身の回り2",
+   "forms": "反対: bagus"
+  },
+  {
+   "word": "rapi",
+   "meaning": "きちんとした・整った",
+   "category": "身の回り2"
   }
  ]
 }
