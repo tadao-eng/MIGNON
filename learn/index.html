@@ -1383,6 +1383,7 @@ function renderHome() {
     <div class="section">
       <div class="section-title">Extra <small>追加でやり込む</small></div>
       <div class="chip-row">
+        <button class="chip" onclick="startTest()">実力テスト 20問</button>
         <button class="chip" onclick="startDialogue('en')">会話練習: 英語</button>
         <button class="chip" onclick="startDialogue('id')">会話練習: インドネシア語</button>
         <button class="chip" onclick="startWeakSession()">苦手単語 特訓</button>
@@ -1893,6 +1894,93 @@ function finishDialogue() {
       </div>
     </div>`;
   dsession = null;
+}
+
+/* =====================================================
+   Extra: 実力テスト（何度でも反復可・SRSには影響しない）
+===================================================== */
+let tsession = null;
+
+function startTest() {
+  const learned = allCards().filter(c => state.srs[c.id]);
+  const pool = learned.length >= 12 ? learned : allCards(); // 学習初期は全単語から
+  const qs = shuffle(pool).slice(0, 20).map(card => {
+    const roll = Math.random();
+    const type = roll < 0.4 ? 'w2m' : roll < 0.8 ? 'm2w' : 'listen';
+    const others = shuffle(allCards().filter(c =>
+      c.lang === card.lang && c.id !== card.id && c.meaning !== card.meaning && c.word !== card.word
+    )).slice(0, 3);
+    return { card, choices: shuffle([card].concat(others)), type };
+  });
+  tsession = { qs, i: 0, correct: 0, wrong: [] };
+  showStudyView();
+  renderTestQ();
+}
+
+function renderTestQ() {
+  const t = tsession;
+  if (t.i >= t.qs.length) { finishTest(); return; }
+  const q = t.qs[t.i];
+  const card = q.card;
+  let head;
+  if (q.type === 'w2m') {
+    head = `<div class="lang-tag">${LANG_NAME[card.lang]}</div><div class="word q">${esc(card.word)}</div>`;
+  } else if (q.type === 'm2w') {
+    head = `<div class="lang-tag">${LANG_NAME[card.lang]}</div><div class="word q">「${esc(card.meaning)}」は？</div>`;
+  } else {
+    head = `<div class="lang-tag">${LANG_NAME[card.lang]} — Listening</div><div class="word q">音声を聞いて意味を選んでください</div><button class="speak-btn" onclick="speak('${card.id}')">&#9654;</button>`;
+  }
+  document.getElementById('view-study').innerHTML =
+    studyHeader('実力テスト', t.i + 1, t.qs.length) + `
+    <div class="flashcard" style="min-height:180px;padding-bottom:26px">${head}</div>
+    <div>${q.choices.map(c => `<button class="choice-btn" data-id="${c.id}" onclick="answerTest(this)">${esc(q.type === 'm2w' ? c.word : c.meaning)}</button>`).join('')}</div>`;
+  if (q.type === 'listen') speak(card.id);
+}
+
+function answerTest(btn) {
+  const t = tsession;
+  const q = t.qs[t.i];
+  document.querySelectorAll('.choice-btn').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.id === q.card.id) b.classList.add('correct');
+  });
+  const ok = btn.dataset.id === q.card.id;
+  if (!ok) { btn.classList.add('wrong'); t.wrong.push(q.card); }
+  else t.correct++;
+  if (q.type !== 'listen') speak(q.card.id);
+  setTimeout(() => { t.i++; renderTestQ(); }, ok ? 600 : 1500);
+}
+
+function finishTest() {
+  const t = tsession;
+  const total = t.qs.length;
+  const pct = total ? Math.round(t.correct / total * 100) : 0;
+  state.xp += 10;
+  save();
+  const comment = pct >= 90 ? '素晴らしい定着度です。' : pct >= 70 ? '良いペース。間違えた単語をもう一周。' : '繰り返しが力になります。すぐもう一度挑戦を。';
+  document.getElementById('view-study').innerHTML = `
+    <div class="done-card" style="padding-top:40px">
+      <div class="ttl">Test Result</div>
+      <p style="font-size:1.5rem;color:var(--primary);font-weight:300;margin-top:18px">${t.correct} / ${total}<span style="font-size:0.8rem;color:var(--sub)">（${pct}%）</span></p>
+      <p>${comment}</p>
+      ${t.wrong.length ? `<div style="text-align:left;margin-top:16px">
+        <div class="legend">間違えた単語（タップで発音）</div>
+        ${t.wrong.map(c => `<div class="word-item" onclick="speak('${c.id}')"><div><div class="w"><span class="lg">${c.lang.toUpperCase()}</span>${esc(c.word)}</div><div class="m">${esc(c.meaning)}</div></div></div>`).join('')}
+      </div>` : ''}
+      <div class="xp-gain">+ 10 XP</div>
+      <div class="center-row">
+        <button class="primary-btn" onclick="startTest()">もう一度テスト</button><br>
+        <button class="ghost-btn" onclick="shareTestResult(${t.correct}, ${total})">LINEに結果を報告</button><br>
+        <button class="ghost-btn" onclick="showView('home')">ホームへ</button>
+      </div>
+    </div>`;
+  tsession = null;
+}
+
+function shareTestResult(correct, total) {
+  const text = `📝 MIGNON LINGO 実力テスト\nDay ${dayNumber()}/90 — ${correct}/${total}問正解（${Math.round(correct / total * 100)}%）\n🔥 ${state.streak}日連続`;
+  if (navigator.share) navigator.share({ text }).catch(() => {});
+  else location.href = 'https://line.me/R/share?text=' + encodeURIComponent(text);
 }
 
 /* =====================================================
