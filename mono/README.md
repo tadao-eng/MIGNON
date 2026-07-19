@@ -59,7 +59,7 @@ python3 -m http.server 8000
 | `app.js` | 画面制御・状態管理・描画 |
 | `db.js` | IndexedDB ラッパー(`items` ストア1本、`status` で現役/手放し済みを区別) |
 | `scanner.js` | バーコード読取(BarcodeDetector → zxing-js フォールバック) |
-| `ai.js` | ブラウザ内AI(TensorFlow.js MobileNet)による品目自動推定 + バーコード商品名検索 |
+| `ai.js` | 品目自動推定(Gemini APIキー設定時は高精度判別、未設定時はブラウザ内AI/TensorFlow.js MobileNet)+ バーコード商品名検索 |
 | `ai-labels.js` | MobileNetのImageNetクラス名 → カテゴリ/日本語品名 マッピングルール表 |
 | `sw.js` | Service Worker(アプリシェルのキャッシュ) |
 | `manifest.json` | PWA マニフェスト |
@@ -85,11 +85,27 @@ python3 -m http.server 8000
   「AIモデルを読み込めませんでした」、判別はできたがルール表に該当が無い場合は近い候補名と
   確度を添えて「判別できませんでした(近い候補: ○○ ○%)」と表示します
 
-より高精度な判定(Claude API 等のVision系API連携)に差し替えたい場合は、`ai.js` の
-`suggestItemInfo(photoBlob)` の中身を差し替えるだけで済みます(app.js は戻り値
-`{name, category} | null` しか見ないため、差し替えは局所的です)。マッピングルールは
-`ai-labels.js` の `LABEL_RULES` に分離してあるので、対応品目を増やす場合もそちらの編集だけで
-完結します。
+### Gemini モード(任意・ユーザー自身のAPIキー使用)
+
+「分析」タブの「AI設定」で自分の Gemini APIキーを保存すると、以降の判別は Google の
+Gemini API(高精度・マルチモーダル)に自動的に切り替わります。
+
+- キーは端末内(localStorage)にのみ保存され、サーバやこのアプリの開発者には送信されません。
+  写真の判別を行うタイミングでのみ、その写真と判定用プロンプトが Google に送信されます
+- APIキーは https://aistudio.google.com/apikey で無料発行できます。無料枠での利用には
+  Google の利用規約が適用され、入力内容がモデル品質改善に利用される場合がある点に注意してください
+  (詳細は Google AI Studio / Gemini API の利用規約を確認してください)
+- キーが無効・期限切れ等の場合は「Gemini APIキーが無効のようです」と表示され、キーを見直すまで
+  判別は行われません(自動ではブラウザ内AIにフォールバックしません)
+- キーが未設定、またはネットワークエラー・タイムアウトなど認証エラー以外の理由でGemini APIに
+  到達できなかった場合は、上記のブラウザ内AI(MobileNet)に自動的にフォールバックします
+- 「削除」ボタンでキーを消すと、以降はブラウザ内AIでの判別に戻ります
+
+より高精度な判定に差し替えたい場合は、`ai.js` の `classifyWithGemini(photoBlob)` や
+`suggestItemInfo(photoBlob)` / `analyzePhoto(photoBlob)` の中身を編集してください
+(app.js は各関数の戻り値の形しか見ないため、差し替えは局所的です)。マッピングルールは
+`ai-labels.js` の `LABEL_RULES` に分離してあるので、ブラウザ内AI側の対応品目を増やす場合も
+そちらの編集だけで完結します。
 
 データ移行が必要になった場合は `db.js` の `DB_VERSION` を上げ、`onupgradeneeded` で対応してください。
 クラウド同期を足す場合も、ストレージ層が `db.js` に閉じているため差し替えは局所的です。

@@ -301,6 +301,9 @@ select {
 .cat-bar-row.top .cat-bar-fill { background: var(--accent); }
 .cat-bar-count { text-align: right; color: var(--muted); }
 
+.ai-settings { margin-bottom: 40px; }
+.ai-settings-actions { display: flex; gap: 10px; margin-bottom: 14px; }
+
 /* ---------- ダイアログ ---------- */
 dialog {
   border: none;
