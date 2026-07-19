@@ -1,6 +1,6 @@
 // MONO — 持ち物管理 PWA 本体
 import { putItem, getItem, deleteItem, getAllItems, newId } from './db.js';
-import { suggestItemInfo, lookupBarcode } from './ai.js';
+import { suggestItemInfo, lookupBarcode, preloadModel } from './ai.js';
 import { startScan } from './scanner.js';
 
 const PRESET_CATEGORIES = ['衣類', '靴', 'バッグ', '本', 'ガジェット', 'キッチン', '日用品', '家具', '趣味', '美容', '書類', 'その他'];
@@ -75,7 +75,6 @@ function switchView(name) {
 
 document.querySelectorAll('.tab').forEach((btn) => {
   btn.addEventListener('click', () => {
-    if (btn.dataset.view === 'add' && !state.editingId) resetForm();
     switchView(btn.dataset.view);
   });
 });
@@ -675,6 +674,13 @@ async function init() {
   maybeShowIOSInstallHint();
   resetForm();
   await reload();
+
+  // 起動直後の描画が落ち着いてからAIモデルを裏で先読みする(初回判別の待ちをなくす)
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => preloadModel(), { timeout: 5000 });
+  } else {
+    setTimeout(() => preloadModel(), 2500);
+  }
 }
 
 init();

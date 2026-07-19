@@ -73,6 +73,29 @@ function matchLabel(className) {
 }
 
 /**
+ * アプリ起動直後に裏でモデルをロード+ウォームアップしておく。
+ * 写真選択時にはすでにロード・コンパイル済みの状態にして、初回判別の待ちをなくす。
+ * loadModel() と同じ modelLoading キャッシュを共有するだけで、ロード自体のロジックは変更しない。
+ * オフライン・CDN不達など、いかなる失敗でも例外を外に漏らさず静かに諦める。
+ */
+export async function preloadModel() {
+  try {
+    const model = await loadModel();
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#888';
+    ctx.fillRect(0, 0, 64, 64);
+    ctx.fillStyle = '#ccc';
+    ctx.fillRect(16, 16, 32, 32);
+    await model.classify(canvas, 1);
+  } catch {
+    // オフライン・CDN不達・タイムアウトなど: 静かに諦める(写真選択時に通常フローで再試行される)
+  }
+}
+
+/**
  * 写真から品目名・カテゴリを推定する(ブラウザ内AI・端末内完結)。
  * オフライン・CDN不達・タイムアウトなど、いかなる失敗でも null を返し
  * 手動入力にフォールバックする。
