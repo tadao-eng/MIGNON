@@ -2,8 +2,8 @@
 import { putItem, getItem, deleteItem, getAllItems, newId } from './db.js';
 import { suggestItemInfo, analyzePhoto, lookupBarcode, preloadModel } from './ai.js';
 import { startScan } from './scanner.js';
+import { getCategories, setCategories } from './categories.js';
 
-const PRESET_CATEGORIES = ['衣類', '靴', 'バッグ', '本', 'ガジェット', 'キッチン', '日用品', '家具', '趣味', '美容', '書類', 'その他'];
 const UNCATEGORIZED = '未分類';
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -122,6 +122,13 @@ function renderChips() {
   };
   mk('すべて', 'all');
   cats.forEach((c) => mk(`${c} ${counts.get(c)}`, c));
+
+  const manage = document.createElement('button');
+  manage.id = 'manage-categories-chip';
+  manage.className = 'chip';
+  manage.textContent = 'カテゴリ編集';
+  manage.addEventListener('click', () => openCategoryDialog());
+  wrap.appendChild(manage);
 }
 
 function sortItems(list) {
@@ -379,9 +386,35 @@ $('#gemini-clear').addEventListener('click', () => {
 
 function initCategoryDatalist() {
   const existing = new Set(state.items.map((i) => i.category).filter(Boolean));
-  const all = [...new Set([...PRESET_CATEGORIES, ...existing])];
+  const all = [...new Set([...getCategories(), ...existing])];
   $('#category-list').innerHTML = all.map((c) => `<option value="${escapeHTML(c)}">`).join('');
 }
+
+// 追加/編集フォームのカテゴリ入力欄直下に、マスタ全カテゴリのチップ列を表示する。
+// タップで #f-category に値を設定し、入力欄の値と一致するチップに .active を付ける。
+function renderCategoryPicker() {
+  const wrap = $('#category-picker');
+  const current = $('#f-category').value.trim();
+  wrap.innerHTML = '';
+  getCategories().forEach((c) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip' + (c === current ? ' active' : '');
+    b.textContent = c;
+    b.addEventListener('click', () => {
+      $('#f-category').value = c;
+      renderCategoryPicker();
+    });
+    wrap.appendChild(b);
+  });
+}
+
+$('#f-category').addEventListener('input', () => {
+  const current = $('#f-category').value.trim();
+  $('#category-picker').querySelectorAll('.chip').forEach((b) => {
+    b.classList.toggle('active', b.textContent === current);
+  });
+});
 
 function resetForm() {
   state.editingId = null;
@@ -393,6 +426,7 @@ function resetForm() {
   $('#cancel-edit').hidden = true;
   updatePhotoPreview();
   initCategoryDatalist();
+  renderCategoryPicker();
 }
 
 let previewURL = null; // 一覧の再描画と独立して管理する(誤って失効させない)
@@ -635,6 +669,7 @@ $('#d-edit').addEventListener('click', () => {
   $('#save-btn').textContent = '更新する';
   $('#cancel-edit').hidden = false;
   updatePhotoPreview();
+  renderCategoryPicker();
   switchView('add');
 });
 
@@ -675,6 +710,104 @@ $('#layout-toggle').addEventListener('click', () => {
   localStorage.setItem('mono.layout', state.listMode ? 'list' : 'grid');
   renderList();
 });
+
+// ---------- カテゴリ管理 ----------
+
+function renderCategoryDialogList() {
+  const wrap = $('#cat-list');
+  wrap.innerHTML = '';
+  getCategories().forEach((cat) => {
+    const row = document.createElement('div');
+    row.className = 'cat-row';
+
+    const label = document.createElement('span');
+    label.textContent = cat;
+    row.appendChild(label);
+
+    const actions = document.createElement('div');
+    actions.className = 'history-actions';
+    const renameBtn = document.createElement('button');
+    renameBtn.type = 'button';
+    renameBtn.textContent = '変更';
+    renameBtn.addEventListener('click', () => renameCategory(cat));
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.textContent = '削除';
+    delBtn.addEventListener('click', () => deleteCategory(cat));
+    actions.appendChild(renameBtn);
+    actions.appendChild(delBtn);
+    row.appendChild(actions);
+
+    wrap.appendChild(row);
+  });
+}
+
+// カテゴリマスタ/アイテムの変更後、追加画面のdatalist・チップピッカーを最新化する
+// (renderChips 等は reload() 経由の renderAll() で更新される)
+function refreshCategoryUI() {
+  initCategoryDatalist();
+  renderCategoryPicker();
+}
+
+function openCategoryDialog() {
+  $('#cat-new-input').value = '';
+  renderCategoryDialogList();
+  $('#category-dialog').showModal();
+}
+
+$('#cat-close').addEventListener('click', () => $('#category-dialog').close());
+
+$('#cat-add-btn').addEventListener('click', () => {
+  const name = $('#cat-new-input').value.trim();
+  if (!name) { toast('カテゴリ名を入力してください'); return; }
+  const cats = getCategories();
+  if (cats.includes(name)) { toast('すでに存在するカテゴリです'); return; }
+  setCategories([...cats, name]);
+  $('#cat-new-input').value = '';
+  renderCategoryDialogList();
+  refreshCategoryUI();
+  toast(`「${name}」を追加しました`);
+});
+
+async function renameCategory(oldName) {
+  const input = prompt('新しいカテゴリ名', oldName);
+  if (input === null) return;
+  const newName = input.trim();
+  if (!newName) { toast('カテゴリ名を入力してください'); return; }
+  if (newName === oldName) return;
+  const cats = getCategories();
+  if (cats.includes(newName)) { toast('すでに存在するカテゴリです'); return; }
+
+  setCategories(cats.map((c) => (c === oldName ? newName : c)));
+  const targets = state.items.filter((i) => i.category === oldName);
+  for (const item of targets) {
+    item.category = newName;
+    await putItem(item);
+  }
+  await reload();
+  renderCategoryDialogList();
+  refreshCategoryUI();
+  toast(`「${oldName}」を「${newName}」に変更しました`);
+}
+
+async function deleteCategory(name) {
+  const n = state.items.filter((i) => i.category === name).length;
+  const msg = n > 0
+    ? `「${name}」を削除しますか?${n}点の持ち物は「未分類」になります`
+    : `「${name}」を削除しますか?`;
+  if (!confirm(msg)) return;
+
+  setCategories(getCategories().filter((c) => c !== name));
+  const targets = state.items.filter((i) => i.category === name);
+  for (const item of targets) {
+    item.category = '';
+    await putItem(item);
+  }
+  await reload();
+  renderCategoryDialogList();
+  refreshCategoryUI();
+  toast(`「${name}」を削除しました`);
+}
 
 // ---------- インストール導線 ----------
 // Android/Chrome 系: beforeinstallprompt を捕まえてワンタップでインストール。

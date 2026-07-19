@@ -10,6 +10,7 @@
 // 区別しない)。analyzePhoto() は手動「AI分析」ボタン用(Gemini認証エラー・モデル起因の失敗と
 // ルール未ヒットを status で区別して返す)。
 import { LABEL_RULES } from './ai-labels.js';
+import { getCategories } from './categories.js';
 
 const TFJS_URL = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js';
 const MOBILENET_URL = 'https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js';
@@ -23,11 +24,14 @@ const MIN_PROBABILITY_MANUAL = 0.15;
 
 const GEMINI_MODEL = 'gemini-2.5-flash';
 const GEMINI_TIMEOUT_MS = 20000;
-const GEMINI_CATEGORIES = ['衣類', '靴', 'バッグ', '本', 'ガジェット', 'キッチン', '日用品', '家具', '趣味', '美容', '書類', 'その他'];
-const GEMINI_PROMPT =
-  'この写真に写っている主要な持ち物1点を判定してください。JSONのみで回答: ' +
-  `{"name": 日本語の簡潔な品名(最大20文字), "category": 次のリストから最も近い1つ ${JSON.stringify(GEMINI_CATEGORIES)}}。` +
-  '何が写っているか判定できない場合は {"name": null, "category": null}';
+
+// ユーザーが編集したカテゴリのマスタ一覧を、リクエスト組み立て時に毎回埋め込む
+// (呼び出しごとに評価することで、カテゴリ編集後の判別に即座に反映される)。
+function geminiPrompt() {
+  return 'この写真に写っている主要な持ち物1点を判定してください。JSONのみで回答: ' +
+    `{"name": 日本語の簡潔な品名(最大20文字), "category": 次のリストから最も近い1つ ${JSON.stringify(getCategories())}}。` +
+    '何が写っているか判定できない場合は {"name": null, "category": null}';
+}
 
 function geminiKey() {
   return (localStorage.getItem('mono.geminiKey') || '').trim();
@@ -64,7 +68,7 @@ async function classifyWithGemini(photoBlob) {
           contents: [{
             parts: [
               { inline_data: { mime_type: photoBlob.type || 'image/jpeg', data: base64 } },
-              { text: GEMINI_PROMPT },
+              { text: geminiPrompt() },
             ],
           }],
           generationConfig: { response_mime_type: 'application/json' },
