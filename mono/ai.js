@@ -175,7 +175,7 @@ async function loadModel() {
     modelLoading = (async () => {
       if (!window.tf) await loadScript(TFJS_URL);
       if (!window.mobilenet) await loadScript(MOBILENET_URL);
-      return window.mobilenet.load({ version: 2, alpha: 0.5 });
+      return window.mobilenet.load({ version: 2, alpha: 1.0 });
     })();
     modelLoading.catch(() => { modelLoading = null; });
   }
