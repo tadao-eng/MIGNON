@@ -603,6 +603,61 @@ $('#layout-toggle').addEventListener('click', () => {
   renderList();
 });
 
+// ---------- インストール導線 ----------
+// Android/Chrome 系: beforeinstallprompt を捕まえてワンタップでインストール。
+// iOS Safari: 同イベントが無いため「共有 → ホーム画面に追加」の手順を案内する。
+
+const INSTALL_DISMISS_KEY = 'mono.installDismissed';
+let installPrompt = null;
+
+function isStandalone() {
+  return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+}
+
+function showInstallBanner(text, withButton) {
+  if (isStandalone() || localStorage.getItem(INSTALL_DISMISS_KEY)) return;
+  $('#install-text').textContent = text;
+  $('#install-btn').hidden = !withButton;
+  $('#install-banner').hidden = false;
+}
+
+function hideInstallBanner() {
+  $('#install-banner').hidden = true;
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  installPrompt = e;
+  showInstallBanner('ホーム画面に追加すると、アプリとして使えます。', true);
+});
+
+window.addEventListener('appinstalled', () => {
+  installPrompt = null;
+  hideInstallBanner();
+  toast('インストールしました');
+});
+
+$('#install-btn').addEventListener('click', async () => {
+  if (!installPrompt) return;
+  hideInstallBanner();
+  installPrompt.prompt();
+  await installPrompt.userChoice.catch(() => {});
+  installPrompt = null;
+});
+
+$('#install-close').addEventListener('click', () => {
+  localStorage.setItem(INSTALL_DISMISS_KEY, '1');
+  hideInstallBanner();
+});
+
+function maybeShowIOSInstallHint() {
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS対策
+  if (isIOS && !isStandalone()) {
+    showInstallBanner('Safariの共有ボタンから「ホーム画面に追加」でアプリとして使えます。', false);
+  }
+}
+
 // ---------- 起動 ----------
 
 async function reload() {
@@ -615,6 +670,7 @@ async function init() {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   }
   $('#sort-select').value = state.sort;
+  maybeShowIOSInstallHint();
   resetForm();
   await reload();
 }

@@ -2,6 +2,7 @@
   "name": "MONO — 持ち物管理",
   "short_name": "MONO",
   "description": "ミニマリズム志向の持ち物管理アプリ。写真とバーコードで登録し、持ち物の増減をひと目で把握。",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

@@ -22,6 +22,15 @@
 
   <main>
 
+    <!-- インストール案内(未インストール時のみ表示) -->
+    <div id="install-banner" class="install-banner" hidden>
+      <span id="install-text">ホーム画面に追加すると、アプリとして使えます。</span>
+      <div class="install-actions">
+        <button id="install-btn" class="install-do" hidden>インストール</button>
+        <button id="install-close" class="install-dismiss" aria-label="閉じる">×</button>
+      </div>
+    </div>
+
     <!-- ======== 一覧 ======== -->
     <section id="view-list" class="view">
       <div class="toolbar">
