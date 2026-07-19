@@ -355,17 +355,41 @@ function renderCategoryBars() {
   }
 }
 
-// ---------- AI設定(Gemini APIキー) ----------
+// ---------- AI設定(中継サーバURL / Gemini APIキー) ----------
 
 const GEMINI_KEY_STORAGE = 'mono.geminiKey';
+const PROXY_URL_STORAGE = 'mono.proxyUrl';
 
 function renderGeminiStatus() {
+  const hasProxy = !!(localStorage.getItem(PROXY_URL_STORAGE) || '').trim();
   const hasKey = !!(localStorage.getItem(GEMINI_KEY_STORAGE) || '').trim();
-  $('#gemini-status').textContent = hasKey
-    ? 'Gemini 使用中(高精度判別が有効)'
-    : '未設定(端末内AIで判別します)';
+  $('#gemini-status').textContent = hasProxy
+    ? '中継サーバ使用中(APIキーはサーバ側)'
+    : hasKey
+      ? 'Gemini 使用中(高精度判別が有効)'
+      : '未設定(端末内AIで判別します)';
   $('#gemini-clear').hidden = !hasKey;
+  $('#proxy-clear').hidden = !hasProxy;
 }
+
+$('#proxy-save').addEventListener('click', () => {
+  const value = $('#proxy-url').value.trim();
+  if (!value) return;
+  if (!value.startsWith('https://')) {
+    toast('中継サーバURLは https:// で始まる必要があります', 4000);
+    return;
+  }
+  localStorage.setItem(PROXY_URL_STORAGE, value);
+  $('#proxy-url').value = '';
+  renderGeminiStatus();
+  toast('中継サーバを使用します(キーは端末に不要)');
+});
+
+$('#proxy-clear').addEventListener('click', () => {
+  localStorage.removeItem(PROXY_URL_STORAGE);
+  renderGeminiStatus();
+  toast('中継サーバの設定を解除しました');
+});
 
 $('#gemini-save').addEventListener('click', () => {
   const value = $('#gemini-key').value.trim();
@@ -538,6 +562,10 @@ $('#analyze-btn').addEventListener('click', async () => {
       }
     } else if (result.status === 'auth-error') {
       toast('Gemini APIキーが無効のようです。「分析」タブのAI設定を確認してください', 4000);
+    } else if (result.status === 'proxy-error') {
+      toast('中継サーバの設定に問題があるようです。URLとWorkerの設定を確認してください', 4000);
+    } else if (result.status === 'quota-error') {
+      toast('AIの利用上限に達しています。しばらくしてから試してください', 4000);
     } else {
       toast('AIモデルを読み込めませんでした。通信環境を確認してもう一度試してください', 4000);
     }

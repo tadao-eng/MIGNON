@@ -142,6 +142,15 @@
       <h3 class="section-label">AI設定</h3>
       <div class="ai-settings">
         <p id="gemini-status" class="muted"></p>
+        <p class="muted">中継サーバを設定するとAPIキーを端末に置かずに使えます(設置手順はリポジトリの mono/proxy/README.md)</p>
+        <label class="field">
+          <span class="field-label">中継サーバURL</span>
+          <input type="url" id="proxy-url" placeholder="https://mono-ai.xxx.workers.dev" autocomplete="off">
+        </label>
+        <div class="ai-settings-actions">
+          <button type="button" id="proxy-save" class="ghost-btn">保存</button>
+          <button type="button" id="proxy-clear" class="ghost-btn" hidden>削除</button>
+        </div>
         <label class="field">
           <span class="field-label">Gemini APIキー</span>
           <input type="password" id="gemini-key" placeholder="AIza… を貼り付け" autocomplete="off">

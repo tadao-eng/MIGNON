@@ -1,14 +1,18 @@
 // 画像・バーコードからの品目情報推定。
 //
-// ユーザーが分析タブでGemini APIキーを設定している場合は classifyWithGemini() による
-// 高精度判別を優先し、キー未設定・認証エラー以外の失敗時は従来のブラウザ内AI(TensorFlow.js +
-// MobileNet)にフォールバックする。ブラウザ内AI経路は classifyPhoto() で画像分類を行い、
-// ImageNetの英語クラス名を ai-labels.js の LABEL_RULES でアプリのカテゴリ/日本語品名に
-// マッピングする。この経路はサーバには一切送信されず、モデルは写真が選ばれた時点で初めて
-// CDN から遅延ロードされる(初期表示を重くしないため)。
+// 判別方式には優先順位があり、上から順に使える設定があればそれを使う:
+//   1. 中継サーバ(Cloudflare Worker) — proxyUrl() が設定されていれば classifyViaProxy() を使う。
+//      Gemini APIキーはユーザー自身がデプロイした Worker 側にのみ保存され、ブラウザには
+//      一切残らない(詳細は mono/proxy/README.md)。
+//   2. Gemini API 直接呼び出し — geminiKey() が設定されていれば classifyWithGemini() を使う。
+//      APIキーがブラウザ(localStorage)に保存される簡易方式。
+//   3. ブラウザ内AI(TensorFlow.js + MobileNet) — 上記どちらも未設定、または失敗時のフォールバック。
+//      classifyPhoto() で画像分類を行い、ImageNetの英語クラス名を ai-labels.js の LABEL_RULES で
+//      アプリのカテゴリ/日本語品名にマッピングする。この経路はサーバには一切送信されず、モデルは
+//      写真が選ばれた時点で初めて CDN から遅延ロードされる(初期表示を重くしないため)。
 // suggestItemInfo() は写真選択時の自動判別用(結果 {name, category} | null のみ、失敗理由は
-// 区別しない)。analyzePhoto() は手動「AI分析」ボタン用(Gemini認証エラー・モデル起因の失敗と
-// ルール未ヒットを status で区別して返す)。
+// 区別しない)。analyzePhoto() は手動「AI分析」ボタン用(中継サーバ・Gemini起因の失敗と
+// モデル起因の失敗、ルール未ヒットを status で区別して返す)。
 import { LABEL_RULES } from './ai-labels.js';
 import { getCategories } from './categories.js';
 
@@ -35,6 +39,10 @@ function geminiPrompt() {
 
 function geminiKey() {
   return (localStorage.getItem('mono.geminiKey') || '').trim();
+}
+
+function proxyUrl() {
+  return (localStorage.getItem('mono.proxyUrl') || '').trim();
 }
 
 function blobToBase64(blob) {
@@ -95,6 +103,47 @@ async function classifyWithGemini(photoBlob) {
   const parsed = JSON.parse(cleaned);
   if (!parsed.name && !parsed.category) return { result: null };
   return { result: { name: parsed.name || null, category: parsed.category || null } };
+}
+
+const PROXY_TIMEOUT_MS = 25000;
+
+/**
+ * ユーザーが設置した中継サーバ(Cloudflare Worker)経由で写真を判別する。
+ * Gemini APIキーは端末に置かず、Worker側にのみ保存される構成のための経路。
+ * @param {Blob} photoBlob
+ * @returns {Promise<{ result: {name: string|null, category: string|null} | null } | { error: 'proxy-config' | 'quota' }>}
+ *   中継サーバの設定不備(403/400/no-key相当の500)は 'proxy-config'、利用上限超過は 'quota' として
+ *   返す。それ以外の失敗(通信エラー・タイムアウト・想定外のレスポンス等)は例外を投げる。
+ */
+async function classifyViaProxy(photoBlob) {
+  const url = proxyUrl();
+  const base64 = await blobToBase64(photoBlob);
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), PROXY_TIMEOUT_MS);
+  let res;
+  try {
+    res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        image: base64,
+        mime: photoBlob.type || 'image/jpeg',
+        categories: getCategories(),
+      }),
+      signal: ctrl.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+
+  if (!res.ok) {
+    if (res.status === 429) return { error: 'quota' };
+    if (res.status === 403 || res.status === 400 || res.status === 500) return { error: 'proxy-config' };
+    throw new Error(`中継サーバエラー: ${res.status}`);
+  }
+
+  const data = await res.json();
+  return { result: data.result ?? null };
 }
 
 function loadScript(src) {
@@ -178,7 +227,7 @@ async function classifyPhoto(photoBlob) {
  * オフライン・CDN不達など、いかなる失敗でも例外を外に漏らさず静かに諦める。
  */
 export async function preloadModel() {
-  if (geminiKey()) return; // Gemini使用時はMobileNetの先読みをスキップ(フォールバック時は遅延ロードで賄う)
+  if (geminiKey() || proxyUrl()) return; // 中継サーバ/Gemini使用時はMobileNetの先読みをスキップ(フォールバック時は遅延ロードで賄う)
   try {
     const model = await loadModel();
     const canvas = document.createElement('canvas');
@@ -197,14 +246,26 @@ export async function preloadModel() {
 
 /**
  * 写真から品目名・カテゴリを推定する。
- * Gemini APIキーが設定されていればまずそちらを試し(高精度)、認証エラーや通信失敗など
- * いかなる問題が起きても従来のブラウザ内AI(MobileNet)経路に静かにフォールバックする。
- * オフライン・CDN不達・タイムアウトなど、いかなる失敗でも null を返し手動入力にフォールバックする。
+ * 中継サーバURL・Gemini APIキーの順に設定を確認し、設定があればそちらを試す(高精度)。
+ * 設定不備・認証エラー・通信失敗など、いかなる問題が起きても従来のブラウザ内AI(MobileNet)
+ * 経路に静かにフォールバックする。オフライン・CDN不達・タイムアウトなど、いかなる失敗でも
+ * null を返し手動入力にフォールバックする。
  * @param {Blob} photoBlob 撮影画像
  * @returns {Promise<{name?: string, category?: string} | null>}
  */
 export async function suggestItemInfo(photoBlob) {
-  if (geminiKey()) {
+  if (proxyUrl()) {
+    try {
+      const res = await classifyViaProxy(photoBlob);
+      if (!res.error) {
+        if (!res.result) return null;
+        return { name: res.result.name || undefined, category: res.result.category || undefined };
+      }
+      // res.error === 'proxy-config' | 'quota': 従来のMobileNet経路へフォールバック
+    } catch {
+      // 通信失敗・タイムアウト等: 従来のMobileNet経路へフォールバック
+    }
+  } else if (geminiKey()) {
     try {
       const res = await classifyWithGemini(photoBlob);
       if (!res.error) {
@@ -232,9 +293,12 @@ export async function suggestItemInfo(photoBlob) {
 
 /**
  * 写真から品目名・カテゴリを推定する(手動「AI分析」ボタン用)。
- * Gemini APIキーが設定されていればまずそちらを試す。認証エラー(無効なキー)は
- * status: 'auth-error' として区別し、それ以外の失敗(通信・タイムアウト等)は従来の
- * ブラウザ内AI(MobileNet)経路にフォールバックする。
+ * 中継サーバURLが設定されていればそちらを最優先で試す。設定不備(URL/Workerの設定に問題がある
+ * 場合)は status: 'proxy-error'、利用上限超過は status: 'quota-error' として区別し、それ以外の
+ * 失敗(通信・タイムアウト等)は従来のブラウザ内AI(MobileNet)経路にフォールバックする。
+ * 中継サーバが未設定で Gemini APIキーが設定されている場合は Gemini を試す。認証エラー
+ * (無効なキー)は status: 'auth-error' として区別し、それ以外の失敗は同様に MobileNet
+ * 経路にフォールバックする。
  * MobileNet経路では suggestItemInfo() と異なり、失敗理由(モデルのロード/推論失敗 か、
  * 判別はできたがルール表に該当が無いか)を区別して返す。ユーザーが明示的に操作しているため
  * しきい値も MIN_PROBABILITY_MANUAL(0.15)と緩めにしている。
@@ -245,10 +309,30 @@ export async function suggestItemInfo(photoBlob) {
  *   | { status: 'no-match', top: { className: string, probability: number } | null, source?: string }
  *   | { status: 'model-error' }
  *   | { status: 'auth-error' }
+ *   | { status: 'proxy-error' }
+ *   | { status: 'quota-error' }
  * >}
  */
 export async function analyzePhoto(photoBlob) {
-  if (geminiKey()) {
+  if (proxyUrl()) {
+    try {
+      const res = await classifyViaProxy(photoBlob);
+      if (res.error === 'proxy-config') return { status: 'proxy-error' };
+      if (res.error === 'quota') return { status: 'quota-error' };
+      if (res.result) {
+        return {
+          status: 'ok',
+          name: res.result.name || undefined,
+          category: res.result.category || undefined,
+          top: null,
+          source: 'proxy',
+        };
+      }
+      return { status: 'no-match', top: null, source: 'proxy' };
+    } catch {
+      // 通信失敗・タイムアウト等: 従来のMobileNet経路へフォールバック
+    }
+  } else if (geminiKey()) {
     try {
       const res = await classifyWithGemini(photoBlob);
       if (res.error === 'auth') return { status: 'auth-error' };
