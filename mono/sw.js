@@ -1,6 +1,6 @@
 // MONO Service Worker — アプリシェルをキャッシュしてオフライン閲覧を可能にする。
 // バージョンを上げると古いキャッシュは activate 時に破棄される。
-const CACHE = 'mono-v2';
+const CACHE = 'mono-v3';
 
 const ASSETS = [
   './',
@@ -9,6 +9,7 @@ const ASSETS = [
   './app.js',
   './db.js',
   './ai.js',
+  './ai-labels.js',
   './scanner.js',
   './manifest.json',
   './icon-192.png',
