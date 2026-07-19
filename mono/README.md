@@ -58,15 +58,30 @@ python3 -m http.server 8000
 | `app.js` | 画面制御・状態管理・描画 |
 | `db.js` | IndexedDB ラッパー(`items` ストア1本、`status` で現役/手放し済みを区別) |
 | `scanner.js` | バーコード読取(BarcodeDetector → zxing-js フォールバック) |
-| `ai.js` | 品目情報の自動推定の拡張ポイント + バーコード商品名検索 |
+| `ai.js` | ブラウザ内AI(TensorFlow.js MobileNet)による品目自動推定 + バーコード商品名検索 |
+| `ai-labels.js` | MobileNetのImageNetクラス名 → カテゴリ/日本語品名 マッピングルール表 |
 | `sw.js` | Service Worker(アプリシェルのキャッシュ) |
 | `manifest.json` | PWA マニフェスト |
 
-## 将来の AI 連携について
+## AI連携について(ブラウザ内AI・無料・端末内完結)
 
-画像からの品目名・カテゴリ自動推定は `ai.js` の `suggestItemInfo(photoBlob)` に隔離してあります。
-現在は `null` を返すだけですが、ここを Vision 系 API(Claude API 等)の呼び出しに差し替えるだけで、
-撮影直後にフォームへ自動入力される動線(`app.js` 側は実装済み)がそのまま有効になります。
+写真からの品目名・カテゴリ自動判別は、TensorFlow.js + MobileNet(ImageNetの1000クラス分類)を
+使ってブラウザの中だけで完結します。サーバには一切送信されず、料金も発生しません。
+
+- モデル(TensorFlow.js 本体 + MobileNet)は初期表示では読み込まず、写真を選んだタイミングで
+  初めて CDN から遅延ロードします(数MB。2回目以降はブラウザ/Service Workerのキャッシュから読み込まれます)
+- ImageNetの英語クラス名(例: `running shoe`)を `ai-labels.js` のルール表でアプリのカテゴリ・
+  日本語品名(例: 靴 / スニーカー)に変換し、空欄のフォーム項目にだけ自動入力します
+- 精度は「ざっくり判別」です。ImageNetの1000クラスに収まらない持ち物や紛らわしい写り方では
+  外れることもあるため、フォームでいつでも修正できるようにしています
+- オフライン・CDN不達・タイムアウト(20秒)など、判別に失敗した場合は静かに手動入力へフォールバック
+  します(エラー表示はしません)
+
+より高精度な判定(Claude API 等のVision系API連携)に差し替えたい場合は、`ai.js` の
+`suggestItemInfo(photoBlob)` の中身を差し替えるだけで済みます(app.js は戻り値
+`{name, category} | null` しか見ないため、差し替えは局所的です)。マッピングルールは
+`ai-labels.js` の `LABEL_RULES` に分離してあるので、対応品目を増やす場合もそちらの編集だけで
+完結します。
 
 データ移行が必要になった場合は `db.js` の `DB_VERSION` を上げ、`onupgradeneeded` で対応してください。
 クラウド同期を足す場合も、ストレージ層が `db.js` に閉じているため差し替えは局所的です。

@@ -427,11 +427,13 @@ $('#photo-input').addEventListener('change', async (e) => {
   state.draftPhoto = await processPhoto(file);
   updatePhotoPreview();
 
-  // 将来のAI連携ポイント: 画像から品目名・カテゴリを推定して自動入力する
+  // ブラウザ内AI(TensorFlow.js MobileNet)で品目名・カテゴリを推定し、空欄のみ自動入力する
   const suggestion = await suggestItemInfo(state.draftPhoto);
   if (suggestion) {
-    if (suggestion.name && !$('#f-name').value) $('#f-name').value = suggestion.name;
-    if (suggestion.category && !$('#f-category').value) $('#f-category').value = suggestion.category;
+    let filled = false;
+    if (suggestion.name && !$('#f-name').value) { $('#f-name').value = suggestion.name; filled = true; }
+    if (suggestion.category && !$('#f-category').value) { $('#f-category').value = suggestion.category; filled = true; }
+    if (filled) toast('AIが品目を推定しました(修正できます)');
   }
 });
 
