@@ -382,11 +382,13 @@ function updatePhotoPreview() {
     img.hidden = false;
     ph.hidden = true;
     $('#photo-clear').hidden = false;
+    $('#analyze-btn').hidden = false;
   } else {
     img.hidden = true;
     img.removeAttribute('src');
     ph.hidden = false;
     $('#photo-clear').hidden = true;
+    $('#analyze-btn').hidden = true;
   }
 }
 
@@ -439,6 +441,27 @@ $('#photo-input').addEventListener('change', async (e) => {
 $('#photo-clear').addEventListener('click', () => {
   state.draftPhoto = null;
   updatePhotoPreview();
+});
+
+$('#analyze-btn').addEventListener('click', async () => {
+  const btn = $('#analyze-btn');
+  if (!state.draftPhoto || btn.disabled) return;
+  btn.disabled = true;
+  btn.textContent = '分析中…';
+  try {
+    const suggestion = await suggestItemInfo(state.draftPhoto);
+    if (suggestion) {
+      if (suggestion.name) $('#f-name').value = suggestion.name;
+      if (suggestion.category) $('#f-category').value = suggestion.category;
+      const label = [suggestion.name, suggestion.category].filter(Boolean).join(' / ');
+      toast(`「${label}」と推定しました`);
+    } else {
+      toast('うまく判別できませんでした。手動で入力してください');
+    }
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'AI分析';
+  }
 });
 
 $('#cancel-edit').addEventListener('click', () => {
