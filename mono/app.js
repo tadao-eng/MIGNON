@@ -421,9 +421,8 @@ $('#photo-preview').addEventListener('keydown', (e) => {
   }
 });
 
-$('#photo-input').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
-  e.target.value = '';
+// 写真ファイル選択後の共通処理(カメラ撮影 / アルバム選択のどちらからでも呼ばれる)
+async function handlePhotoFile(file) {
   if (!file) return;
   state.draftPhoto = await processPhoto(file);
   updatePhotoPreview();
@@ -436,6 +435,20 @@ $('#photo-input').addEventListener('change', async (e) => {
     if (suggestion.category && !$('#f-category').value) { $('#f-category').value = suggestion.category; filled = true; }
     if (filled) toast('AIが品目を推定しました(修正できます)');
   }
+}
+
+$('#photo-input').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  e.target.value = '';
+  await handlePhotoFile(file);
+});
+
+$('#gallery-btn').addEventListener('click', () => $('#photo-input-gallery').click());
+
+$('#photo-input-gallery').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  e.target.value = '';
+  await handlePhotoFile(file);
 });
 
 $('#photo-clear').addEventListener('click', () => {
