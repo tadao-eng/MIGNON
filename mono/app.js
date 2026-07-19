@@ -1,6 +1,6 @@
 // MONO — 持ち物管理 PWA 本体
 import { putItem, getItem, deleteItem, getAllItems, newId } from './db.js';
-import { suggestItemInfo, lookupBarcode, preloadModel } from './ai.js';
+import { suggestItemInfo, analyzePhoto, lookupBarcode, preloadModel } from './ai.js';
 import { startScan } from './scanner.js';
 
 const PRESET_CATEGORIES = ['衣類', '靴', 'バッグ', '本', 'ガジェット', 'キッチン', '日用品', '家具', '趣味', '美容', '書類', 'その他'];
@@ -33,12 +33,12 @@ function revokeURLs() {
 // ---------- 汎用 ----------
 
 let toastTimer = null;
-function toast(msg) {
+function toast(msg, durationMs = 2200) {
   const el = $('#toast');
   el.textContent = msg;
   el.hidden = false;
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { el.hidden = true; }, 2200);
+  toastTimer = setTimeout(() => { el.hidden = true; }, durationMs);
 }
 
 function todayStr() {
@@ -449,14 +449,21 @@ $('#analyze-btn').addEventListener('click', async () => {
   btn.disabled = true;
   btn.textContent = '分析中…';
   try {
-    const suggestion = await suggestItemInfo(state.draftPhoto);
-    if (suggestion) {
-      if (suggestion.name) $('#f-name').value = suggestion.name;
-      if (suggestion.category) $('#f-category').value = suggestion.category;
-      const label = [suggestion.name, suggestion.category].filter(Boolean).join(' / ');
+    const result = await analyzePhoto(state.draftPhoto);
+    if (result.status === 'ok') {
+      if (result.name) $('#f-name').value = result.name;
+      if (result.category) $('#f-category').value = result.category;
+      const label = [result.name, result.category].filter(Boolean).join(' / ');
       toast(`「${label}」と推定しました`);
+    } else if (result.status === 'no-match') {
+      if (result.top) {
+        const pct = Math.round(result.top.probability * 100);
+        toast(`判別できませんでした(近い候補: ${result.top.className} ${pct}%)`, 4000);
+      } else {
+        toast('判別できませんでした。角度や明るさを変えて撮り直してみてください', 4000);
+      }
     } else {
-      toast('うまく判別できませんでした。手動で入力してください');
+      toast('AIモデルを読み込めませんでした。通信環境を確認してもう一度試してください', 4000);
     }
   } finally {
     btn.disabled = false;
