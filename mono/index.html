@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FAFAFA">
+  <title>MONO — 持ち物管理</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="MONO">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>MONO</h1>
+    <div id="weekly-delta" class="weekly-delta" title="今週の増減"></div>
+  </header>
+
+  <main>
+
+    <!-- ======== 一覧 ======== -->
+    <section id="view-list" class="view">
+      <div class="toolbar">
+        <div id="category-chips" class="chips"></div>
+        <div class="toolbar-row">
+          <span id="item-count" class="muted"></span>
+          <span class="spacer"></span>
+          <select id="sort-select" aria-label="並び替え">
+            <option value="new">新しい順</option>
+            <option value="old">古い順</option>
+            <option value="name">名前順</option>
+            <option value="category">カテゴリ順</option>
+          </select>
+          <button id="layout-toggle" class="ghost-btn" aria-label="表示切替">≡</button>
+        </div>
+      </div>
+      <div id="item-grid" class="grid"></div>
+      <p id="empty-list" class="empty" hidden>まだ持ち物がありません。<br>「追加」から最初のひとつを登録してください。</p>
+    </section>
+
+    <!-- ======== 追加 / 編集 ======== -->
+    <section id="view-add" class="view" hidden>
+      <h2 id="add-title" class="view-title">追加</h2>
+      <form id="add-form" autocomplete="off">
+
+        <div class="photo-field">
+          <div id="photo-preview" class="photo-preview" role="button" tabindex="0" aria-label="写真を撮る">
+            <span id="photo-placeholder">＋ 写真を撮る</span>
+            <img id="photo-img" alt="" hidden>
+          </div>
+          <input type="file" id="photo-input" accept="image/*" capture="environment" hidden>
+          <div class="photo-actions">
+            <button type="button" id="scan-btn" class="ghost-btn">バーコード読取</button>
+            <button type="button" id="photo-clear" class="ghost-btn" hidden>写真を削除</button>
+          </div>
+        </div>
+
+        <label class="field">
+          <span class="field-label">名前 *</span>
+          <input type="text" id="f-name" required placeholder="例: 白いシャツ">
+        </label>
+
+        <label class="field">
+          <span class="field-label">カテゴリ</span>
+          <input type="text" id="f-category" list="category-list" placeholder="選択または入力">
+          <datalist id="category-list"></datalist>
+        </label>
+
+        <div class="field-grid">
+          <label class="field">
+            <span class="field-label">取得日</span>
+            <input type="date" id="f-acquired">
+          </label>
+          <label class="field">
+            <span class="field-label">バーコード</span>
+            <input type="text" id="f-barcode" inputmode="numeric" placeholder="読取または入力">
+          </label>
+        </div>
+
+        <label class="field">
+          <span class="field-label">メモ</span>
+          <textarea id="f-note" rows="2" placeholder="任意"></textarea>
+        </label>
+
+        <div class="form-actions">
+          <button type="submit" class="primary-btn" id="save-btn">登録する</button>
+          <button type="button" class="ghost-btn" id="cancel-edit" hidden>キャンセル</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ======== 履歴(手放したもの) ======== -->
+    <section id="view-history" class="view" hidden>
+      <h2 class="view-title">手放した履歴</h2>
+      <div id="history-list" class="history-list"></div>
+      <p id="empty-history" class="empty" hidden>まだ手放した記録はありません。</p>
+    </section>
+
+    <!-- ======== 分析 ======== -->
+    <section id="view-stats" class="view" hidden>
+      <h2 class="view-title">分析</h2>
+
+      <div class="stat-cards">
+        <div class="stat-card">
+          <span id="stat-total" class="stat-num">0</span>
+          <span class="stat-label">現在の持ち物</span>
+        </div>
+        <div class="stat-card">
+          <span id="stat-week" class="stat-num">±0</span>
+          <span class="stat-label">今週の増減</span>
+        </div>
+        <div class="stat-card">
+          <span id="stat-released" class="stat-num">0</span>
+          <span class="stat-label">手放した累計</span>
+        </div>
+      </div>
+
+      <h3 class="section-label">総アイテム数の推移(12週)</h3>
+      <div id="trend-chart" class="chart-box"></div>
+
+      <h3 class="section-label">カテゴリの内訳</h3>
+      <div id="category-bars" class="category-bars"></div>
+      <p id="stats-hint" class="muted"></p>
+    </section>
+
+  </main>
+
+  <nav class="tab-bar">
+    <button data-view="list" class="tab active">一覧</button>
+    <button data-view="add" class="tab">追加</button>
+    <button data-view="history" class="tab">履歴</button>
+    <button data-view="stats" class="tab">分析</button>
+  </nav>
+
+  <!-- バーコード読取ダイアログ -->
+  <dialog id="scan-dialog">
+    <div class="scan-wrap">
+      <video id="scan-video" playsinline muted></video>
+      <div class="scan-frame"></div>
+    </div>
+    <p id="scan-status" class="muted center">カメラを起動しています…</p>
+    <div class="dialog-actions">
+      <button id="scan-close" class="ghost-btn">閉じる</button>
+    </div>
+  </dialog>
+
+  <!-- アイテム詳細ダイアログ -->
+  <dialog id="detail-dialog">
+    <img id="d-photo" class="detail-photo" alt="" hidden>
+    <h2 id="d-name" class="detail-name"></h2>
+    <dl class="detail-meta" id="d-meta"></dl>
+    <div class="dialog-actions">
+      <button id="d-edit" class="ghost-btn">編集</button>
+      <button id="d-release" class="accent-btn">手放す</button>
+      <button id="d-close" class="ghost-btn">閉じる</button>
+    </div>
+  </dialog>
+
+  <!-- 手放すダイアログ -->
+  <dialog id="release-dialog">
+    <h2 class="detail-name">手放す</h2>
+    <p id="r-item-name" class="muted"></p>
+    <div class="radio-row" role="radiogroup" aria-label="方法">
+      <label><input type="radio" name="r-method" value="処分" checked><span>処分</span></label>
+      <label><input type="radio" name="r-method" value="譲渡"><span>譲渡</span></label>
+      <label><input type="radio" name="r-method" value="売却"><span>売却</span></label>
+    </div>
+    <label class="field">
+      <span class="field-label">理由(任意)</span>
+      <input type="text" id="r-reason" placeholder="例: 1年使わなかった">
+    </label>
+    <div class="dialog-actions">
+      <button id="r-cancel" class="ghost-btn">キャンセル</button>
+      <button id="r-confirm" class="accent-btn">手放した</button>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

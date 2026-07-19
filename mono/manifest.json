@@ -1,0 +1,17 @@
+{
+  "name": "MONO — 持ち物管理",
+  "short_name": "MONO",
+  "description": "ミニマリズム志向の持ち物管理アプリ。写真とバーコードで登録し、持ち物の増減をひと目で把握。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAFAFA",
+  "theme_color": "#FAFAFA",
+  "lang": "ja",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
