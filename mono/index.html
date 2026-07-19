@@ -137,6 +137,20 @@
       <h3 class="section-label">カテゴリの内訳</h3>
       <div id="category-bars" class="category-bars"></div>
       <p id="stats-hint" class="muted"></p>
+
+      <h3 class="section-label">AI設定</h3>
+      <div class="ai-settings">
+        <p id="gemini-status" class="muted"></p>
+        <label class="field">
+          <span class="field-label">Gemini APIキー</span>
+          <input type="password" id="gemini-key" placeholder="AIza… を貼り付け" autocomplete="off">
+        </label>
+        <div class="ai-settings-actions">
+          <button type="button" id="gemini-save" class="ghost-btn">保存</button>
+          <button type="button" id="gemini-clear" class="ghost-btn" hidden>削除</button>
+        </div>
+        <p class="muted">キーは aistudio.google.com/apikey で無料発行できます。この端末にのみ保存され、写真の判別時だけ Google に送信されます。</p>
+      </div>
     </section>
 
   </main>

@@ -348,6 +348,33 @@ function renderCategoryBars() {
   }
 }
 
+// ---------- AI設定(Gemini APIキー) ----------
+
+const GEMINI_KEY_STORAGE = 'mono.geminiKey';
+
+function renderGeminiStatus() {
+  const hasKey = !!(localStorage.getItem(GEMINI_KEY_STORAGE) || '').trim();
+  $('#gemini-status').textContent = hasKey
+    ? 'Gemini 使用中(高精度判別が有効)'
+    : '未設定(端末内AIで判別します)';
+  $('#gemini-clear').hidden = !hasKey;
+}
+
+$('#gemini-save').addEventListener('click', () => {
+  const value = $('#gemini-key').value.trim();
+  if (!value) return;
+  localStorage.setItem(GEMINI_KEY_STORAGE, value);
+  $('#gemini-key').value = '';
+  renderGeminiStatus();
+  toast('Gemini を有効にしました');
+});
+
+$('#gemini-clear').addEventListener('click', () => {
+  localStorage.removeItem(GEMINI_KEY_STORAGE);
+  renderGeminiStatus();
+  toast('端末内AIに戻しました');
+});
+
 // ---------- 追加 / 編集フォーム ----------
 
 function initCategoryDatalist() {
@@ -475,6 +502,8 @@ $('#analyze-btn').addEventListener('click', async () => {
       } else {
         toast('判別できませんでした。角度や明るさを変えて撮り直してみてください', 4000);
       }
+    } else if (result.status === 'auth-error') {
+      toast('Gemini APIキーが無効のようです。「分析」タブのAI設定を確認してください', 4000);
     } else {
       toast('AIモデルを読み込めませんでした。通信環境を確認してもう一度試してください', 4000);
     }
@@ -716,6 +745,7 @@ async function init() {
   $('#sort-select').value = state.sort;
   maybeShowIOSInstallHint();
   resetForm();
+  renderGeminiStatus();
   await reload();
 
   // 起動直後の描画が落ち着いてからAIモデルを裏で先読みする(初回判別の待ちをなくす)

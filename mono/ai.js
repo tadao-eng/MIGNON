@@ -1,14 +1,14 @@
 // 画像・バーコードからの品目情報推定。
 //
-// suggestItemInfo() / analyzePhoto() はどちらも共通の classifyPhoto()(ブラウザ内AI・
-// TensorFlow.js + MobileNet)で画像分類を行い、ImageNetの英語クラス名を ai-labels.js の
-// LABEL_RULES でアプリのカテゴリ/日本語品名にマッピングする。サーバには一切送信されず、
-// モデルは写真が選ばれた時点で初めて CDN から遅延ロードされる(初期表示を重くしないため)。
+// ユーザーが分析タブでGemini APIキーを設定している場合は classifyWithGemini() による
+// 高精度判別を優先し、キー未設定・認証エラー以外の失敗時は従来のブラウザ内AI(TensorFlow.js +
+// MobileNet)にフォールバックする。ブラウザ内AI経路は classifyPhoto() で画像分類を行い、
+// ImageNetの英語クラス名を ai-labels.js の LABEL_RULES でアプリのカテゴリ/日本語品名に
+// マッピングする。この経路はサーバには一切送信されず、モデルは写真が選ばれた時点で初めて
+// CDN から遅延ロードされる(初期表示を重くしないため)。
 // suggestItemInfo() は写真選択時の自動判別用(結果 {name, category} | null のみ、失敗理由は
-// 区別しない)。analyzePhoto() は手動「AI分析」ボタン用(モデル起因の失敗とルール未ヒットを
-// status で区別して返す)。
-// より高精度な判定に差し替えたい場合(例: Claude API 等の Vision 系API)は、
-// classifyPhoto() の中身を差し替えるだけでよい(app.js は各関数の戻り値の形しか見ない)。
+// 区別しない)。analyzePhoto() は手動「AI分析」ボタン用(Gemini認証エラー・モデル起因の失敗と
+// ルール未ヒットを status で区別して返す)。
 import { LABEL_RULES } from './ai-labels.js';
 
 const TFJS_URL = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js';
@@ -18,6 +18,80 @@ const MIN_PROBABILITY = 0.25;
 // 手動「AI分析」ボタン用のしきい値。ユーザーが明示的に操作しているため、
 // 自動判別(MIN_PROBABILITY)より緩めにして「近い候補」も拾えるようにする。
 const MIN_PROBABILITY_MANUAL = 0.15;
+
+// ---------- Gemini API(ユーザー自身のAPIキーを使用する高精度判別) ----------
+
+const GEMINI_MODEL = 'gemini-2.5-flash';
+const GEMINI_TIMEOUT_MS = 20000;
+const GEMINI_CATEGORIES = ['衣類', '靴', 'バッグ', '本', 'ガジェット', 'キッチン', '日用品', '家具', '趣味', '美容', '書類', 'その他'];
+const GEMINI_PROMPT =
+  'この写真に写っている主要な持ち物1点を判定してください。JSONのみで回答: ' +
+  `{"name": 日本語の簡潔な品名(最大20文字), "category": 次のリストから最も近い1つ ${JSON.stringify(GEMINI_CATEGORIES)}}。` +
+  '何が写っているか判定できない場合は {"name": null, "category": null}';
+
+function geminiKey() {
+  return (localStorage.getItem('mono.geminiKey') || '').trim();
+}
+
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(',').pop());
+    reader.onerror = () => reject(new Error('画像を読み込めませんでした'));
+    reader.readAsDataURL(blob);
+  });
+}
+
+/**
+ * ユーザー自身の Gemini APIキーで写真を判別する(高精度・要ネットワーク)。
+ * @param {Blob} photoBlob
+ * @returns {Promise<{ result: {name: string|null, category: string|null} | null } | { error: 'auth' }>}
+ *   認証エラー(400/401/403、無効なキー相当)以外の失敗は例外を投げる。
+ */
+async function classifyWithGemini(photoBlob) {
+  const key = geminiKey();
+  const base64 = await blobToBase64(photoBlob);
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), GEMINI_TIMEOUT_MS);
+  let res;
+  try {
+    res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
+      {
+        method: 'POST',
+        headers: { 'x-goog-api-key': key, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { inline_data: { mime_type: photoBlob.type || 'image/jpeg', data: base64 } },
+              { text: GEMINI_PROMPT },
+            ],
+          }],
+          generationConfig: { response_mime_type: 'application/json' },
+        }),
+        signal: ctrl.signal,
+      }
+    );
+  } finally {
+    clearTimeout(timer);
+  }
+
+  if (!res.ok) {
+    if (res.status === 400 || res.status === 401 || res.status === 403) {
+      return { error: 'auth' };
+    }
+    throw new Error(`Gemini API エラー: ${res.status}`);
+  }
+
+  const data = await res.json();
+  const text = (data?.candidates?.[0]?.content?.parts || [])
+    .map((p) => p.text || '')
+    .join('');
+  const cleaned = text.trim().replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/```\s*$/, '').trim();
+  const parsed = JSON.parse(cleaned);
+  if (!parsed.name && !parsed.category) return { result: null };
+  return { result: { name: parsed.name || null, category: parsed.category || null } };
+}
 
 function loadScript(src) {
   return new Promise((resolve, reject) => {
@@ -100,6 +174,7 @@ async function classifyPhoto(photoBlob) {
  * オフライン・CDN不達など、いかなる失敗でも例外を外に漏らさず静かに諦める。
  */
 export async function preloadModel() {
+  if (geminiKey()) return; // Gemini使用時はMobileNetの先読みをスキップ(フォールバック時は遅延ロードで賄う)
   try {
     const model = await loadModel();
     const canvas = document.createElement('canvas');
@@ -117,13 +192,27 @@ export async function preloadModel() {
 }
 
 /**
- * 写真から品目名・カテゴリを推定する(ブラウザ内AI・端末内完結)。
- * オフライン・CDN不達・タイムアウトなど、いかなる失敗でも null を返し
- * 手動入力にフォールバックする。
+ * 写真から品目名・カテゴリを推定する。
+ * Gemini APIキーが設定されていればまずそちらを試し(高精度)、認証エラーや通信失敗など
+ * いかなる問題が起きても従来のブラウザ内AI(MobileNet)経路に静かにフォールバックする。
+ * オフライン・CDN不達・タイムアウトなど、いかなる失敗でも null を返し手動入力にフォールバックする。
  * @param {Blob} photoBlob 撮影画像
  * @returns {Promise<{name?: string, category?: string} | null>}
  */
 export async function suggestItemInfo(photoBlob) {
+  if (geminiKey()) {
+    try {
+      const res = await classifyWithGemini(photoBlob);
+      if (!res.error) {
+        if (!res.result) return null;
+        return { name: res.result.name || undefined, category: res.result.category || undefined };
+      }
+      // res.error === 'auth': 従来のMobileNet経路へフォールバック
+    } catch {
+      // 通信失敗・タイムアウト等: 従来のMobileNet経路へフォールバック
+    }
+  }
+
   try {
     const predictions = await classifyPhoto(photoBlob);
     for (const pred of predictions || []) {
@@ -139,18 +228,41 @@ export async function suggestItemInfo(photoBlob) {
 
 /**
  * 写真から品目名・カテゴリを推定する(手動「AI分析」ボタン用)。
- * suggestItemInfo() と異なり、失敗理由(モデルのロード/推論失敗 か、判別はできたが
- * ルール表に該当が無いか)を区別して返す。ユーザーが明示的に操作しているため
+ * Gemini APIキーが設定されていればまずそちらを試す。認証エラー(無効なキー)は
+ * status: 'auth-error' として区別し、それ以外の失敗(通信・タイムアウト等)は従来の
+ * ブラウザ内AI(MobileNet)経路にフォールバックする。
+ * MobileNet経路では suggestItemInfo() と異なり、失敗理由(モデルのロード/推論失敗 か、
+ * 判別はできたがルール表に該当が無いか)を区別して返す。ユーザーが明示的に操作しているため
  * しきい値も MIN_PROBABILITY_MANUAL(0.15)と緩めにしている。
  * この関数自体は例外を投げない。
  * @param {Blob} photoBlob 撮影画像
  * @returns {Promise<
- *   | { status: 'ok', name?: string, category?: string, top: { className: string, probability: number } }
- *   | { status: 'no-match', top: { className: string, probability: number } | null }
+ *   | { status: 'ok', name?: string, category?: string, top: { className: string, probability: number } | null, source?: string }
+ *   | { status: 'no-match', top: { className: string, probability: number } | null, source?: string }
  *   | { status: 'model-error' }
+ *   | { status: 'auth-error' }
  * >}
  */
 export async function analyzePhoto(photoBlob) {
+  if (geminiKey()) {
+    try {
+      const res = await classifyWithGemini(photoBlob);
+      if (res.error === 'auth') return { status: 'auth-error' };
+      if (res.result) {
+        return {
+          status: 'ok',
+          name: res.result.name || undefined,
+          category: res.result.category || undefined,
+          top: null,
+          source: 'gemini',
+        };
+      }
+      return { status: 'no-match', top: null, source: 'gemini' };
+    } catch {
+      // 通信失敗・タイムアウト等: 従来のMobileNet経路へフォールバック
+    }
+  }
+
   let predictions;
   try {
     predictions = await classifyPhoto(photoBlob);
@@ -167,6 +279,7 @@ export async function analyzePhoto(photoBlob) {
         name: rule.name,
         category: rule.category,
         top: { className: pred.className, probability: pred.probability },
+        source: 'local',
       };
     }
   }
@@ -174,7 +287,7 @@ export async function analyzePhoto(photoBlob) {
   const top = predictions && predictions.length
     ? { className: predictions[0].className, probability: predictions[0].probability }
     : null;
-  return { status: 'no-match', top };
+  return { status: 'no-match', top, source: 'local' };
 }
 
 /**
