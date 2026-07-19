@@ -81,6 +81,7 @@
           <input type="text" id="f-category" list="category-list" placeholder="選択または入力">
           <datalist id="category-list"></datalist>
         </label>
+        <div id="category-picker" class="chips category-picker"></div>
 
         <div class="field-grid">
           <label class="field">
@@ -202,6 +203,22 @@
     <div class="dialog-actions">
       <button id="r-cancel" class="ghost-btn">キャンセル</button>
       <button id="r-confirm" class="accent-btn">手放した</button>
+    </div>
+  </dialog>
+
+  <!-- カテゴリ編集ダイアログ -->
+  <dialog id="category-dialog">
+    <h2 class="detail-name">カテゴリ編集</h2>
+    <div class="cat-add-row">
+      <label class="field" style="margin-bottom:0;">
+        <span class="field-label">新規カテゴリ</span>
+        <input type="text" id="cat-new-input" placeholder="例: アウトドア">
+      </label>
+      <button type="button" id="cat-add-btn" class="ghost-btn">追加</button>
+    </div>
+    <div id="cat-list" class="cat-list"></div>
+    <div class="dialog-actions">
+      <button id="cat-close" class="ghost-btn">閉じる</button>
     </div>
   </dialog>
 
