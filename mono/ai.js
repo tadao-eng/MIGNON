@@ -6,14 +6,19 @@
 //      一切残らない(詳細は mono/proxy/README.md)。
 //   2. Gemini API 直接呼び出し — geminiKey() が設定されていれば classifyWithGemini() を使う。
 //      APIキーがブラウザ(localStorage)に保存される簡易方式。
-//   3. ブラウザ内AI(TensorFlow.js + MobileNet) — 上記どちらも未設定、または失敗時のフォールバック。
+//   3. ブラウザ内AI(CLIP・ゼロショット画像分類) — 上記どちらも未設定時の既定経路。
+//      classifyWithCLIP() で clip-labels.js の CLIP_LABELS(300件超の任意ラベル)と写真を照合する。
+//      MobileNetのImageNet1000クラスに縛られず幅広い持ち物を判別できる。この経路はサーバには
+//      一切送信されず、モデル(transformers.js + CLIP)は写真が選ばれた時点で初めて CDN から
+//      遅延ロードされる(数十MBあるため自動先読みはしない。初回のみ時間がかかる)。
+//   4. ブラウザ内AI(TensorFlow.js + MobileNet) — CLIPのロード/推論に失敗した場合の最終フォールバック。
 //      classifyPhoto() で画像分類を行い、ImageNetの英語クラス名を ai-labels.js の LABEL_RULES で
-//      アプリのカテゴリ/日本語品名にマッピングする。この経路はサーバには一切送信されず、モデルは
-//      写真が選ばれた時点で初めて CDN から遅延ロードされる(初期表示を重くしないため)。
+//      アプリのカテゴリ/日本語品名にマッピングする。
 // suggestItemInfo() は写真選択時の自動判別用(結果 {name, category} | null のみ、失敗理由は
 // 区別しない)。analyzePhoto() は手動「AI分析」ボタン用(中継サーバ・Gemini起因の失敗と
 // モデル起因の失敗、ルール未ヒットを status で区別して返す)。
 import { LABEL_RULES } from './ai-labels.js';
+import { CLIP_LABELS } from './clip-labels.js';
 import { getCategories } from './categories.js';
 
 const TFJS_URL = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js';
@@ -146,6 +151,66 @@ async function classifyViaProxy(photoBlob) {
   return { result: data.result ?? null };
 }
 
+// ---------- ブラウザ内AI: CLIP(transformers.js・ゼロショット画像分類) ----------
+
+const TRANSFORMERS_URL = 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
+const CLIP_MODEL_ID = 'Xenova/clip-vit-base-patch32';
+const CLIP_LOAD_TIMEOUT_MS = 25000;
+// 最上位候補のスコアがこれ未満なら「該当なし」として扱う。
+const CLIP_MIN_SCORE = 0.20;
+
+const CLIP_CANDIDATE_LABELS = CLIP_LABELS.map((item) => item.en);
+const CLIP_LABEL_BY_EN = new Map(CLIP_LABELS.map((item) => [item.en, item]));
+
+// CLIPパイプラインのロードは一度だけ行い、以降は同じ Promise を再利用する。
+// 失敗した場合は変数を戻して次回呼び出し時に再試行できるようにする(loadModel と同じ形)。
+let clipPipelinePromise = null;
+
+async function loadClipPipeline() {
+  if (!clipPipelinePromise) {
+    clipPipelinePromise = (async () => {
+      const { pipeline, env } = await import(TRANSFORMERS_URL);
+      env.allowLocalModels = false;
+      return pipeline('zero-shot-image-classification', CLIP_MODEL_ID, { quantized: true });
+    })();
+    clipPipelinePromise.catch(() => { clipPipelinePromise = null; });
+  }
+  return withTimeout(clipPipelinePromise, CLIP_LOAD_TIMEOUT_MS);
+}
+
+function blobToDataURL(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(new Error('画像を読み込めませんでした'));
+    reader.readAsDataURL(blob);
+  });
+}
+
+/**
+ * CLIP(ゼロショット画像分類)で写真から品目名・カテゴリを推定する。
+ * clip-labels.js の CLIP_LABELS を候補ラベルとして写真と照合し、最上位候補のスコアが
+ * CLIP_MIN_SCORE 以上なら該当する {name, category} を返す。未満なら該当なしとして
+ * result: null を返す。モデルのロード・推論自体の失敗は例外を投げる(呼び出し側で
+ * MobileNetにフォールバックする)。
+ * @param {Blob} photoBlob
+ * @returns {Promise<{ result: {name: string, category: string} | null }>}
+ */
+async function classifyWithCLIP(photoBlob) {
+  const classifier = await loadClipPipeline();
+  const dataUrl = await blobToDataURL(photoBlob);
+  const output = await classifier(dataUrl, CLIP_CANDIDATE_LABELS, {
+    hypothesis_template: 'a photo of a {}',
+  });
+  const top = Array.isArray(output) ? output[0] : null;
+  if (!top || typeof top.score !== 'number' || top.score < CLIP_MIN_SCORE) {
+    return { result: null, top: top ? { className: top.label, probability: top.score } : null };
+  }
+  const label = CLIP_LABEL_BY_EN.get(top.label);
+  if (!label) return { result: null, top: { className: top.label, probability: top.score } };
+  return { result: { name: label.name, category: label.category }, top: { className: top.label, probability: top.score } };
+}
+
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     const s = document.createElement('script');
@@ -222,34 +287,25 @@ async function classifyPhoto(photoBlob) {
 
 /**
  * アプリ起動直後に裏でモデルをロード+ウォームアップしておく。
- * 写真選択時にはすでにロード・コンパイル済みの状態にして、初回判別の待ちをなくす。
- * loadModel() と同じ modelLoading キャッシュを共有するだけで、ロード自体のロジックは変更しない。
- * オフライン・CDN不達など、いかなる失敗でも例外を外に漏らさず静かに諦める。
+ * CLIP(transformers.js)はモデルサイズが大きい(数十MB)ため、初期表示直後に無条件で
+ * ダウンロードを始めることは避け、自動先読みは行わない(写真選択時に遅延ロードする)。
+ * MobileNetはCLIP失敗時のみ使うフォールバック専用経路になったため、こちらも先読みの
+ * 対象にしない。中継サーバ/Gemini APIキー設定時は端末内AIを使わないため、元々どのみち
+ * 先読み不要(この関数自体が呼ばれた際の早期リターンとして条件を残す)。
+ * @returns {Promise<void>}
  */
 export async function preloadModel() {
-  if (geminiKey() || proxyUrl()) return; // 中継サーバ/Gemini使用時はMobileNetの先読みをスキップ(フォールバック時は遅延ロードで賄う)
-  try {
-    const model = await loadModel();
-    const canvas = document.createElement('canvas');
-    canvas.width = 64;
-    canvas.height = 64;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#888';
-    ctx.fillRect(0, 0, 64, 64);
-    ctx.fillStyle = '#ccc';
-    ctx.fillRect(16, 16, 32, 32);
-    await model.classify(canvas, 1);
-  } catch {
-    // オフライン・CDN不達・タイムアウトなど: 静かに諦める(写真選択時に通常フローで再試行される)
-  }
+  if (geminiKey() || proxyUrl()) return; // 中継サーバ/Gemini使用時は端末内AIを使わないため先読み不要
+  // CLIP/MobileNetいずれも自動先読みしない。写真選択・AI分析ボタン操作時に遅延ロードされる。
 }
 
 /**
  * 写真から品目名・カテゴリを推定する。
  * 中継サーバURL・Gemini APIキーの順に設定を確認し、設定があればそちらを試す(高精度)。
- * 設定不備・認証エラー・通信失敗など、いかなる問題が起きても従来のブラウザ内AI(MobileNet)
- * 経路に静かにフォールバックする。オフライン・CDN不達・タイムアウトなど、いかなる失敗でも
- * null を返し手動入力にフォールバックする。
+ * どちらも未設定の通常ケースでは、まずブラウザ内AI(CLIP)を試す。
+ * 設定不備・認証エラー・通信失敗・CLIPのロード/推論失敗など、いかなる問題が起きても
+ * 従来のブラウザ内AI(MobileNet)経路に静かにフォールバックする。オフライン・CDN不達・
+ * タイムアウトなど、いかなる失敗でも null を返し手動入力にフォールバックする。
  * @param {Blob} photoBlob 撮影画像
  * @returns {Promise<{name?: string, category?: string} | null>}
  */
@@ -276,6 +332,16 @@ export async function suggestItemInfo(photoBlob) {
     } catch {
       // 通信失敗・タイムアウト等: 従来のMobileNet経路へフォールバック
     }
+  } else {
+    try {
+      // CLIPで判別できたが該当ラベルなし(スコア不足)の場合は res.result が null になる
+      // (= MobileNetへはフォールバックせず、そのまま「該当なし」として null を返す)。
+      const res = await classifyWithCLIP(photoBlob);
+      if (!res.result) return null;
+      return { name: res.result.name || undefined, category: res.result.category || undefined };
+    } catch {
+      // CLIPのロード/推論失敗(初回DL不達・タイムアウト等): 従来のMobileNet経路へフォールバック
+    }
   }
 
   try {
@@ -299,6 +365,10 @@ export async function suggestItemInfo(photoBlob) {
  * 中継サーバが未設定で Gemini APIキーが設定されている場合は Gemini を試す。認証エラー
  * (無効なキー)は status: 'auth-error' として区別し、それ以外の失敗は同様に MobileNet
  * 経路にフォールバックする。
+ * どちらも未設定の通常ケースでは、まずブラウザ内AI(CLIP)を試す。CLIPで判別できたが
+ * clip-labels.js に該当ラベルが無い(スコア不足)場合は status: 'no-match'。CLIP自体の
+ * ロード・推論が失敗した場合(初回DL不達・タイムアウト等)のみ、従来のMobileNet経路に
+ * フォールバックする。
  * MobileNet経路では suggestItemInfo() と異なり、失敗理由(モデルのロード/推論失敗 か、
  * 判別はできたがルール表に該当が無いか)を区別して返す。ユーザーが明示的に操作しているため
  * しきい値も MIN_PROBABILITY_MANUAL(0.15)と緩めにしている。
@@ -348,6 +418,22 @@ export async function analyzePhoto(photoBlob) {
       return { status: 'no-match', top: null, source: 'gemini' };
     } catch {
       // 通信失敗・タイムアウト等: 従来のMobileNet経路へフォールバック
+    }
+  } else {
+    try {
+      const res = await classifyWithCLIP(photoBlob);
+      if (res.result) {
+        return {
+          status: 'ok',
+          name: res.result.name || undefined,
+          category: res.result.category || undefined,
+          top: res.top || null,
+          source: 'clip',
+        };
+      }
+      return { status: 'no-match', top: res.top || null, source: 'clip' };
+    } catch {
+      // CLIPのロード/推論失敗(初回DL不達・タイムアウト等): 従来のMobileNet経路へフォールバック
     }
   }
 

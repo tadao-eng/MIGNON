@@ -506,13 +506,25 @@ $('#photo-preview').addEventListener('keydown', (e) => {
   }
 });
 
+// 端末内AI(CLIP)の初回ロードは数十MBの遅延ダウンロードが発生し体感が固まりやすいため、
+// このセッションで最初に写真を選んだ時だけ「準備中」の案内を出す(中継サーバ/Geminiキー
+// 設定時はCLIPを使わないため出さない)。結果が返れば通常の成功/未ヒットのトーストに差し替わる。
+let clipPrepNoticeShown = false;
+
 // 写真ファイル選択後の共通処理(カメラ撮影 / アルバム選択のどちらからでも呼ばれる)
 async function handlePhotoFile(file) {
   if (!file) return;
   state.draftPhoto = await processPhoto(file);
   updatePhotoPreview();
 
-  // ブラウザ内AI(TensorFlow.js MobileNet)で品目名・カテゴリを推定し、空欄のみ自動入力する
+  const hasProxy = !!(localStorage.getItem(PROXY_URL_STORAGE) || '').trim();
+  const hasKey = !!(localStorage.getItem(GEMINI_KEY_STORAGE) || '').trim();
+  if (!hasProxy && !hasKey && !clipPrepNoticeShown) {
+    clipPrepNoticeShown = true;
+    toast('AIを準備中…(初回のみ時間がかかります)', 3000);
+  }
+
+  // 端末内AI(CLIP、失敗時はMobileNetにフォールバック)で品目名・カテゴリを推定し、空欄のみ自動入力する
   const suggestion = await suggestItemInfo(state.draftPhoto);
   if (suggestion) {
     let filled = false;
