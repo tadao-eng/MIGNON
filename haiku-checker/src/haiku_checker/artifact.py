@@ -48,13 +48,36 @@ def build_payload(data_dir: Path | None = None) -> dict:
     }
 
 
-def build(output: Path, data_dir: Path | None = None) -> Path:
+def _strip_document_wrapper(html: str) -> str:
+    """<html>/<head>/<body> を外し、title・style・本文・script だけにする。
+
+    claude.ai の Artifact は投入した HTML を独自の文書骨格で包むため、
+    こちらで骨格を持つと二重になる。title は残す（タブ名に使われる）。
+    """
+    title_start = html.index("<title>")
+    style_end = html.index("</style>") + len("</style>")
+    head = html[title_start:style_end]
+
+    body_start = html.index("<body>") + len("<body>")
+    body_end = html.index("</body>")
+    body = html[body_start:body_end]
+
+    return f"{head}\n{body.strip()}\n"
+
+
+def build(output: Path, data_dir: Path | None = None, bare: bool = False) -> Path:
+    """配布用 HTML を書き出す。
+
+    bare=True では文書骨格を外した断片を出す（claude.ai の Artifact 用）。
+    """
     template = TEMPLATE.read_text(encoding="utf-8")
     if PLACEHOLDER not in template:
         raise RuntimeError(f"テンプレートに {PLACEHOLDER} がありません: {TEMPLATE}")
 
     payload = json.dumps(build_payload(data_dir), ensure_ascii=False, separators=(",", ":"))
     html = template.replace(PLACEHOLDER, payload)
+    if bare:
+        html = _strip_document_wrapper(html)
 
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(html, encoding="utf-8")

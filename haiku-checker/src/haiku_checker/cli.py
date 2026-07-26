@@ -73,6 +73,8 @@ def build_parser() -> argparse.ArgumentParser:
     art = sub.add_parser("build-artifact", help="配布用の単体 HTML を生成する")
     art.add_argument("-o", "--output", type=Path, default=Path("dist/haiku-checker.html"))
     art.add_argument("--data-dir", type=Path)
+    art.add_argument("--bare", action="store_true",
+                     help="文書骨格(<html>/<head>/<body>)を外した断片を出す（claude.ai の Artifact 用）")
 
     kigo = sub.add_parser("kigo", help="季語を検索する")
     kigo.add_argument("query", nargs="?", help="部分一致で検索する語")
@@ -185,7 +187,7 @@ def cmd_serve(args, console: Console) -> int:
 def cmd_build_artifact(args, console: Console) -> int:
     from . import artifact
 
-    path = artifact.build(args.output, args.data_dir)
+    path = artifact.build(args.output, args.data_dir, bare=args.bare)
     size = path.stat().st_size / 1024
     console.print(f"[green]生成しました:[/green] {path} ({size:.0f} KB)")
     console.print("[dim]外部通信なしで単体で開けます。AI 評価と Web 検索は含まれません。[/dim]")
