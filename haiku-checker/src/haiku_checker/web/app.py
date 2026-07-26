@@ -16,6 +16,7 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel, Field
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from .. import __version__, db, evaluator, similarity
 from ..analyzer import AnalysisOptions, analyze
@@ -23,6 +24,15 @@ from ..analyzer import AnalysisOptions, analyze
 STATIC_DIR = Path(__file__).parent / "static"
 
 SEASONS = ("春", "夏", "秋", "冬", "新年")
+
+# 既定で受け付ける Host ヘッダ。
+#
+# CORS ミドルウェアを入れていないので、悪意あるサイトの JS が fetch しても
+# プリフライトが通らず応答を読めない。ただし DNS リバインディング
+# （攻撃者のドメインを 127.0.0.1 に解決させる手口）を使われると同一オリジン扱いになり、
+# ブラウザを踏んだだけで /api/evaluate を叩かれて API 課金が発生しうる。
+# Host ヘッダを検証することでこの経路を塞ぐ。
+LOCAL_HOSTS = ["localhost", "127.0.0.1", "::1"]
 
 
 class AnalyzeRequest(BaseModel):
@@ -60,8 +70,19 @@ def _options(req: AnalyzeRequest, use_llm: bool, **extra) -> AnalysisOptions:
     )
 
 
-def create_app() -> FastAPI:
+def resolve_allowed_hosts(allowed_hosts: list[str] | None = None) -> list[str]:
+    """許可する Host ヘッダを決める。環境変数 HAIKU_ALLOWED_HOSTS で上書きできる。"""
+    if allowed_hosts:
+        return allowed_hosts
+    env = os.environ.get("HAIKU_ALLOWED_HOSTS", "").strip()
+    if env:
+        return [h.strip() for h in env.split(",") if h.strip()]
+    return list(LOCAL_HOSTS)
+
+
+def create_app(allowed_hosts: list[str] | None = None) -> FastAPI:
     app = FastAPI(title="haiku-checker", version=__version__, docs_url="/api/docs")
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=resolve_allowed_hosts(allowed_hosts))
 
     @app.get("/api/status")
     def status() -> dict:

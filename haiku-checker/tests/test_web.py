@@ -8,7 +8,8 @@ from haiku_checker.web.app import create_app  # noqa: E402
 
 @pytest.fixture(scope="module")
 def client():
-    return TestClient(create_app())
+    # TestClient は Host: testserver を送るため明示的に許可する
+    return TestClient(create_app(allowed_hosts=["testserver"]))
 
 
 def test_status_does_not_leak_keys(client):
@@ -91,3 +92,41 @@ def test_evaluate_reports_missing_key(client, monkeypatch):
 def test_evaluate_rejects_bad_effort(client):
     res = client.post("/api/evaluate", json={"haiku": "古池や", "effort": "turbo"})
     assert res.status_code == 400
+
+
+def test_foreign_host_header_rejected():
+    """DNS リバインディング経路を塞げているか。
+
+    悪意あるサイトが自分のドメインを 127.0.0.1 に解決させると同一オリジン扱いになり、
+    ブラウザを踏んだだけで /api/evaluate を叩かれて API 課金が発生しうる。
+    Host ヘッダを検証することでこれを拒否する。
+    """
+    c = TestClient(create_app(allowed_hosts=["localhost", "127.0.0.1"]))
+    ok = c.post("/api/analyze", json={"haiku": "古池や", "use_web": False},
+                headers={"Host": "127.0.0.1"})
+    assert ok.status_code == 200
+
+    bad = c.post("/api/analyze", json={"haiku": "古池や", "use_web": False},
+                 headers={"Host": "evil.example"})
+    assert bad.status_code == 400
+
+
+def test_allowed_hosts_from_env(monkeypatch):
+    from haiku_checker.web.app import resolve_allowed_hosts
+
+    monkeypatch.delenv("HAIKU_ALLOWED_HOSTS", raising=False)
+    assert resolve_allowed_hosts() == ["localhost", "127.0.0.1", "::1"]
+
+    monkeypatch.setenv("HAIKU_ALLOWED_HOSTS", "haiku.local, 192.168.1.5")
+    assert resolve_allowed_hosts() == ["haiku.local", "192.168.1.5"]
+
+    # 引数は環境変数より優先される
+    assert resolve_allowed_hosts(["only.example"]) == ["only.example"]
+
+
+def test_no_cors_headers_exposed(client):
+    """CORS を開けていないこと。開けると任意サイトの JS が応答を読めてしまう。"""
+    res = client.post("/api/analyze",
+                      json={"haiku": "古池や", "use_web": False},
+                      headers={"Origin": "https://evil.example"})
+    assert "access-control-allow-origin" not in {k.lower() for k in res.headers}

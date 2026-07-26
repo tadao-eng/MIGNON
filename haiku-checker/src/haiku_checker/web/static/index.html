@@ -172,6 +172,17 @@ footer { text-align: center; color: var(--muted); font-size: .74rem; padding-top
       <select id="season"><option value="">指定しない</option></select>
       <p class="hint">当季雑詠の季節外れ判定に使います。</p>
     </div>
+    <div>
+      <label for="effort">AI の思考の深さ</label>
+      <select id="effort">
+        <option value="low">low（最安・粗い）</option>
+        <option value="medium">medium（推奨）</option>
+        <option value="high" selected>high（既定）</option>
+        <option value="xhigh">xhigh</option>
+        <option value="max">max（最高精度・最も高額）</option>
+      </select>
+      <p class="hint">下げるほど出力トークンが減り安くなります。俳句一句なら medium で十分なことが多いです。</p>
+    </div>
   </div>
   <div class="actions">
     <button id="run">評価する</button>
@@ -200,6 +211,17 @@ const el = (tag, cls, text) => {
 };
 
 let STATUS = null;
+
+// 検索結果の URL は第三者 API 由来。javascript: などのスキームをそのまま
+// href に入れるとクリックで実行されるため、http/https 以外は弾く。
+function safeUrl(u) {
+  try {
+    const p = new URL(u, location.origin);
+    return (p.protocol === 'http:' || p.protocol === 'https:') ? p.href : null;
+  } catch {
+    return null;
+  }
+}
 
 async function loadStatus() {
   try {
@@ -379,10 +401,15 @@ function renderSimilarity(s) {
     s.web_matches.slice(0, 6).forEach(m => {
       const tr = el('tr');
       const td = el('td');
-      const a = el('a', null, m.title || m.url);
-      a.href = m.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
-      a.style.color = 'var(--accent)';
-      td.appendChild(a);
+      const href = safeUrl(m.url);
+      if (href) {
+        const a = el('a', null, m.title || href);
+        a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+        a.style.color = 'var(--accent)';
+        td.appendChild(a);
+      } else {
+        td.appendChild(el('span', null, m.title || m.url));
+      }
       tr.appendChild(td);
       const flag = el('td');
       if (m.exact) flag.appendChild(el('span', 'tag bad', '一致'));
@@ -530,7 +557,7 @@ async function run() {
   results.appendChild(placeholder);
 
   try {
-    const ev = await post('/api/evaluate', body);
+    const ev = await post('/api/evaluate', { ...body, effort: $('effort').value });
     placeholder.remove();
     if (!ev.available) {
       showError(ev.error || 'AI 評価を実行できませんでした。');

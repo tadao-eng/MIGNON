@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from datetime import date, datetime
 from pathlib import Path
@@ -66,6 +67,8 @@ def build_parser() -> argparse.ArgumentParser:
                        help="待ち受けアドレス（既定は自分の端末からのみ）")
     serve.add_argument("--port", type=int, default=8000)
     serve.add_argument("--reload", action="store_true", help="開発用のオートリロード")
+    serve.add_argument("--allow-host", action="append", default=[],
+                       help="許可する Host ヘッダ（繰り返し指定可）。リバースプロキシ配下で使う")
 
     kigo = sub.add_parser("kigo", help="季語を検索する")
     kigo.add_argument("query", nargs="?", help="部分一致で検索する語")
@@ -156,6 +159,11 @@ def cmd_serve(args, console: Console) -> int:
             "このアプリに認証はありません。到達できる相手は誰でもあなたの Anthropic API キーで "
             "評価を実行できます（= あなたに課金されます）。外部に出す場合は必ず前段に認証を置いてください。"
         )
+        # 外部公開時はアクセス元のホスト名を特定できないため Host 検証を緩める。
+        # --allow-host で明示された場合はそれだけを許可する。
+        os.environ.setdefault("HAIKU_ALLOWED_HOSTS", ",".join(args.allow_host) if args.allow_host else "*")
+    elif args.allow_host:
+        os.environ["HAIKU_ALLOWED_HOSTS"] = ",".join(args.allow_host)
 
     console.print(f"[green]起動しました:[/green] http://{args.host}:{args.port}/")
     import uvicorn
