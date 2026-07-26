@@ -74,6 +74,18 @@ haiku build-artifact -o dist/haiku-checker.html
 判定ロジックは Python から JavaScript へ移植したものです。両者がずれると配布版だけ誤った
 結果を出すため、実ブラウザで突き合わせる一致テストを `tests/test_artifact.py` に置いています。
 
+### GitHub Pages で公開する
+
+リポジトリ直下の `haiku/index.html` がこの生成物です。`main` に入ると
+`https://tadao-eng.github.io/MIGNON/haiku/` で公開されます（このリポジトリは公開設定で、
+Pages は `main` のルートから配信しています）。
+
+歳時記データを更新したら、生成し直してコミットしてください。
+
+```bash
+haiku build-artifact -o ../haiku/index.html --data-dir data
+```
+
 > **読みの精度に差があります。** 配布版は形態素解析（janome）を持てないため、漢字の読みは
 > 歳時記の見出し語＋常用語辞書でしか引けません。読めない字があるときは音数を表示せず、
 > かなの入力を促します。CLI / 自前ホスト版はこの制約を受けません。
