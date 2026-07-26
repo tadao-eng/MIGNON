@@ -378,6 +378,9 @@ const MIN_KANA_MATCH = 3;
 const surfaceIndex = new Map(), kanaIndex = new Map();
 DATA.kigo.forEach((k, id) => {
   k._id = id;
+  // 埋め込み時に空フィールドは省かれている
+  if (!k.a) k.a = [];
+  if (!k.n) k.n = "";
   for (const s of [k.w, ...k.a]) {
     const key = normalize(s);
     if (!surfaceIndex.has(key)) surfaceIndex.set(key, []);
@@ -416,11 +419,30 @@ function scan(text, index, maxLen, matchedBy) {
   return hits;
 }
 
-function findKigo(text, readingKana) {
+// 本文がかなで書かれている連続部分だけを取り出す。
+// 読み一致は「作者がかなで書いた季語」を拾う経路なので、漢字の読みまで含めた
+// 一続きの読み文字列を走査すると語をまたいだ誤検出が起きる。
+// 例:「この道や…」の読み「このみち」から「木の実（このみ）」を拾ってしまう。
+function kanaRuns(tokens) {
+  const runs = [];
+  let cur = "";
+  for (const t of tokens) {
+    if (t.surface && !containsKanji(t.surface) && t.kana) cur += t.kana;
+    else { if (cur) runs.push(cur); cur = ""; }
+  }
+  if (cur) runs.push(cur);
+  return runs;
+}
+
+function findKigo(text, readingKana, tokens) {
   const hits = scan(normalize(text), surfaceIndex, MAX_SURFACE, "surface");
   const found = new Set(hits.map(h => h.kigo._id));
-  if (readingKana) {
-    for (const h of scan(toHiragana(readingKana), kanaIndex, MAX_KANA, "kana")) {
+  let targets = (tokens && tokens.length) ? kanaRuns(tokens) : [];
+  // 読みをユーザーが与えた場合はトークンが 1 個で語境界が取れない。
+  // その場合だけ読み全体を走査対象にする（誤検出より取り逃しを避ける）。
+  if (!targets.length && readingKana) targets = [toHiragana(readingKana)];
+  for (const target of targets) {
+    for (const h of scan(target, kanaIndex, MAX_KANA, "kana")) {
       if (!found.has(h.kigo._id)) { hits.push(h); found.add(h.kigo._id); }
     }
   }
@@ -428,8 +450,8 @@ function findKigo(text, readingKana) {
   return hits;
 }
 
-function analyzeSaijiki(text, readingKana, targetSeason) {
-  const hits = findKigo(text, readingKana);
+function analyzeSaijiki(text, readingKana, targetSeason, tokens) {
+  const hits = findKigo(text, readingKana, tokens);
   const rep = { hits, seasons: [], warnings: [], notes: [], muki: false,
                 kigasanari: false, kichigai: false, outOfSeason: [],
                 primarySeason: null, targetSeason: targetSeason || null };
@@ -662,7 +684,7 @@ function judge(haiku, yomi, season) {
     haiku,
     reading,
     structure: analyzeStructure(haiku, reading, yomi || null),
-    saijiki: analyzeSaijiki(haiku, reading.kana, season || null),
+    saijiki: analyzeSaijiki(haiku, reading.kana, season || null, reading.tokens),
     similarity: checkSimilarity(haiku, reading.kana),
   };
 }

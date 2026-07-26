@@ -121,6 +121,7 @@ def analyze(haiku: str, options: AnalysisOptions | None = None) -> AnalysisResul
         reading_kana=reading.kana,
         target_season=options.target_season,
         submission_date=options.submission_date,
+        tokens=reading.tokens,
     )
 
     sim_report = similarity.check(
