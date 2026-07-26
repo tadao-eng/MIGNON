@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<title>俳句チェッカー</title>
+<style>
+:root {
+  --bg: #faf8f4;
+  --panel: #ffffff;
+  --ink: #1f2328;
+  --muted: #6b7280;
+  --line: #e5e0d8;
+  --accent: #7a5c3e;
+  --ok: #217a4b;
+  --warn: #a86a00;
+  --bad: #b3261e;
+  --serif: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  --sans: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16181c; --panel: #1e2126; --ink: #e8e6e3; --muted: #9aa0a6;
+    --line: #333840; --accent: #c9a37a; --ok: #4ec27f; --warn: #e0a63c; --bad: #f0736a;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--sans); line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 24px 16px 80px; }
+header { padding: 24px 0 8px; }
+h1 { font-family: var(--serif); font-size: 1.6rem; margin: 0 0 4px; letter-spacing: .06em; }
+.sub { color: var(--muted); font-size: .85rem; margin: 0; }
+
+.card {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 10px; padding: 18px; margin-bottom: 16px;
+}
+.card > h2 {
+  font-size: .95rem; margin: 0 0 14px; letter-spacing: .04em;
+  display: flex; align-items: center; gap: 8px;
+}
+.card > h2 .num {
+  background: var(--accent); color: #fff; border-radius: 4px;
+  font-size: .7rem; padding: 2px 7px; font-weight: 600;
+}
+
+label { display: block; font-size: .8rem; color: var(--muted); margin-bottom: 5px; }
+input[type=text], input[type=date], select {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--line);
+  border-radius: 7px; background: var(--bg); color: var(--ink);
+  font-family: inherit; font-size: 1rem;
+}
+#haiku { font-family: var(--serif); font-size: 1.25rem; letter-spacing: .08em; }
+.row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+.row > div { flex: 1 1 150px; }
+.hint { font-size: .74rem; color: var(--muted); margin-top: 5px; }
+
+.actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; align-items: center; }
+button {
+  font-family: inherit; font-size: .9rem; padding: 10px 20px; border-radius: 7px;
+  border: 1px solid var(--accent); background: var(--accent); color: #fff;
+  cursor: pointer; font-weight: 600;
+}
+button.ghost { background: transparent; color: var(--accent); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+.checkbox { display: flex; align-items: center; gap: 6px; font-size: .82rem; color: var(--muted); }
+.checkbox input { width: auto; }
+
+.haiku-display {
+  font-family: var(--serif); font-size: 1.45rem; letter-spacing: .12em;
+  text-align: center; padding: 8px 0 4px;
+}
+.haiku-yomi { text-align: center; color: var(--muted); font-size: .8rem; margin-bottom: 4px; }
+
+table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+th { text-align: left; font-weight: 600; color: var(--muted); font-size: .76rem;
+     border-bottom: 1px solid var(--line); padding: 6px 8px; }
+td { padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+.tag { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: .74rem; font-weight: 600; }
+.tag.ok   { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
+.tag.warn { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
+.tag.bad  { background: color-mix(in srgb, var(--bad) 15%, transparent); color: var(--bad); }
+.tag.mute { background: color-mix(in srgb, var(--muted) 15%, transparent); color: var(--muted); }
+
+.note { display: flex; gap: 8px; font-size: .84rem; padding: 8px 0; border-top: 1px dashed var(--line); }
+.note:first-of-type { border-top: none; }
+.note.warn::before { content: "⚠"; color: var(--warn); }
+.note.info::before { content: "ℹ"; color: var(--muted); }
+.note.warn { color: var(--ink); }
+.note.info { color: var(--muted); }
+
+.summary-line { margin-top: 10px; font-size: .88rem; }
+.summary-line b { font-family: var(--serif); letter-spacing: .06em; }
+
+.risk { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.risk .level { font-size: 1.5rem; font-weight: 700; font-family: var(--serif); }
+.risk-高 .level { color: var(--bad); }
+.risk-中 .level { color: var(--warn); }
+.risk-低 .level { color: var(--ok); }
+.risk-判定不能 .level { color: var(--muted); }
+ul.reasons { margin: 8px 0 0; padding-left: 1.1em; font-size: .86rem; }
+ul.reasons li { margin-bottom: 4px; }
+
+.score-total { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+.score-total .n { font-size: 2.4rem; font-weight: 700; font-family: var(--serif); line-height: 1; }
+.axis { margin-bottom: 14px; }
+.axis-head { display: flex; justify-content: space-between; align-items: baseline; font-size: .86rem; }
+.axis-head .label { font-weight: 600; }
+.bar { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin: 5px 0 6px; }
+.bar > span { display: block; height: 100%; border-radius: 3px; background: var(--accent); }
+.axis p { margin: 0; font-size: .85rem; color: var(--muted); }
+.axis ul { margin: 6px 0 0; padding-left: 1.1em; font-size: .82rem; color: var(--warn); }
+
+.persp { border-left: 3px solid var(--accent); padding-left: 14px; margin-bottom: 18px; }
+.persp h3 { font-size: .9rem; margin: 0 0 6px; font-family: var(--serif); letter-spacing: .05em; }
+.persp p { margin: 0 0 8px; font-size: .88rem; }
+.persp .lists { display: flex; gap: 18px; flex-wrap: wrap; font-size: .82rem; }
+.persp .lists > div { flex: 1 1 200px; }
+.persp .lists h4 { margin: 0 0 3px; font-size: .76rem; color: var(--muted); }
+.persp .lists ul { margin: 0; padding-left: 1.1em; }
+.grade { font-size: .82rem; font-weight: 600; margin-top: 8px; }
+
+.revision { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
+.revision .h {
+  font-family: var(--serif); font-size: 1.15rem; letter-spacing: .1em;
+  margin-bottom: 8px; color: var(--accent);
+}
+.revision dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; font-size: .82rem; }
+.revision dt { color: var(--muted); white-space: nowrap; }
+.revision dd { margin: 0; }
+
+.spinner {
+  display: inline-block; width: 14px; height: 14px; border: 2px solid var(--line);
+  border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.status { font-size: .82rem; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.hidden { display: none; }
+.err { color: var(--bad); font-size: .86rem; }
+footer { text-align: center; color: var(--muted); font-size: .74rem; padding-top: 20px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>俳句チェッカー</h1>
+  <p class="sub">歳時記照合・定型判定・類句チェック・添削</p>
+</header>
+
+<div class="card">
+  <div>
+    <label for="haiku">句（上五・中七・下五をスペースで区切ると正確に判定できます）</label>
+    <input type="text" id="haiku" placeholder="古池や 蛙飛びこむ 水の音" autocomplete="off">
+  </div>
+  <div class="row">
+    <div style="flex:2 1 260px">
+      <label for="yomi">読み（任意・かな）</label>
+      <input type="text" id="yomi" placeholder="ふるいけや かわずとびこむ みずのおと" autocomplete="off">
+      <p class="hint">文語の活用などで音数がずれるときに指定します。節ごとに区切ると各節まで正確になります。</p>
+    </div>
+    <div>
+      <label for="season">投句時期の季節（任意）</label>
+      <select id="season"><option value="">指定しない</option></select>
+      <p class="hint">当季雑詠の季節外れ判定に使います。</p>
+    </div>
+    <div>
+      <label for="effort">AI の思考の深さ</label>
+      <select id="effort">
+        <option value="low">low（最安・粗い）</option>
+        <option value="medium">medium（推奨）</option>
+        <option value="high" selected>high（既定）</option>
+        <option value="xhigh">xhigh</option>
+        <option value="max">max（最高精度・最も高額）</option>
+      </select>
+      <p class="hint">下げるほど出力トークンが減り安くなります。俳句一句なら medium で十分なことが多いです。</p>
+    </div>
+  </div>
+  <div class="actions">
+    <button id="run">評価する</button>
+    <span class="checkbox"><input type="checkbox" id="useWeb" checked><label for="useWeb" style="margin:0">Web 検索で類句を調べる</label></span>
+    <span class="checkbox"><input type="checkbox" id="useLlm" checked><label for="useLlm" style="margin:0">AI で採点・添削する</label></span>
+    <span id="status" class="status"></span>
+  </div>
+  <p id="error" class="err hidden"></p>
+</div>
+
+<div id="results"></div>
+
+<footer>
+  <span id="meta"></span>
+</footer>
+
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, text) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text !== undefined) n.textContent = text;
+  return n;
+};
+
+let STATUS = null;
+
+// 検索結果の URL は第三者 API 由来。javascript: などのスキームをそのまま
+// href に入れるとクリックで実行されるため、http/https 以外は弾く。
+function safeUrl(u) {
+  try {
+    const p = new URL(u, location.origin);
+    return (p.protocol === 'http:' || p.protocol === 'https:') ? p.href : null;
+  } catch {
+    return null;
+  }
+}
+
+async function loadStatus() {
+  try {
+    STATUS = await (await fetch('/api/status')).json();
+  } catch { return; }
+  const sel = $('season');
+  STATUS.seasons.forEach(s => sel.appendChild(new Option(s, s)));
+
+  if (!STATUS.llm_available) {
+    $('useLlm').checked = false;
+    $('useLlm').disabled = true;
+    $('useLlm').parentElement.title = 'ANTHROPIC_API_KEY が未設定です';
+  }
+  if (!STATUS.web_search_provider) {
+    $('useWeb').checked = false;
+    $('useWeb').disabled = true;
+    $('useWeb').parentElement.title = 'TAVILY_API_KEY / SERPER_API_KEY が未設定です';
+  }
+  $('meta').textContent =
+    `季語 ${STATUS.kigo_count} 件 / 有名句 ${STATUS.corpus_count} 句` +
+    (STATUS.llm_available ? ` / 評価モデル ${STATUS.default_model}` : ' / AI 評価は無効') +
+    (STATUS.web_search_provider ? ` / Web 検索 ${STATUS.web_search_provider}` : '');
+}
+
+function payload() {
+  return {
+    haiku: $('haiku').value.trim(),
+    yomi: $('yomi').value.trim() || null,
+    season: $('season').value || null,
+    use_web: $('useWeb').checked,
+  };
+}
+
+function setBusy(on, message) {
+  $('run').disabled = on;
+  $('status').innerHTML = '';
+  if (on) {
+    $('status').appendChild(el('span', 'spinner'));
+    $('status').appendChild(el('span', null, message || ''));
+  }
+}
+
+function showError(msg) {
+  const box = $('error');
+  box.textContent = msg;
+  box.classList.remove('hidden');
+}
+
+function card(num, title) {
+  const c = el('div', 'card');
+  const h = el('h2');
+  if (num) h.appendChild(el('span', 'num', num));
+  h.appendChild(el('span', null, title));
+  c.appendChild(h);
+  return c;
+}
+
+function notes(container, warnings, infos) {
+  (warnings || []).forEach(w => container.appendChild(el('div', 'note warn', w)));
+  (infos || []).forEach(n => container.appendChild(el('div', 'note info', n)));
+}
+
+/* ---------------- 0. 入力句 ---------------- */
+function renderHeader(d) {
+  const c = el('div', 'card');
+  c.appendChild(el('div', 'haiku-display', d.haiku));
+  if (d.reading.kana) c.appendChild(el('div', 'haiku-yomi', '（' + d.reading.kana + '）'));
+  if (d.reading.unknown.length) {
+    notes(c, ['読みを推定できなかった文字があります（' + d.reading.unknown.join('・') +
+              '）。音数がずれている可能性があるため、読みを入力してください。']);
+  }
+  return c;
+}
+
+/* ---------------- 1. 定型 ---------------- */
+function renderStructure(s) {
+  const c = card('1', '定型チェック');
+  const t = el('table');
+  t.innerHTML = '<thead><tr><th>句</th><th>本文</th><th class="num">音数</th><th>判定</th></tr></thead>';
+  const tb = el('tbody');
+  s.segments.forEach(seg => {
+    const tr = el('tr');
+    tr.appendChild(el('td', null, seg.name));
+    const td = el('td'); td.style.fontFamily = 'var(--serif)'; td.textContent = seg.text;
+    tr.appendChild(td);
+    tr.appendChild(el('td', 'num', String(seg.mora)));
+    const cls = seg.delta === 0 ? 'ok' : (Math.abs(seg.delta) === 1 ? 'warn' : 'bad');
+    const badge = el('td'); badge.appendChild(el('span', 'tag ' + cls, seg.label));
+    tr.appendChild(badge);
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb);
+  c.appendChild(t);
+
+  const line = el('div', 'summary-line');
+  line.innerHTML = `音数パターン <b>${s.pattern}</b>（計 ${s.total_mora} 音）　`;
+  line.appendChild(el('span', 'tag ' + (s.is_teikei ? 'ok' : 'warn'), s.is_teikei ? '定型' : '破調'));
+  if (s.kireji.length) line.appendChild(el('span', 'tag mute', '切字: ' + s.kireji.join('、')));
+  c.appendChild(line);
+
+  notes(c, s.warnings, s.confident ? [] : ['音数の推定に不確実性があります。']);
+  return c;
+}
+
+/* ---------------- 2. 歳時記 ---------------- */
+function renderSaijiki(k) {
+  const c = card('2', '歳時記照合');
+  if (k.muki) {
+    c.appendChild(el('div', 'tag bad', '季語なし（無季）'));
+  } else {
+    const t = el('table');
+    t.innerHTML = '<thead><tr><th>季語</th><th>読み</th><th>季節</th><th>分類</th><th>一致</th></tr></thead>';
+    const tb = el('tbody');
+    k.kigo.forEach(g => {
+      const tr = el('tr');
+      const w = el('td'); w.style.fontFamily = 'var(--serif)'; w.textContent = g.word;
+      tr.appendChild(w);
+      tr.appendChild(el('td', null, g.kana));
+      const sc = (k.kichigai && g.season !== k.primary_season) ? 'bad' : 'mute';
+      const st = el('td'); st.appendChild(el('span', 'tag ' + sc, g.season));
+      tr.appendChild(st);
+      tr.appendChild(el('td', null, g.category));
+      tr.appendChild(el('td', null, g.matched_by === 'surface' ? '本文' : '読み'));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    c.appendChild(t);
+
+    const line = el('div', 'summary-line');
+    line.innerHTML = `主たる季節 <b>${k.primary_season}</b>` +
+      (k.target_season ? `　／　投句時期の季節 <b>${k.target_season}</b>` : '');
+    c.appendChild(line);
+  }
+  notes(c, k.warnings, k.notes);
+  return c;
+}
+
+/* ---------------- 3. 類句 ---------------- */
+function renderSimilarity(s) {
+  const c = card('3', '類似句チェック');
+  const box = el('div', 'risk risk-' + s.risk);
+  box.appendChild(el('span', 'level', s.risk));
+  box.appendChild(el('span', null, 'リスク度'));
+  c.appendChild(box);
+  c.appendChild(el('p', 'hint', s.advice));
+
+  if (s.reasons.length) {
+    const ul = el('ul', 'reasons');
+    s.reasons.forEach(r => ul.appendChild(el('li', null, r)));
+    c.appendChild(ul);
+  }
+
+  if (s.local_matches.length) {
+    const t = el('table');
+    t.style.marginTop = '12px';
+    t.innerHTML = '<thead><tr><th>類似する既存句</th><th>作者</th><th class="num">類似度</th></tr></thead>';
+    const tb = el('tbody');
+    s.local_matches.forEach(m => {
+      const tr = el('tr');
+      const h = el('td'); h.style.fontFamily = 'var(--serif)'; h.textContent = m.text;
+      tr.appendChild(h);
+      tr.appendChild(el('td', null, m.author));
+      const cls = m.score >= 0.85 ? 'bad' : (m.score >= 0.7 ? 'warn' : 'mute');
+      const sc = el('td', 'num'); sc.appendChild(el('span', 'tag ' + cls, Math.round(m.score * 100) + '%'));
+      tr.appendChild(sc);
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    c.appendChild(t);
+  }
+
+  if (s.web_matches.length) {
+    const t = el('table');
+    t.style.marginTop = '12px';
+    t.innerHTML = '<thead><tr><th>Web 検索結果</th><th>完全一致</th></tr></thead>';
+    const tb = el('tbody');
+    s.web_matches.slice(0, 6).forEach(m => {
+      const tr = el('tr');
+      const td = el('td');
+      const href = safeUrl(m.url);
+      if (href) {
+        const a = el('a', null, m.title || href);
+        a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+        a.style.color = 'var(--accent)';
+        td.appendChild(a);
+      } else {
+        td.appendChild(el('span', null, m.title || m.url));
+      }
+      tr.appendChild(td);
+      const flag = el('td');
+      if (m.exact) flag.appendChild(el('span', 'tag bad', '一致'));
+      tr.appendChild(flag);
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    c.appendChild(t);
+  }
+
+  notes(c, [], s.web_error ? [s.web_error] : []);
+  return c;
+}
+
+/* ---------------- 4-6. AI 評価 ---------------- */
+function renderAxis(label, a) {
+  const d = el('div', 'axis');
+  const head = el('div', 'axis-head');
+  head.appendChild(el('span', 'label', label));
+  head.appendChild(el('span', null, `${a.score} / ${a.max_score}`));
+  d.appendChild(head);
+  const bar = el('div', 'bar');
+  const fill = el('span');
+  const ratio = a.max_score ? a.score / a.max_score : 0;
+  fill.style.width = (ratio * 100) + '%';
+  fill.style.background = ratio >= 0.7 ? 'var(--ok)' : (ratio >= 0.5 ? 'var(--warn)' : 'var(--bad)');
+  bar.appendChild(fill);
+  d.appendChild(bar);
+  d.appendChild(el('p', null, a.comment));
+  if (a.issues && a.issues.length) {
+    const ul = el('ul');
+    a.issues.forEach(i => ul.appendChild(el('li', null, i)));
+    d.appendChild(ul);
+  }
+  return d;
+}
+
+function renderPerspective(title, p) {
+  const d = el('div', 'persp');
+  d.appendChild(el('h3', null, title));
+  d.appendChild(el('p', null, p.verdict));
+  const lists = el('div', 'lists');
+  if (p.strengths && p.strengths.length) {
+    const box = el('div');
+    box.appendChild(el('h4', null, '評価する点'));
+    const ul = el('ul');
+    p.strengths.forEach(s => ul.appendChild(el('li', null, s)));
+    box.appendChild(ul); lists.appendChild(box);
+  }
+  if (p.concerns && p.concerns.length) {
+    const box = el('div');
+    box.appendChild(el('h4', null, '気になる点'));
+    const ul = el('ul');
+    p.concerns.forEach(s => ul.appendChild(el('li', null, s)));
+    box.appendChild(ul); lists.appendChild(box);
+  }
+  d.appendChild(lists);
+  d.appendChild(el('div', 'grade', '見込み: ' + p.estimated_grade));
+  return d;
+}
+
+function renderEvaluation(e) {
+  const frag = document.createDocumentFragment();
+
+  const c = card('4', '客観的評価');
+  const tot = el('div', 'score-total');
+  const n = el('span', 'n', String(e.total_score));
+  n.style.color = e.total_score >= 85 ? 'var(--ok)' : (e.total_score >= 70 ? 'var(--accent)' : (e.total_score >= 50 ? 'var(--warn)' : 'var(--bad)'));
+  tot.appendChild(n);
+  tot.appendChild(el('span', null, '/ 100'));
+  c.appendChild(tot);
+  c.appendChild(renderAxis('構造', e.structure));
+  c.appendChild(renderAxis('表現のオリジナリティ', e.originality));
+  c.appendChild(renderAxis('情景の具体性と余韻', e.imagery));
+  frag.appendChild(c);
+
+  const p = card('5', '二つの視点からの講評');
+  p.appendChild(renderPerspective('伝統派（有季定型）の視点', e.traditional));
+  p.appendChild(renderPerspective('現代派の視点', e.modern));
+  frag.appendChild(p);
+
+  if (e.revisions && e.revisions.length) {
+    const r = card('6', '添削案');
+    e.revisions.forEach(rev => {
+      const box = el('div', 'revision');
+      box.appendChild(el('div', 'h', rev.haiku));
+      const dl = el('dl');
+      [['変更点', rev.changed], ['ねらい', rev.intent], ['留意点', rev.tradeoff]].forEach(([k, v]) => {
+        dl.appendChild(el('dt', null, k));
+        dl.appendChild(el('dd', null, v));
+      });
+      box.appendChild(dl);
+      r.appendChild(box);
+    });
+    frag.appendChild(r);
+  }
+
+  const s = card(null, '総括');
+  s.appendChild(el('p', null, e.summary));
+  if (e.usage) {
+    s.appendChild(el('p', 'hint',
+      `${e.model} / 入力 ${e.usage.input_tokens} トークン・出力 ${e.usage.output_tokens} トークン`));
+  }
+  frag.appendChild(s);
+  return frag;
+}
+
+/* ---------------- 実行 ---------------- */
+async function post(url, body) {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.detail || `エラー (${res.status})`);
+  return data;
+}
+
+async function run() {
+  const body = payload();
+  if (!body.haiku) { showError('句を入力してください。'); return; }
+  $('error').classList.add('hidden');
+  $('results').innerHTML = '';
+
+  setBusy(true, '解析中…');
+  let fast;
+  try {
+    fast = await post('/api/analyze', body);
+  } catch (err) {
+    setBusy(false); showError(err.message); return;
+  }
+
+  const results = $('results');
+  results.appendChild(renderHeader(fast));
+  results.appendChild(renderStructure(fast.structure));
+  results.appendChild(renderSaijiki(fast.saijiki));
+  results.appendChild(renderSimilarity(fast.similarity));
+
+  if (!$('useLlm').checked) { setBusy(false); return; }
+
+  setBusy(true, 'AI が採点・添削しています（1〜3 分かかることがあります）…');
+  const placeholder = card(null, 'AI 評価');
+  placeholder.appendChild(el('p', 'hint', 'モデルが句を読み込んでいます…'));
+  results.appendChild(placeholder);
+
+  try {
+    const ev = await post('/api/evaluate', { ...body, effort: $('effort').value });
+    placeholder.remove();
+    if (!ev.available) {
+      showError(ev.error || 'AI 評価を実行できませんでした。');
+    } else {
+      results.appendChild(renderEvaluation(ev));
+    }
+  } catch (err) {
+    placeholder.remove();
+    showError(err.message);
+  } finally {
+    setBusy(false);
+  }
+}
+
+$('run').addEventListener('click', run);
+$('haiku').addEventListener('keydown', e => { if (e.key === 'Enter') run(); });
+$('yomi').addEventListener('keydown', e => { if (e.key === 'Enter') run(); });
+loadStatus();
+</script>
+</body>
+</html>

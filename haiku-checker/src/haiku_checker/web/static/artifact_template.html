@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>歳時記チェッカー</title>
+<style>
+/* ─────────────────────────────────────────────────────────────
+   配色は季節そのものを情報の軸に据える。季語のチップは季節の色を
+   持ち、季違い（異なる季節の季語の同居）は色の衝突として一目で分かる。
+   地色は藍を含んだ寒色寄りの灰。俳句本文は明朝、UI はゴシック、
+   数値は等幅——日本語組版の役割分担をそのまま画面に持ち込む。
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --paper:  #e7eaec;
+  --panel:  #f3f5f6;
+  --ink:    #131a20;
+  --muted:  #58666f;
+  --rule:   #c6ced3;
+  --accent: #1f4e79;
+  --warn:   #8a5c09;
+  --bad:    #932c33;
+
+  --haru:   #b25a73;
+  --natsu:  #2c7663;
+  --aki:    #955c14;
+  --fuyu:   #3e6086;
+  --shin:   #93262d;
+
+  --mincho: "Hiragino Mincho ProN", "Yu Mincho", YuMincho, "Noto Serif JP", "Songti SC", serif;
+  --gothic: "Hiragino Sans", "Yu Gothic", YuGothic, "Noto Sans JP", "Helvetica Neue", Arial, sans-serif;
+  --mono:   ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --step:   clamp(0.5rem, 1.6vw, 0.9rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #10151a; --panel: #171d24; --ink: #dde4ea; --muted: #8b98a4;
+    --rule: #2a333c; --accent: #7fb0dd; --warn: #d19c3e; --bad: #e2717a;
+    --haru: #dd869c; --natsu: #52b096; --aki: #cd9442; --fuyu: #79a0ca; --shin: #d9636b;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10151a; --panel: #171d24; --ink: #dde4ea; --muted: #8b98a4;
+  --rule: #2a333c; --accent: #7fb0dd; --warn: #d19c3e; --bad: #e2717a;
+  --haru: #dd869c; --natsu: #52b096; --aki: #cd9442; --fuyu: #79a0ca; --shin: #d9636b;
+}
+:root[data-theme="light"] {
+  --paper: #e7eaec; --panel: #f3f5f6; --ink: #131a20; --muted: #58666f;
+  --rule: #c6ced3; --accent: #1f4e79; --warn: #8a5c09; --bad: #932c33;
+  --haru: #b25a73; --natsu: #2c7663; --aki: #955c14; --fuyu: #3e6086; --shin: #93262d;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--gothic); line-height: 1.75; font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+.page { max-width: 720px; margin: 0 auto; padding: 0 20px 72px; }
+
+/* ── ヘッダ ─────────────────────────────────────────────── */
+.masthead {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 16px; padding: 32px 0 14px; border-bottom: 2px solid var(--ink);
+}
+.masthead h1 {
+  font-family: var(--mincho); font-size: 1.5rem; font-weight: 600;
+  margin: 0; letter-spacing: .18em;
+}
+.masthead .tagline { color: var(--muted); font-size: .76rem; letter-spacing: .04em; }
+.themetoggle {
+  border: 1px solid var(--rule); background: transparent; color: var(--muted);
+  border-radius: 2px; font-size: .72rem; padding: 4px 9px; cursor: pointer;
+  font-family: var(--gothic);
+}
+
+/* ── 入力 ───────────────────────────────────────────────── */
+.compose { display: grid; gap: 14px; padding: 22px 0; }
+.field { display: grid; gap: 5px; }
+.field > label { font-size: .72rem; color: var(--muted); letter-spacing: .1em; }
+input[type=text], select {
+  width: 100%; padding: 9px 11px; border: 1px solid var(--rule);
+  border-radius: 2px; background: var(--panel); color: var(--ink);
+  font-family: inherit; font-size: .95rem;
+}
+#haiku { font-family: var(--mincho); font-size: 1.15rem; letter-spacing: .1em; }
+input:focus-visible, select:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 1px;
+}
+.hint { font-size: .72rem; color: var(--muted); }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 520px) { .pair { grid-template-columns: 1fr; } }
+.go {
+  justify-self: start; border: 1px solid var(--accent); background: var(--accent);
+  color: var(--paper); font-family: inherit; font-size: .88rem; font-weight: 600;
+  padding: 9px 26px; border-radius: 2px; cursor: pointer; letter-spacing: .08em;
+}
+.go:hover { filter: brightness(1.12); }
+
+/* ── 句の掲示 ───────────────────────────────────────────────
+   当初は writing-mode: vertical-rl で縦組みにしていたが取りやめた。
+   日本語フォントを持たない環境では代替フォントに縦書きの字送りが無く、
+   漢字だけが 4〜5px 送りになって重なって潰れる。Artifact は CSP で
+   Web フォントを読めず閲覧環境も選べないため、横組みで確実に出す。 */
+.specimen {
+  display: grid; gap: 8px; justify-items: center; text-align: center;
+  padding: 30px 22px 28px; margin-top: 4px;
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+}
+.specimen .body {
+  font-family: var(--mincho); font-size: clamp(1.25rem, 4.2vw, 1.75rem);
+  letter-spacing: .18em; line-height: 1.9; text-wrap: balance;
+}
+.specimen .yomi {
+  font-family: var(--mincho); font-size: .8rem; color: var(--muted);
+  letter-spacing: .12em;
+}
+
+/* ── セクション ─────────────────────────────────────────── */
+section { padding: 22px 0; border-top: 1px solid var(--rule); }
+section > h2 {
+  font-size: .74rem; letter-spacing: .18em; color: var(--muted);
+  margin: 0 0 16px; font-weight: 600;
+}
+.headline { font-family: var(--mincho); font-size: 1.05rem; margin: 0 0 10px; }
+
+/* ── モーラ定規 ─────────────────────────────────────────── */
+.scan { display: grid; gap: 12px; }
+.seg { display: grid; grid-template-columns: 3.4em 1fr auto; gap: 12px; align-items: center; }
+.seg .name { font-size: .74rem; color: var(--muted); letter-spacing: .08em; }
+.seg .body { font-family: var(--mincho); font-size: 1.05rem; letter-spacing: .06em; }
+.seg .count { font-family: var(--mono); font-size: .8rem; font-variant-numeric: tabular-nums; }
+.ruler { display: flex; gap: 3px; margin-top: 4px; }
+.ruler i {
+  display: block; width: 11px; height: 11px; border-radius: 1px;
+  background: var(--accent); opacity: .85;
+}
+.ruler i.over  { background: var(--warn); }
+.ruler i.short { background: transparent; border: 1px dashed var(--rule); }
+.verdict { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; margin-top: 14px; }
+.pattern { font-family: var(--mono); font-size: 1.05rem; font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+
+/* ── チップ ─────────────────────────────────────────────── */
+.chip {
+  display: inline-block; font-size: .7rem; font-weight: 600; letter-spacing: .06em;
+  padding: 2px 9px; border-radius: 2px; border: 1px solid currentColor;
+}
+.chip.plain { color: var(--muted); }
+.chip.good  { color: var(--accent); }
+.chip.warn  { color: var(--warn); }
+.chip.bad   { color: var(--bad); }
+.chip.s春   { color: var(--haru); }
+.chip.s夏   { color: var(--natsu); }
+.chip.s秋   { color: var(--aki); }
+.chip.s冬   { color: var(--fuyu); }
+.chip.s新年 { color: var(--shin); }
+
+/* ── 表 ─────────────────────────────────────────────────── */
+.scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+th {
+  text-align: left; font-weight: 600; font-size: .7rem; color: var(--muted);
+  letter-spacing: .08em; padding: 5px 10px 5px 0; border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+td.kg { font-family: var(--mincho); font-size: 1rem; white-space: nowrap; }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+
+/* ── 注意書き ───────────────────────────────────────────── */
+.alert {
+  border: 1px solid var(--bad); border-left-width: 3px; border-radius: 2px;
+  padding: 11px 13px; margin-bottom: 16px; font-size: .84rem;
+}
+.alert strong { display: block; font-weight: 600; letter-spacing: .04em; margin-bottom: 3px; }
+.dimmed { opacity: .42; }
+.notes { display: grid; gap: 7px; margin-top: 14px; }
+.notice { display: grid; grid-template-columns: 1.2em 1fr; gap: 6px; font-size: .82rem; }
+.notice .mk { font-family: var(--mono); font-weight: 700; }
+.notice.warn .mk { color: var(--warn); }
+.notice.bad  .mk { color: var(--bad); }
+.notice.info { color: var(--muted); }
+
+/* ── 類句 ───────────────────────────────────────────────── */
+.risk { display: flex; align-items: baseline; gap: 12px; }
+.risk .lv { font-family: var(--mincho); font-size: 2rem; line-height: 1; font-weight: 600; }
+.risk-高 .lv { color: var(--bad); }
+.risk-中 .lv { color: var(--warn); }
+.risk-低 .lv { color: var(--natsu); }
+.reasons { margin: 12px 0 0; padding-left: 1.15em; font-size: .85rem; display: grid; gap: 5px; }
+
+/* ── 季語検索 ───────────────────────────────────────────── */
+.lookup { display: grid; gap: 10px; }
+.lookup .controls { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; }
+@media (max-width: 520px) { .lookup .controls { grid-template-columns: 1fr; } }
+#kigoResults { max-height: 330px; overflow-y: auto; }
+
+footer {
+  border-top: 2px solid var(--ink); margin-top: 34px; padding-top: 16px;
+  font-size: .74rem; color: var(--muted); display: grid; gap: 8px;
+}
+.hidden { display: none; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="masthead">
+  <div>
+    <h1>歳時記チェッカー</h1>
+    <div class="tagline">季語照合・定型判定・類句チェック</div>
+  </div>
+  <button class="themetoggle" id="themeBtn" type="button">表示切替</button>
+</div>
+
+<div class="compose">
+  <div class="field">
+    <label for="haiku">句</label>
+    <input type="text" id="haiku" placeholder="古池や 蛙飛びこむ 水の音" autocomplete="off" spellcheck="false">
+    <span class="hint">上五・中七・下五をスペースで区切ると、区切りを推測せず正確に判定します。</span>
+  </div>
+  <div class="pair">
+    <div class="field">
+      <label for="yomi">読み（かな・任意）</label>
+      <input type="text" id="yomi" placeholder="ふるいけや かわずとびこむ みずのおと" autocomplete="off" spellcheck="false">
+      <span class="hint">漢字の読みは限定的にしか推定できません。音数が合わないときに指定してください。</span>
+    </div>
+    <div class="field">
+      <label for="season">投句時期の季節（任意）</label>
+      <select id="season">
+        <option value="">指定しない</option>
+        <option value="春">春</option><option value="夏">夏</option>
+        <option value="秋">秋</option><option value="冬">冬</option>
+        <option value="新年">新年</option>
+      </select>
+      <span class="hint">当季雑詠の季節外れ判定に使います。</span>
+    </div>
+  </div>
+  <button class="go" id="run" type="button">judge ─ 判定する</button>
+</div>
+
+<div id="out"></div>
+
+<section id="lookupSection">
+  <h2>季語をひく</h2>
+  <div class="lookup">
+    <div class="controls">
+      <input type="text" id="kigoQuery" placeholder="語・読みで検索（例: 月）" autocomplete="off">
+      <select id="kigoSeason">
+        <option value="">全季節</option>
+        <option value="春">春</option><option value="夏">夏</option>
+        <option value="秋">秋</option><option value="冬">冬</option>
+        <option value="新年">新年</option>
+      </select>
+      <select id="kigoCategory">
+        <option value="">全分類</option>
+        <option value="時候">時候</option><option value="天文">天文</option>
+        <option value="地理">地理</option><option value="生活">生活</option>
+        <option value="行事">行事</option><option value="動物">動物</option>
+        <option value="植物">植物</option>
+      </select>
+    </div>
+    <div id="kigoResults" class="scroll"></div>
+  </div>
+</section>
+
+<footer>
+  <div id="counts"></div>
+  <div>
+    このページはブラウザ内で完結します。入力した句がどこかへ送信されることはありません。
+    その代わり <strong>AI による採点・添削と、Web 検索による類句調査は含まれません</strong>
+    ——それらは外部通信を必要とするためです。
+  </div>
+  <div>
+    類句チェックは収録済みの有名句との照合のみです。「低」は類句が存在しないことの証明ではなく、
+    この収録範囲では見つからなかったという意味にすぎません。
+  </div>
+</footer>
+
+</div>
+
+<script>
+const DATA = /*__DATA__*/;
+
+/* ══ かな・モーラ ════════════════════════════════════════════
+   俳句の音数は「かな一文字＝一音」を基本に、拗音は数えず、
+   促音・撥音・長音はそれぞれ一音として数える。            */
+const NON_MORAIC = new Set("ぁぃぅぇぉゃゅょゎァィゥェォャュョヮ");
+const MORAIC_SMALL = new Set("ゕゖヵヶ");
+const KANA_RE = /[ぁ-ゖァ-ヺー]/g;
+const SEPARATORS = " 　/／|｜\t";
+
+function toHiragana(text) {
+  let out = "";
+  for (const ch of text) {
+    const c = ch.codePointAt(0);
+    out += (c >= 0x30A1 && c <= 0x30FA) ? String.fromCodePoint(c - 0x60) : ch;
+  }
+  return out;
+}
+function isKana(ch) {
+  const c = ch.codePointAt(0);
+  return (c >= 0x3041 && c <= 0x3096) || (c >= 0x30A1 && c <= 0x30FA) || ch === "ー";
+}
+function containsKanji(text) {
+  for (const ch of text) {
+    const c = ch.codePointAt(0);
+    if ((c >= 0x4E00 && c <= 0x9FFF) || (c >= 0x3400 && c <= 0x4DBF)) return true;
+  }
+  return false;
+}
+function normalize(text) { return text.normalize("NFKC").trim(); }
+function kanaOnly(text) { return (toHiragana(text).match(KANA_RE) || []).join(""); }
+
+function countMora(kana) {
+  let n = 0;
+  for (const ch of toHiragana(kana)) {
+    if (NON_MORAIC.has(ch)) continue;
+    if (MORAIC_SMALL.has(ch)) { n++; continue; }
+    if (isKana(ch)) n++;
+  }
+  return n;
+}
+function moraList(kana) {
+  const out = [];
+  for (const ch of toHiragana(kana)) {
+    if (NON_MORAIC.has(ch)) { if (out.length) out[out.length - 1] += ch; else out.push(ch); continue; }
+    if (isKana(ch) || MORAIC_SMALL.has(ch)) out.push(ch);
+  }
+  return out;
+}
+function hasSeparator(text) { return [...SEPARATORS].some(s => text.includes(s)); }
+function splitOnSeparators(text) {
+  return text.split(/[ 　/／|｜\t]+/).filter(Boolean);
+}
+
+/* ══ 読み推定 ═══════════════════════════════════════════════
+   形態素解析は使えないため、歳時記の見出し語＋常用語の辞書で
+   最長一致する。読めなかった文字は黙って落とさず unknown に載せ、
+   音数が信用できないことを画面で明示する。                  */
+const READ_MAX = Math.max(...Object.keys(DATA.readings).map(k => k.length));
+
+function readText(text) {
+  const tokens = [], unknown = [];
+  let i = 0;
+  while (i < text.length) {
+    const ch = text[i];
+    if (!containsKanji(ch)) {
+      tokens.push({ surface: ch, kana: isKana(ch) ? toHiragana(ch) : "" });
+      i++; continue;
+    }
+    let matched = false;
+    for (let len = Math.min(READ_MAX, text.length - i); len > 0; len--) {
+      const chunk = text.slice(i, i + len);
+      if (Object.prototype.hasOwnProperty.call(DATA.readings, chunk)) {
+        tokens.push({ surface: chunk, kana: DATA.readings[chunk] });
+        i += len; matched = true; break;
+      }
+    }
+    if (!matched) { unknown.push(ch); tokens.push({ surface: ch, kana: "" }); i++; }
+  }
+  return { kana: tokens.map(t => t.kana).join(""), tokens, unknown };
+}
+function readWithOverride(text, yomi) {
+  if (yomi) {
+    const clean = kanaOnly(yomi);
+    return { kana: clean, tokens: [{ surface: text, kana: clean }], unknown: [], user: true };
+  }
+  return readText(text);
+}
+
+/* ══ 歳時記照合 ═════════════════════════════════════════════ */
+const MIN_KANA_MATCH = 3;
+const surfaceIndex = new Map(), kanaIndex = new Map();
+DATA.kigo.forEach((k, id) => {
+  k._id = id;
+  for (const s of [k.w, ...k.a]) {
+    const key = normalize(s);
+    if (!surfaceIndex.has(key)) surfaceIndex.set(key, []);
+    surfaceIndex.get(key).push(k);
+  }
+  const kanas = new Set([k.k, ...[k.w, ...k.a].map(kanaOnly)]);
+  for (let kn of kanas) {
+    kn = toHiragana(kn);
+    if (kn && countMora(kn) >= MIN_KANA_MATCH) {
+      if (!kanaIndex.has(kn)) kanaIndex.set(kn, []);
+      kanaIndex.get(kn).push(k);
+    }
+  }
+});
+const MAX_SURFACE = Math.max(...[...surfaceIndex.keys()].map(s => s.length));
+const MAX_KANA = Math.max(...[...kanaIndex.keys()].map(s => s.length));
+
+function scan(text, index, maxLen, matchedBy) {
+  const hits = [], seen = new Set();
+  let i = 0;
+  while (i < text.length) {
+    let advanced = false;
+    for (let len = Math.min(maxLen, text.length - i); len > 0; len--) {
+      const chunk = text.slice(i, i + len);
+      const cands = index.get(chunk);
+      if (!cands) continue;
+      for (const k of cands) {
+        if (seen.has(k._id)) continue;
+        seen.add(k._id);
+        hits.push({ kigo: k, matched: chunk, start: i, matchedBy });
+      }
+      i += len; advanced = true; break;
+    }
+    if (!advanced) i++;
+  }
+  return hits;
+}
+
+function findKigo(text, readingKana) {
+  const hits = scan(normalize(text), surfaceIndex, MAX_SURFACE, "surface");
+  const found = new Set(hits.map(h => h.kigo._id));
+  if (readingKana) {
+    for (const h of scan(toHiragana(readingKana), kanaIndex, MAX_KANA, "kana")) {
+      if (!found.has(h.kigo._id)) { hits.push(h); found.add(h.kigo._id); }
+    }
+  }
+  hits.sort((a, b) => (a.matchedBy !== "surface") - (b.matchedBy !== "surface") || a.start - b.start);
+  return hits;
+}
+
+function analyzeSaijiki(text, readingKana, targetSeason) {
+  const hits = findKigo(text, readingKana);
+  const rep = { hits, seasons: [], warnings: [], notes: [], muki: false,
+                kigasanari: false, kichigai: false, outOfSeason: [],
+                primarySeason: null, targetSeason: targetSeason || null };
+  if (!hits.length) {
+    rep.muki = true;
+    rep.warnings.push({ level: "bad", text:
+      "季語が検出できませんでした。有季定型の大会では失格扱いになる場合があります（無季を許容する大会か、収録漏れの季語かをご確認ください）。" });
+    return rep;
+  }
+  for (const h of hits) if (!rep.seasons.includes(h.kigo.s)) rep.seasons.push(h.kigo.s);
+  const surfaceHits = hits.filter(h => h.matchedBy === "surface");
+  rep.primarySeason = (surfaceHits.length ? surfaceHits : hits)[0].kigo.s;
+
+  if (hits.length > 1) {
+    if (rep.seasons.length === 1) {
+      rep.kigasanari = true;
+      rep.warnings.push({ level: "warn", text:
+        `季重なりです（${rep.seasons[0]}の季語が ${hits.length} 語：${hits.map(h => h.kigo.w).join("・")}）。` +
+        "意図した効果でなければ、主となる一語を残して他は言い換えを検討してください。" });
+    } else {
+      rep.kichigai = true;
+      rep.warnings.push({ level: "bad", text:
+        `異なる季節の季語が同居しています（季違い）：${hits.map(h => `${h.kigo.w}（${h.kigo.s}）`).join("、")}。` +
+        "句の季節が定まらず、選から漏れる大きな要因になります。" });
+    }
+  }
+  if (targetSeason) {
+    rep.outOfSeason = hits.filter(h => h.kigo.s !== targetSeason);
+    if (rep.outOfSeason.length) {
+      rep.warnings.push({ level: "warn", text:
+        `投句時期の季節「${targetSeason}」と合わない季語があります：` +
+        `${rep.outOfSeason.map(h => `${h.kigo.w}（${h.kigo.s}）`).join("、")}。当季雑詠の大会では要注意です。` });
+    }
+  }
+  for (const h of hits) {
+    if (h.kigo.n) rep.notes.push(`${h.kigo.w}：${h.kigo.n}`);
+    if (h.matchedBy === "kana")
+      rep.notes.push(`${h.kigo.w}（${h.kigo.k}）は読みからの推定一致です。誤検出の可能性があります。`);
+  }
+  return rep;
+}
+
+/* ══ 定型 ═══════════════════════════════════════════════════ */
+const IDEAL = [5, 7, 5];
+const NAMES = ["上五", "中七", "下五"];
+
+function segFromTokens(tokens) {
+  const usable = tokens.filter(t => t.kana || t.surface.trim());
+  if (usable.length < 3) return null;
+  const moras = usable.map(t => countMora(t.kana));
+  let best = null, bestCost = null;
+  for (let i = 1; i < usable.length - 1; i++) {
+    for (let j = i + 1; j < usable.length; j++) {
+      const a = moras.slice(0, i).reduce((x, y) => x + y, 0);
+      const b = moras.slice(i, j).reduce((x, y) => x + y, 0);
+      const c = moras.slice(j).reduce((x, y) => x + y, 0);
+      if (!a || !b || !c) continue;
+      const cost = Math.abs(a - 5) * 2 + Math.abs(b - 7) + Math.abs(c - 5) * 2;
+      if (bestCost === null || cost < bestCost) { bestCost = cost; best = [i, j]; }
+    }
+  }
+  if (!best) return null;
+  const groups = [usable.slice(0, best[0]), usable.slice(best[0], best[1]), usable.slice(best[1])];
+  return groups.map((g, idx) => mkSeg(idx, g.map(t => t.surface).join(""), g.map(t => t.kana).join("")));
+}
+function segFromKana(kana) {
+  const m = moraList(kana);
+  return [m.slice(0, 5), m.slice(5, 12), m.slice(12)]
+    .map((g, idx) => mkSeg(idx, g.join(""), g.join("")));
+}
+function mkSeg(idx, text, kana) {
+  const mora = countMora(kana);
+  const delta = mora - IDEAL[idx];
+  return { name: NAMES[idx], text, kana, mora, ideal: IDEAL[idx], delta,
+           label: delta === 0 ? "定型" : (delta > 0 ? `字余り+${delta}` : `字足らず${delta}`) };
+}
+function detectKireji(segments) {
+  const out = [];
+  for (const s of segments) {
+    let hit = false;
+    for (const k of ["かな", "けり", "なり", "らむ", "けむ"]) {
+      if (s.kana.endsWith(k)) { out.push(`${s.name}末「${k}」`); hit = true; break; }
+    }
+    if (!hit && s.kana.endsWith("や") && s.name !== "下五") out.push(`${s.name}末「や」`);
+  }
+  return out;
+}
+
+function analyzeStructure(text, reading, userYomi) {
+  const rep = { segments: [], warnings: [], confident: true, splitSource: "char" };
+  const yomiParts = userYomi ? splitOnSeparators(userYomi) : [];
+
+  if (hasSeparator(text)) {
+    const parts = splitOnSeparators(text);
+    if (parts.length === 3) {
+      if (yomiParts.length === 3) {
+        rep.segments = parts.map((p, i) => mkSeg(i, p, kanaOnly(yomiParts[i])));
+        rep.splitSource = "user";
+      } else if (userYomi) {
+        rep.segments = segFromKana(kanaOnly(userYomi));
+        rep.splitSource = "user-total";
+        rep.warnings.push({ level: "info", text:
+          "読みが一続きで指定されたため、各節の音数はモーラ数だけで機械的に割りました。" +
+          "節ごとに正確に見るには読みもスペースで区切ってください。" });
+      } else {
+        rep.segments = parts.map((p, i) =>
+          mkSeg(i, p, containsKanji(p) ? readText(p).kana : kanaOnly(p)));
+        rep.splitSource = "explicit";
+      }
+    } else {
+      rep.warnings.push({ level: "warn", text:
+        `区切り文字で ${parts.length} 分割されました。上五／中七／下五の 3 つに区切ってください。` });
+    }
+  }
+  if (!rep.segments.length) {
+    const fromTokens = reading.tokens.length ? segFromTokens(reading.tokens) : null;
+    if (fromTokens) { rep.segments = fromTokens; rep.splitSource = "token"; }
+    else {
+      rep.segments = segFromKana(reading.kana);
+      rep.splitSource = "char";
+      rep.confident = false;
+      rep.warnings.push({ level: "info", text:
+        "語の境界が取れなかったため音数だけで機械的に区切りました。上五／中七／下五をスペースで区切ると正確になります。" });
+    }
+  }
+
+  rep.totalMora = rep.segments.reduce((a, s) => a + s.mora, 0);
+  rep.isTeikei = rep.segments.every(s => s.delta === 0);
+  rep.pattern = rep.segments.map(s => s.mora).join("・");
+  rep.kireji = detectKireji(rep.segments);
+
+  if (reading.unknown && reading.unknown.length) {
+    rep.confident = false;
+    rep.unreadable = [...new Set(reading.unknown)];
+  }
+  for (const s of rep.segments) {
+    if (s.delta > 0) rep.warnings.push({ level: "warn", text:
+      `${s.name}が ${s.mora} 音で字余り（+${s.delta}）です。意図的な破調なら効果を、そうでなければ語の圧縮を検討してください。` });
+    else if (s.delta < 0) rep.warnings.push({ level: "warn", text:
+      `${s.name}が ${s.mora} 音で字足らず（${s.delta}）です。間として効かせるのでなければ音を補うことを検討してください。` });
+  }
+  if (rep.totalMora && Math.abs(rep.totalMora - 17) >= 4) rep.warnings.push({ level: "warn", text:
+    `総音数 ${rep.totalMora} 音は定型（17 音）から大きく離れています。自由律を認めない大会では対象外になります。` });
+  return rep;
+}
+
+/* ══ 類句 ═══════════════════════════════════════════════════ */
+const TH_HIGH = 0.85, TH_MED = 0.70, TH_REPORT = 0.55;
+
+function bigrams(s) {
+  if (s.length < 2) return new Set(s ? [s] : []);
+  const out = new Set();
+  for (let i = 0; i < s.length - 1; i++) out.add(s.slice(i, i + 2));
+  return out;
+}
+function dice(a, b) {
+  const A = bigrams(a), B = bigrams(b);
+  if (!A.size || !B.size) return 0;
+  let inter = 0;
+  for (const g of A) if (B.has(g)) inter++;
+  return 2 * inter / (A.size + B.size);
+}
+function lcsubstr(a, b) {
+  if (!a || !b) return "";
+  let prev = new Array(b.length + 1).fill(0), bestLen = 0, bestEnd = 0;
+  for (let i = 1; i <= a.length; i++) {
+    const cur = new Array(b.length + 1).fill(0);
+    for (let j = 1; j <= b.length; j++) {
+      if (a[i - 1] === b[j - 1]) {
+        cur[j] = prev[j - 1] + 1;
+        if (cur[j] > bestLen) { bestLen = cur[j]; bestEnd = i; }
+      }
+    }
+    prev = cur;
+  }
+  return a.slice(bestEnd - bestLen, bestEnd);
+}
+function similarity(a, b) {
+  const d = dice(a, b), l = lcsubstr(a, b);
+  const ratio = l.length / Math.max(a.length, 1);
+  return [Math.max(d, ratio * 0.95), l];
+}
+const STRIP = new Set([..."。、，．「」『』・…ー－―"]);
+function plain(text) {
+  return [...normalize(text)].filter(c => !/\s/.test(c) && !STRIP.has(c)).join("");
+}
+// 表記と読みの両面で比較して高い方を採る。「蛙」を「かわず」と読むか
+// 「かえる」と読むかで読みは割れるため、読みだけでは丸写しを取り逃がす。
+function compare(tText, tKana, eText, eKana) {
+  const [ks, ksh] = similarity(tKana, eKana);
+  const [ts, tsh] = similarity(plain(tText), plain(eText));
+  return ts >= ks ? [ts, tsh] : [ks, ksh];
+}
+
+const RISK_ADVICE = {
+  "高": "そのままの投句は避けてください。既存句とほぼ同一か、著名句の措辞をなぞっています。",
+  "中": "既視感のある表現が含まれます。中七〜下五を中心に言い換えを検討してください。",
+  "低": "収録範囲では明らかな類句は見つかりませんでした（網羅性は保証されません）。",
+};
+
+function checkSimilarity(text, readingKana) {
+  const target = kanaOnly(readingKana || text);
+  const scored = [];
+  for (const e of DATA.famous) {
+    const [score, shared] = compare(text, target, e.t, kanaOnly(e.k));
+    if (score >= TH_REPORT) scored.push({ text: e.t, author: e.a, score, shared });
+  }
+  scored.sort((a, b) => b.score - a.score);
+  const rep = { matches: scored.slice(0, 5), reasons: [], risk: "低" };
+  const top = scored.length ? scored[0].score : 0;
+  if (top >= TH_HIGH) {
+    rep.risk = "高";
+    rep.reasons.push(`既知の句「${scored[0].text}」（${scored[0].author}）と類似度 ${Math.round(top * 100)}% です。`);
+  } else if (top >= TH_MED) {
+    rep.risk = "中";
+    rep.reasons.push(`既知の句「${scored[0].text}」（${scored[0].author}）と類似度 ${Math.round(top * 100)}%、共通部分「${scored[0].shared}」があります。`);
+  }
+  for (const m of scored.slice(0, 3)) {
+    if (m.shared.length >= 5 && m.score < TH_MED)
+      rep.reasons.push(`「${m.shared}」は「${m.text}」（${m.author}）と共通する措辞です。類想と見なされる恐れがあります。`);
+  }
+  rep.advice = RISK_ADVICE[rep.risk];
+  return rep;
+}
+
+/* ══ 全体 ═══════════════════════════════════════════════════ */
+function judge(haiku, yomi, season) {
+  const reading = readWithOverride(haiku, yomi || null);
+  return {
+    haiku,
+    reading,
+    structure: analyzeStructure(haiku, reading, yomi || null),
+    saijiki: analyzeSaijiki(haiku, reading.kana, season || null),
+    similarity: checkSimilarity(haiku, reading.kana),
+  };
+}
+window.judge = judge;   // パリティ検証から呼ぶ
+
+/* ══ 描画 ═══════════════════════════════════════════════════ */
+const $ = id => document.getElementById(id);
+function el(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text !== undefined) n.textContent = text;
+  return n;
+}
+function chip(cls, text) { return el("span", "chip " + cls, text); }
+
+function renderNotices(container, items) {
+  if (!items.length) return;
+  const box = el("div", "notes");
+  for (const it of items) {
+    const row = el("div", "notice " + it.level);
+    row.appendChild(el("span", "mk", it.level === "info" ? "＊" : "！"));
+    row.appendChild(el("span", null, it.text));
+    box.appendChild(row);
+  }
+  container.appendChild(box);
+}
+
+function renderSpecimen(r) {
+  const d = el("div", "specimen");
+  d.appendChild(el("div", "body", r.haiku));
+  if (r.reading.kana) d.appendChild(el("div", "yomi", r.reading.kana));
+  return d;
+}
+
+function renderStructure(s) {
+  const sec = el("section");
+  sec.appendChild(el("h2", null, "定型"));
+
+  // 誤っていると分かっている音数を大きく出さない。読みが引けなかった時点で
+  // 音数は当てにならないので、数値は伏せて読みの入力を促すのが正直な出し方。
+  if (s.unreadable) {
+    const a = el("div", "alert");
+    a.appendChild(el("strong", null, "音数を判定できません"));
+    a.appendChild(el("span", null,
+      `「${s.unreadable.join("・")}」の読みが辞書にありません。` +
+      "このページは形態素解析を持たないため、漢字の読みは限定的にしか引けません。" +
+      "上の「読み」欄にかなを入力すると正確に判定します。"));
+    sec.appendChild(a);
+  }
+
+  const scan = el("div", "scan" + (s.unreadable ? " dimmed" : ""));
+  for (const seg of s.segments) {
+    const row = el("div", "seg");
+    row.appendChild(el("div", "name", seg.name));
+    const mid = el("div");
+    mid.appendChild(el("div", "body", seg.text || "—"));
+    const ruler = el("div", "ruler");
+    const shown = Math.max(seg.mora, seg.ideal);
+    for (let i = 0; i < shown; i++) {
+      ruler.appendChild(el("i", i >= seg.ideal ? "over" : (i >= seg.mora ? "short" : "")));
+    }
+    mid.appendChild(ruler);
+    row.appendChild(mid);
+    const right = el("div");
+    right.appendChild(el("div", "count", `${seg.mora}音`));
+    right.appendChild(chip(seg.delta === 0 ? "good" : "warn", seg.label));
+    row.appendChild(right);
+    scan.appendChild(row);
+  }
+  sec.appendChild(scan);
+
+  const v = el("div", "verdict" + (s.unreadable ? " dimmed" : ""));
+  v.appendChild(el("span", "pattern", s.pattern));
+  v.appendChild(el("span", null, `計 ${s.totalMora} 音`));
+  if (!s.unreadable) {
+    v.appendChild(chip(s.isTeikei ? "good" : "warn", s.isTeikei ? "定型" : "破調"));
+  }
+  for (const k of s.kireji) v.appendChild(chip("plain", "切字 " + k));
+  sec.appendChild(v);
+  renderNotices(sec, s.warnings);
+  return sec;
+}
+
+function renderSaijiki(k) {
+  const sec = el("section");
+  sec.appendChild(el("h2", null, "歳時記照合"));
+  if (k.muki) {
+    sec.appendChild(chip("bad", "季語なし（無季）"));
+  } else {
+    const wrap = el("div", "scroll");
+    const t = el("table");
+    const thead = el("thead");
+    const hr = el("tr");
+    for (const h of ["季語", "読み", "季節", "分類", "一致"]) hr.appendChild(el("th", null, h));
+    thead.appendChild(hr); t.appendChild(thead);
+    const tb = el("tbody");
+    for (const h of k.hits) {
+      const tr = el("tr");
+      tr.appendChild(el("td", "kg", h.kigo.w));
+      tr.appendChild(el("td", null, h.kigo.k));
+      const sc = el("td"); sc.appendChild(chip("s" + h.kigo.s, h.kigo.s)); tr.appendChild(sc);
+      tr.appendChild(el("td", null, h.kigo.c));
+      tr.appendChild(el("td", null, h.matchedBy === "surface" ? "本文" : "読み"));
+      tb.appendChild(tr);
+    }
+    t.appendChild(tb); wrap.appendChild(t); sec.appendChild(wrap);
+
+    const v = el("div", "verdict");
+    v.appendChild(el("span", null, "主たる季節"));
+    v.appendChild(chip("s" + k.primarySeason, k.primarySeason));
+    if (k.targetSeason) {
+      v.appendChild(el("span", null, "／ 投句時期"));
+      v.appendChild(chip("s" + k.targetSeason, k.targetSeason));
+    }
+    sec.appendChild(v);
+  }
+  renderNotices(sec, [...k.warnings, ...k.notes.map(n => ({ level: "info", text: n }))]);
+  return sec;
+}
+
+function renderSimilarity(s) {
+  const sec = el("section");
+  sec.appendChild(el("h2", null, "類句チェック"));
+  const box = el("div", "risk risk-" + s.risk);
+  box.appendChild(el("span", "lv", s.risk));
+  box.appendChild(el("span", null, "リスク度"));
+  sec.appendChild(box);
+  sec.appendChild(el("p", "hint", s.advice));
+  if (s.reasons.length) {
+    const ul = el("ul", "reasons");
+    for (const r of s.reasons) ul.appendChild(el("li", null, r));
+    sec.appendChild(ul);
+  }
+  if (s.matches.length) {
+    const wrap = el("div", "scroll");
+    wrap.style.marginTop = "14px";
+    const t = el("table");
+    const thead = el("thead"); const hr = el("tr");
+    for (const h of ["収録句", "作者", "類似度"]) {
+      const th = el("th", null, h);
+      if (h === "類似度") th.style.textAlign = "right";
+      hr.appendChild(th);
+    }
+    thead.appendChild(hr); t.appendChild(thead);
+    const tb = el("tbody");
+    for (const m of s.matches) {
+      const tr = el("tr");
+      tr.appendChild(el("td", "kg", m.text));
+      tr.appendChild(el("td", null, m.author));
+      const td = el("td", "n");
+      td.appendChild(chip(m.score >= TH_HIGH ? "bad" : (m.score >= TH_MED ? "warn" : "plain"),
+                          Math.round(m.score * 100) + "%"));
+      tr.appendChild(td);
+      tb.appendChild(tr);
+    }
+    t.appendChild(tb); wrap.appendChild(t); sec.appendChild(wrap);
+  }
+  return sec;
+}
+
+function run() {
+  const haiku = $("haiku").value.trim();
+  const out = $("out");
+  out.innerHTML = "";
+  if (!haiku) { $("haiku").focus(); return; }
+  const r = judge(haiku, $("yomi").value.trim(), $("season").value);
+  out.appendChild(renderSpecimen(r));
+  out.appendChild(renderStructure(r.structure));
+  out.appendChild(renderSaijiki(r.saijiki));
+  out.appendChild(renderSimilarity(r.similarity));
+}
+
+/* ══ 季語検索 ═══════════════════════════════════════════════ */
+function renderKigo() {
+  const q = $("kigoQuery").value.trim();
+  const s = $("kigoSeason").value, c = $("kigoCategory").value;
+  let rows = DATA.kigo;
+  if (s) rows = rows.filter(k => k.s === s);
+  if (c) rows = rows.filter(k => k.c === c);
+  if (q) rows = rows.filter(k => k.w.includes(q) || k.k.includes(q) || k.a.some(a => a.includes(q)));
+
+  const box = $("kigoResults");
+  box.innerHTML = "";
+  if (!rows.length) { box.appendChild(el("p", "hint", "該当する季語はありません。")); return; }
+  const t = el("table");
+  const thead = el("thead"); const hr = el("tr");
+  for (const h of ["季語", "読み", "季節", "分類", "傍題・備考"]) hr.appendChild(el("th", null, h));
+  thead.appendChild(hr); t.appendChild(thead);
+  const tb = el("tbody");
+  for (const k of rows.slice(0, 120)) {
+    const tr = el("tr");
+    tr.appendChild(el("td", "kg", k.w));
+    tr.appendChild(el("td", null, k.k));
+    const sc = el("td"); sc.appendChild(chip("s" + k.s, k.s)); tr.appendChild(sc);
+    tr.appendChild(el("td", null, k.c));
+    let extra = k.a.join("、");
+    if (k.n) extra = extra ? `${extra}（${k.n}）` : k.n;
+    tr.appendChild(el("td", null, extra));
+    tb.appendChild(tr);
+  }
+  t.appendChild(tb); box.appendChild(t);
+  if (rows.length > 120) box.appendChild(el("p", "hint", `… 他 ${rows.length - 120} 件`));
+}
+
+/* ══ 起動 ═══════════════════════════════════════════════════ */
+$("run").addEventListener("click", run);
+for (const id of ["haiku", "yomi"]) {
+  $(id).addEventListener("keydown", e => { if (e.key === "Enter") run(); });
+}
+for (const id of ["kigoQuery", "kigoSeason", "kigoCategory"]) {
+  $(id).addEventListener("input", renderKigo);
+}
+$("themeBtn").addEventListener("click", () => {
+  const cur = document.documentElement.getAttribute("data-theme");
+  const dark = cur ? cur === "dark"
+    : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.setAttribute("data-theme", dark ? "light" : "dark");
+});
+$("counts").textContent = `収録：季語 ${DATA.kigo.length} 件／有名句 ${DATA.famous.length} 句`;
+renderKigo();
+</script>
+</body>
+</html>
