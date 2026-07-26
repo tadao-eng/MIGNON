@@ -5,3 +5,4 @@ __pycache__/
 .pytest_cache/
 .env
 data/saijiki.sqlite3
+dist/

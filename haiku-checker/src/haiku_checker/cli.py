@@ -70,6 +70,10 @@ def build_parser() -> argparse.ArgumentParser:
     serve.add_argument("--allow-host", action="append", default=[],
                        help="許可する Host ヘッダ（繰り返し指定可）。リバースプロキシ配下で使う")
 
+    art = sub.add_parser("build-artifact", help="配布用の単体 HTML を生成する")
+    art.add_argument("-o", "--output", type=Path, default=Path("dist/haiku-checker.html"))
+    art.add_argument("--data-dir", type=Path)
+
     kigo = sub.add_parser("kigo", help="季語を検索する")
     kigo.add_argument("query", nargs="?", help="部分一致で検索する語")
     kigo.add_argument("--season", choices=SEASONS)
@@ -178,6 +182,16 @@ def cmd_serve(args, console: Console) -> int:
     return 0
 
 
+def cmd_build_artifact(args, console: Console) -> int:
+    from . import artifact
+
+    path = artifact.build(args.output, args.data_dir)
+    size = path.stat().st_size / 1024
+    console.print(f"[green]生成しました:[/green] {path} ({size:.0f} KB)")
+    console.print("[dim]外部通信なしで単体で開けます。AI 評価と Web 検索は含まれません。[/dim]")
+    return 0
+
+
 def cmd_kigo(args, console: Console) -> int:
     data = db.load(args.data_dir)
     rows = data.kigo
@@ -223,6 +237,7 @@ def main(argv: list[str] | None = None) -> int:
         "build-db": cmd_build_db,
         "kigo": cmd_kigo,
         "serve": cmd_serve,
+        "build-artifact": cmd_build_artifact,
     }
     return handlers[args.command](args, console)
 
