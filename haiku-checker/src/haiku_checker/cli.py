@@ -61,6 +61,12 @@ def build_parser() -> argparse.ArgumentParser:
     builddb = sub.add_parser("build-db", help="JSON から歳時記 SQLite を再構築する")
     builddb.add_argument("--data-dir", type=Path)
 
+    serve = sub.add_parser("serve", help="ブラウザから使う Web アプリを起動する")
+    serve.add_argument("--host", default="127.0.0.1",
+                       help="待ち受けアドレス（既定は自分の端末からのみ）")
+    serve.add_argument("--port", type=int, default=8000)
+    serve.add_argument("--reload", action="store_true", help="開発用のオートリロード")
+
     kigo = sub.add_parser("kigo", help="季語を検索する")
     kigo.add_argument("query", nargs="?", help="部分一致で検索する語")
     kigo.add_argument("--season", choices=SEASONS)
@@ -137,6 +143,33 @@ def cmd_build_db(args, console: Console) -> int:
     return 0
 
 
+def cmd_serve(args, console: Console) -> int:
+    try:
+        import uvicorn  # noqa: F401
+    except ImportError:
+        console.print("[red]Web アプリの依存が未インストールです。[/red] pip install -e \".[web]\"")
+        return 1
+
+    if args.host not in ("127.0.0.1", "localhost", "::1"):
+        console.print(
+            f"[yellow]警告: {args.host} で待ち受けます。[/yellow] "
+            "このアプリに認証はありません。到達できる相手は誰でもあなたの Anthropic API キーで "
+            "評価を実行できます（= あなたに課金されます）。外部に出す場合は必ず前段に認証を置いてください。"
+        )
+
+    console.print(f"[green]起動しました:[/green] http://{args.host}:{args.port}/")
+    import uvicorn
+
+    uvicorn.run(
+        "haiku_checker.web.app:app",
+        host=args.host,
+        port=args.port,
+        reload=args.reload,
+        log_level="info",
+    )
+    return 0
+
+
 def cmd_kigo(args, console: Console) -> int:
     data = db.load(args.data_dir)
     rows = data.kigo
@@ -181,6 +214,7 @@ def main(argv: list[str] | None = None) -> int:
         "batch": cmd_batch,
         "build-db": cmd_build_db,
         "kigo": cmd_kigo,
+        "serve": cmd_serve,
     }
     return handlers[args.command](args, console)
 

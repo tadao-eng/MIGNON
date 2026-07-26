@@ -4,10 +4,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date
+from functools import lru_cache
 from pathlib import Path
 
 from . import db, evaluator, saijiki as saijiki_mod, similarity, structure
-from .reading import ReadingResult, get_reader, read_with_override
+from .reading import Reader, ReadingResult, get_reader, read_with_override
 
 
 @dataclass
@@ -91,16 +92,30 @@ def _similarity_summary(report: similarity.SimilarityReport) -> str:
     return "\n".join(lines)
 
 
+@lru_cache(maxsize=4)
+def _resources(data_dir: Path | None) -> tuple[db.Saijiki, saijiki_mod.SaijikiMatcher, Reader]:
+    """歳時記・照合器・リーダーは使い回す。
+
+    サーバー用途では 1 リクエストごとに SQLite を読み直し、janome の辞書を
+    ロードし直すのは無駄が大きい。CLI でも初回コストは変わらない。
+    """
+    data = db.load(data_dir)
+    return data, saijiki_mod.SaijikiMatcher(data), get_reader(extra_dictionary=data.reading_dictionary())
+
+
+def clear_cache() -> None:
+    """歳時記データを更新したあとに呼ぶ。"""
+    _resources.cache_clear()
+
+
 def analyze(haiku: str, options: AnalysisOptions | None = None) -> AnalysisResult:
     options = options or AnalysisOptions()
-    data = db.load(options.data_dir)
+    data, matcher, reader = _resources(options.data_dir)
 
-    reader = get_reader(extra_dictionary=data.reading_dictionary())
     reading = read_with_override(haiku, options.yomi, reader)
 
     struct_report = structure.analyze(haiku, reading, reader=reader, user_yomi=options.yomi)
 
-    matcher = saijiki_mod.SaijikiMatcher(data)
     saijiki_report = matcher.analyze(
         haiku,
         reading_kana=reading.kana,

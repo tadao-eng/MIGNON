@@ -12,9 +12,9 @@
 ```bash
 cd haiku-checker
 python3 -m venv .venv && source .venv/bin/activate
-pip install -e ".[reading]"     # reading = janome（読み推定の精度が上がる）
-cp .env.example .env            # API キーを記入
-haiku build-db                  # data/*.json から SQLite を構築
+pip install -e ".[reading,web]"  # reading = janome（読み推定）, web = ブラウザ版
+cp .env.example .env             # API キーを記入
+haiku build-db                   # data/*.json から SQLite を構築
 ```
 
 環境変数：
@@ -55,6 +55,44 @@ haiku batch submissions.txt
 # 季語を引く
 haiku kigo 月
 haiku kigo --season 新年 --category 行事
+```
+
+## ブラウザで使う
+
+```bash
+pip install -e ".[web]"
+haiku serve                  # http://127.0.0.1:8000/
+```
+
+CLI と同じ解析モジュールをそのまま使うので、**歳時記照合・LLM 評価・Web 検索・janome の
+読み推定まで全機能がブラウザから使えます**。API キーはサーバー側にのみ置き、フロントエンドには
+一切渡しません（`/api/status` はキーの有無だけを返します）。
+
+画面は 2 段階で描画されます。定型・歳時記・ローカル類句照合は即座に返り、時間のかかる
+LLM 評価だけが後から差し込まれるので、待ち時間中も先に読める結果が出ます。
+
+### 共有するときの注意
+
+`haiku serve` は既定で `127.0.0.1` にのみ待ち受けます（自分の端末からのみアクセス可能）。
+LAN や外部に公開する場合は `--host 0.0.0.0` を指定しますが、**このアプリに認証はありません**。
+到達できる相手は誰でもあなたの API キーで評価を実行できる ＝ あなたに課金されるので、
+外部公開する際は必ず前段にリバースプロキシ等で認証を置いてください（起動時にも警告が出ます）。
+
+### API
+
+| メソッド | パス | 用途 |
+|---|---|---|
+| `GET` | `/` | 画面 |
+| `GET` | `/api/status` | 有効な機能・季語件数（キーは返さない） |
+| `POST` | `/api/analyze` | 定型・歳時記・類句チェック（LLM 抜き、即応答） |
+| `POST` | `/api/evaluate` | LLM 評価・添削（数十秒〜数分） |
+| `GET` | `/api/kigo` | 季語検索（`q` / `season` / `category` / `limit`） |
+| `GET` | `/api/docs` | OpenAPI ドキュメント |
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/analyze \
+  -H 'Content-Type: application/json' \
+  -d '{"haiku":"古池や 蛙飛びこむ 水の音","use_web":false}'
 ```
 
 ## 出力例
@@ -182,7 +220,13 @@ src/haiku_checker/
 ├── structure.py    五七五分割と定型判定
 ├── evaluator.py    ② LLM 評価・添削
 ├── similarity.py   ③ 類似句チェック
-├── analyzer.py     パイプライン統合
+├── analyzer.py     パイプライン統合（歳時記・照合器・リーダーをキャッシュ）
 ├── report.py       ターミナル表示
-└── cli.py          CLI
+├── cli.py          CLI
+└── web/
+    ├── app.py             FastAPI（CLI と同じ解析モジュールを利用）
+    └── static/index.html  フロントエンド（依存ライブラリなし）
 ```
+
+歳時記データを書き換えたら `haiku build-db` を実行してください。サーバー常駐中に
+差し替える場合は `analyzer.clear_cache()` でキャッシュを破棄できます。

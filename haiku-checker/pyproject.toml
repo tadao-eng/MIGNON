@@ -20,13 +20,18 @@ dependencies = [
 [project.optional-dependencies]
 # 形態素解析による読み推定。純 Python・辞書同梱でオフライン動作する。
 reading = ["janome>=0.5"]
-dev = ["pytest>=8.0"]
+# 自前ホストの Web アプリ（haiku serve）
+web = ["fastapi>=0.110", "uvicorn[standard]>=0.29"]
+dev = ["pytest>=8.0", "httpx>=0.27"]
 
 [project.scripts]
 haiku = "haiku_checker.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+haiku_checker = ["web/static/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
