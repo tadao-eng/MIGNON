@@ -12,14 +12,17 @@
    数値は等幅——日本語組版の役割分担をそのまま画面に持ち込む。
    ───────────────────────────────────────────────────────────── */
 :root {
-  --paper:  #e7eaec;
-  --panel:  #f3f5f6;
-  --ink:    #131a20;
-  --muted:  #58666f;
-  --rule:   #c6ced3;
-  --accent: #1f4e79;
-  --warn:   #8a5c09;
-  --bad:    #932c33;
+  /* 浅葱色。--asagi は面・線に使う純色、--accent は文字にも載せられる濃色。
+     純色をそのまま文字にすると淡地でコントラストが 2.5:1 程度しか出ない。 */
+  --asagi:  #00a3af;
+  --paper:  #f7f7f5;
+  --panel:  #ffffff;
+  --ink:    #1c1c1c;
+  --muted:  #9a9a98;
+  --rule:   #e3e3df;
+  --accent: #00757f;
+  --warn:   #9a6a12;
+  --bad:    #b4453c;
 
   --haru:   #b25a73;
   --natsu:  #2c7663;
@@ -27,27 +30,33 @@
   --fuyu:   #3e6086;
   --shin:   #93262d;
 
-  --mincho: "Hiragino Mincho ProN", "Yu Mincho", YuMincho, "Noto Serif JP", "Songti SC", serif;
-  --gothic: "Hiragino Sans", "Yu Gothic", YuGothic, "Noto Sans JP", "Helvetica Neue", Arial, sans-serif;
-  --mono:   ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  /* 全面ゴシック。以前は俳句本文を明朝にしていたが、細身・字間広めの
+     一書体で通す指定に変えた。明朝へ戻すなら --display だけ差し替える。 */
+  --gothic:  "Hiragino Sans", "Hiragino Kaku Gothic ProN", -apple-system,
+             BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", "Yu Gothic", sans-serif;
+  --display: var(--gothic);
+  --mono:    ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   --step:   clamp(0.5rem, 1.6vw, 0.9rem);
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #10151a; --panel: #171d24; --ink: #dde4ea; --muted: #8b98a4;
-    --rule: #2a333c; --accent: #7fb0dd; --warn: #d19c3e; --bad: #e2717a;
+    --asagi: #4fc3cc;
+    --paper: #14181a; --panel: #1b2124; --ink: #e8eaea; --muted: #868d90;
+    --rule: #2b3235; --accent: #5cc9d1; --warn: #d6a94a; --bad: #e28078;
     --haru: #dd869c; --natsu: #52b096; --aki: #cd9442; --fuyu: #79a0ca; --shin: #d9636b;
   }
 }
 :root[data-theme="dark"] {
-  --paper: #10151a; --panel: #171d24; --ink: #dde4ea; --muted: #8b98a4;
-  --rule: #2a333c; --accent: #7fb0dd; --warn: #d19c3e; --bad: #e2717a;
+  --asagi: #4fc3cc;
+  --paper: #14181a; --panel: #1b2124; --ink: #e8eaea; --muted: #868d90;
+  --rule: #2b3235; --accent: #5cc9d1; --warn: #d6a94a; --bad: #e28078;
   --haru: #dd869c; --natsu: #52b096; --aki: #cd9442; --fuyu: #79a0ca; --shin: #d9636b;
 }
 :root[data-theme="light"] {
-  --paper: #e7eaec; --panel: #f3f5f6; --ink: #131a20; --muted: #58666f;
-  --rule: #c6ced3; --accent: #1f4e79; --warn: #8a5c09; --bad: #932c33;
+  --asagi: #00a3af;
+  --paper: #f7f7f5; --panel: #ffffff; --ink: #1c1c1c; --muted: #9a9a98;
+  --rule: #e3e3df; --accent: #00757f; --warn: #9a6a12; --bad: #b4453c;
   --haru: #b25a73; --natsu: #2c7663; --aki: #955c14; --fuyu: #3e6086; --shin: #93262d;
 }
 
@@ -55,7 +64,8 @@
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0; background: var(--paper); color: var(--ink);
-  font-family: var(--gothic); line-height: 1.75; font-size: 15px;
+  font-family: var(--gothic); line-height: 1.85; font-size: 15px;
+  font-weight: 300; letter-spacing: .04em;
   -webkit-font-smoothing: antialiased;
 }
 .page { max-width: 720px; margin: 0 auto; padding: 0 20px 72px; }
@@ -63,17 +73,17 @@ body {
 /* ── ヘッダ ─────────────────────────────────────────────── */
 .masthead {
   display: flex; align-items: flex-end; justify-content: space-between;
-  gap: 16px; padding: 32px 0 14px; border-bottom: 2px solid var(--ink);
+  gap: 16px; padding: 40px 0 18px; border-bottom: 1px solid var(--rule);
 }
 .masthead h1 {
-  font-family: var(--mincho); font-size: 1.5rem; font-weight: 600;
-  margin: 0; letter-spacing: .18em;
+  font-family: var(--display); font-size: 1.45rem; font-weight: 300;
+  margin: 0; letter-spacing: .34em;
 }
 .masthead .tagline { color: var(--muted); font-size: .76rem; letter-spacing: .04em; }
 .themetoggle {
   border: 1px solid var(--rule); background: transparent; color: var(--muted);
-  border-radius: 2px; font-size: .72rem; padding: 4px 9px; cursor: pointer;
-  font-family: var(--gothic);
+  border-radius: 999px; font-size: .72rem; padding: 5px 14px; cursor: pointer;
+  font-family: var(--gothic); letter-spacing: .1em;
 }
 
 /* ── 入力 ───────────────────────────────────────────────── */
@@ -82,10 +92,10 @@ body {
 .field > label { font-size: .72rem; color: var(--muted); letter-spacing: .1em; }
 input[type=text], select {
   width: 100%; padding: 9px 11px; border: 1px solid var(--rule);
-  border-radius: 2px; background: var(--panel); color: var(--ink);
-  font-family: inherit; font-size: .95rem;
+  border-radius: 6px; background: var(--panel); color: var(--ink);
+  font-family: inherit; font-size: .95rem; font-weight: 300;
 }
-#haiku { font-family: var(--mincho); font-size: 1.15rem; letter-spacing: .1em; }
+#haiku { font-family: var(--display); font-size: 1.15rem; letter-spacing: .1em; }
 input:focus-visible, select:focus-visible, button:focus-visible {
   outline: 2px solid var(--accent); outline-offset: 1px;
 }
@@ -94,8 +104,8 @@ input:focus-visible, select:focus-visible, button:focus-visible {
 @media (max-width: 520px) { .pair { grid-template-columns: 1fr; } }
 .go {
   justify-self: start; border: 1px solid var(--accent); background: var(--accent);
-  color: var(--paper); font-family: inherit; font-size: .88rem; font-weight: 600;
-  padding: 9px 26px; border-radius: 2px; cursor: pointer; letter-spacing: .08em;
+  color: #fff; font-family: inherit; font-size: .88rem; font-weight: 400;
+  padding: 10px 30px; border-radius: 999px; cursor: pointer; letter-spacing: .14em;
 }
 .go:hover { filter: brightness(1.12); }
 
@@ -110,32 +120,32 @@ input:focus-visible, select:focus-visible, button:focus-visible {
   border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
 }
 .specimen .body {
-  font-family: var(--mincho); font-size: clamp(1.25rem, 4.2vw, 1.75rem);
-  letter-spacing: .18em; line-height: 1.9; text-wrap: balance;
+  font-family: var(--display); font-size: clamp(1.25rem, 4.2vw, 1.75rem);
+  letter-spacing: .24em; line-height: 2.0; font-weight: 300; text-wrap: balance;
 }
 .specimen .yomi {
-  font-family: var(--mincho); font-size: .8rem; color: var(--muted);
+  font-family: var(--display); font-size: .8rem; color: var(--muted);
   letter-spacing: .12em;
 }
 
 /* ── セクション ─────────────────────────────────────────── */
 section { padding: 22px 0; border-top: 1px solid var(--rule); }
 section > h2 {
-  font-size: .74rem; letter-spacing: .18em; color: var(--muted);
-  margin: 0 0 16px; font-weight: 600;
+  font-size: .72rem; letter-spacing: .24em; color: var(--muted);
+  margin: 0 0 16px; font-weight: 400;
 }
-.headline { font-family: var(--mincho); font-size: 1.05rem; margin: 0 0 10px; }
+.headline { font-family: var(--display); font-size: 1.05rem; margin: 0 0 10px; }
 
 /* ── モーラ定規 ─────────────────────────────────────────── */
 .scan { display: grid; gap: 12px; }
 .seg { display: grid; grid-template-columns: 3.4em 1fr auto; gap: 12px; align-items: center; }
 .seg .name { font-size: .74rem; color: var(--muted); letter-spacing: .08em; }
-.seg .body { font-family: var(--mincho); font-size: 1.05rem; letter-spacing: .06em; }
+.seg .body { font-family: var(--display); font-size: 1.05rem; letter-spacing: .06em; }
 .seg .count { font-family: var(--mono); font-size: .8rem; font-variant-numeric: tabular-nums; }
 .ruler { display: flex; gap: 3px; margin-top: 4px; }
 .ruler i {
   display: block; width: 11px; height: 11px; border-radius: 1px;
-  background: var(--accent); opacity: .85;
+  background: var(--asagi); opacity: .9;
 }
 .ruler i.over  { background: var(--warn); }
 .ruler i.short { background: transparent; border: 1px dashed var(--rule); }
@@ -144,7 +154,7 @@ section > h2 {
 
 /* ── チップ ─────────────────────────────────────────────── */
 .chip {
-  display: inline-block; font-size: .7rem; font-weight: 600; letter-spacing: .06em;
+  display: inline-block; font-size: .7rem; font-weight: 400; letter-spacing: .1em;
   padding: 2px 9px; border-radius: 2px; border: 1px solid currentColor;
 }
 .chip.plain { color: var(--muted); }
@@ -159,15 +169,19 @@ section > h2 {
 
 /* ── 表 ─────────────────────────────────────────────────── */
 .scroll { overflow-x: auto; }
+/* 狭い画面で「時候」が一字ずつ折り返されて読めなくなるので、
+   表は折り返さず .scroll の横スクロールに逃がす。 */
 table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+.scroll table { min-width: max-content; }
+.scroll th, .scroll td { white-space: nowrap; }
 th {
-  text-align: left; font-weight: 600; font-size: .7rem; color: var(--muted);
-  letter-spacing: .08em; padding: 5px 10px 5px 0; border-bottom: 1px solid var(--rule);
+  text-align: left; font-weight: 400; font-size: .7rem; color: var(--muted);
+  letter-spacing: .12em; padding: 5px 10px 5px 0; border-bottom: 1px solid var(--rule);
   white-space: nowrap;
 }
 td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
 tr:last-child td { border-bottom: none; }
-td.kg { font-family: var(--mincho); font-size: 1rem; white-space: nowrap; }
+td.kg { font-family: var(--display); font-size: 1rem; white-space: nowrap; }
 td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
 
 /* ── 注意書き ───────────────────────────────────────────── */
@@ -175,7 +189,7 @@ td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align:
   border: 1px solid var(--bad); border-left-width: 3px; border-radius: 2px;
   padding: 11px 13px; margin-bottom: 16px; font-size: .84rem;
 }
-.alert strong { display: block; font-weight: 600; letter-spacing: .04em; margin-bottom: 3px; }
+.alert strong { display: block; font-weight: 500; letter-spacing: .08em; margin-bottom: 3px; }
 .dimmed { opacity: .42; }
 .notes { display: grid; gap: 7px; margin-top: 14px; }
 .notice { display: grid; grid-template-columns: 1.2em 1fr; gap: 6px; font-size: .82rem; }
@@ -186,7 +200,7 @@ td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align:
 
 /* ── 類句 ───────────────────────────────────────────────── */
 .risk { display: flex; align-items: baseline; gap: 12px; }
-.risk .lv { font-family: var(--mincho); font-size: 2rem; line-height: 1; font-weight: 600; }
+.risk .lv { font-family: var(--display); font-size: 2rem; line-height: 1; font-weight: 300; letter-spacing: .1em; }
 .risk-高 .lv { color: var(--bad); }
 .risk-中 .lv { color: var(--warn); }
 .risk-低 .lv { color: var(--natsu); }
@@ -199,7 +213,7 @@ td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align:
 #kigoResults { max-height: 330px; overflow-y: auto; }
 
 footer {
-  border-top: 2px solid var(--ink); margin-top: 34px; padding-top: 16px;
+  border-top: 1px solid var(--rule); margin-top: 40px; padding-top: 18px;
   font-size: .74rem; color: var(--muted); display: grid; gap: 8px;
 }
 .hidden { display: none; }
