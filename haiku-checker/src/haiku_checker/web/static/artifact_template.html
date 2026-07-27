@@ -450,25 +450,25 @@ function scan(text, index, maxLen, matchedBy) {
 // 読み一致は「作者がかなで書いた季語」を拾う経路なので、漢字の読みまで含めた
 // 一続きの読み文字列を走査すると語をまたいだ誤検出が起きる。
 // 例:「この道や…」の読み「このみち」から「木の実（このみ）」を拾ってしまう。
-function kanaRuns(tokens) {
+/* 本文の中でかなが続いている部分だけを取り出す。読みを繋いだ文字列全体を
+   走査すると、漢字の読みが偶然つながって季語の形になる（「連山影を」→
+   「れんざんかげを」→「残花（ざんか）」）。走査範囲は本文から直接決まるので、
+   形態素解析の結果にも利用者の入力した読みにも依存しない。 */
+function kanaRuns(text) {
   const runs = [];
   let cur = "";
-  for (const t of tokens) {
-    if (t.surface && !containsKanji(t.surface) && t.kana) cur += t.kana;
+  for (const ch of toHiragana(normalize(text))) {
+    if (isKana(ch)) cur += ch;
     else { if (cur) runs.push(cur); cur = ""; }
   }
   if (cur) runs.push(cur);
   return runs;
 }
 
-function findKigo(text, readingKana, tokens) {
+function findKigo(text, readingKana) {
   const hits = scan(normalize(text), surfaceIndex, MAX_SURFACE, "surface");
   const found = new Set(hits.map(h => h.kigo._id));
-  let targets = (tokens && tokens.length) ? kanaRuns(tokens) : [];
-  // 読みをユーザーが与えた場合はトークンが 1 個で語境界が取れない。
-  // その場合だけ読み全体を走査対象にする（誤検出より取り逃しを避ける）。
-  if (!targets.length && readingKana) targets = [toHiragana(readingKana)];
-  for (const target of targets) {
+  for (const target of kanaRuns(text)) {
     for (const h of scan(target, kanaIndex, MAX_KANA, "kana")) {
       if (!found.has(h.kigo._id)) { hits.push(h); found.add(h.kigo._id); }
     }
@@ -477,8 +477,8 @@ function findKigo(text, readingKana, tokens) {
   return hits;
 }
 
-function analyzeSaijiki(text, readingKana, targetSeason, tokens) {
-  const hits = findKigo(text, readingKana, tokens);
+function analyzeSaijiki(text, readingKana, targetSeason) {
+  const hits = findKigo(text, readingKana);
   const rep = { hits, seasons: [], warnings: [], notes: [], muki: false,
                 kigasanari: false, kichigai: false, outOfSeason: [],
                 primarySeason: null, targetSeason: targetSeason || null };
@@ -711,7 +711,7 @@ function judge(haiku, yomi, season) {
     haiku,
     reading,
     structure: analyzeStructure(haiku, reading, yomi || null),
-    saijiki: analyzeSaijiki(haiku, reading.kana, season || null, reading.tokens),
+    saijiki: analyzeSaijiki(haiku, reading.kana, season || null),
     similarity: checkSimilarity(haiku, reading.kana),
   };
 }

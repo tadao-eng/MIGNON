@@ -103,7 +103,7 @@ def measure_precision(data) -> dict:
     per_haiku: dict[str, list[str]] = {}
     for f in data.famous:
         reading = read_with_override(f.text, f.kana or None, reader)
-        hits = matcher.find(f.text, reading.kana, tokens=reading.tokens)
+        hits = matcher.find(f.text, reading.kana)
         words = [h.kigo.word for h in hits]
         counts[len(words)] += 1
         per_haiku[f.text] = words

@@ -100,44 +100,18 @@ class SaijikiMatcher:
 
     # ------------------------------------------------------------------ 検出
 
-    @staticmethod
-    def kana_runs(tokens) -> list[str]:
-        """本文がかなで書かれている連続部分だけを取り出す。
-
-        読み一致は「作者がかなで書いた季語」を拾うための経路なので、漢字の読みまで
-        含めた一続きの読み文字列を走査すると語をまたいだ誤検出が起きる。
-        例:「この道や…」の読み「このみち」から「木の実（このみ）」を拾ってしまう。
-        漢字のトークンで区切ることでこれを防ぐ。
-        """
-        runs: list[str] = []
-        current = ""
-        for tok in tokens:
-            surface = tok.surface
-            if surface and not kana_util.contains_kanji(surface) and tok.kana:
-                current += tok.kana
-            else:
-                if current:
-                    runs.append(current)
-                current = ""
-        if current:
-            runs.append(current)
-        return runs
-
-    def find(self, text: str, reading_kana: str = "", tokens=None) -> list[KigoHit]:
+    def find(self, text: str, reading_kana: str = "") -> list[KigoHit]:
         """本文（漢字仮名交じり）と読みの両方から季語を最長一致で拾う。
 
-        `tokens` を渡すと、読み一致の走査をかな表記の部分に限定して精度を上げる。
+        読み一致の走査は本文がかなで書かれている部分に限る。読みを繋いだ文字列
+        全体を走査すると、漢字の読みが偶然つながって季語の形になる（「連山影を」
+        →「ざんか」→ 残花）。走査範囲は本文から直接決められるので、形態素解析の
+        結果にも、利用者が入力した読みにも依存しない。
         """
         hits = self._scan(kana_util.normalize(text), self._surface_index, self._max_surface, "surface")
         found_ids = {h.kigo.id for h in hits}
 
-        targets = self.kana_runs(tokens) if tokens else []
-        if not targets and reading_kana:
-            # 読みをユーザーが与えた場合はトークンが 1 個で語境界が取れない。
-            # その場合だけ読み全体を走査対象にする（誤検出より取り逃しを避ける）。
-            targets = [kana_util.to_hiragana(reading_kana)]
-
-        for target in targets:
+        for target in kana_util.kana_runs(text):
             for hit in self._scan(target, self._kana_index, self._max_kana, "kana"):
                 if hit.kigo.id not in found_ids:
                     hits.append(hit)
@@ -181,9 +155,8 @@ class SaijikiMatcher:
         reading_kana: str = "",
         target_season: str | None = None,
         submission_date: date | None = None,
-        tokens=None,
     ) -> SaijikiReport:
-        hits = self.find(text, reading_kana, tokens=tokens)
+        hits = self.find(text, reading_kana)
         report = SaijikiReport(hits=hits)
 
         if target_season is None and submission_date is not None:
