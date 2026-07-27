@@ -86,8 +86,13 @@ class SaijikiMatcher:
         for k in saijiki.kigo:
             for surface in k.surfaces:
                 self._surface_index.setdefault(kana_util.normalize(surface), []).append(k)
-            for kana in {k.kana, *(kana_util.kana_only(a) for a in k.surfaces)}:
-                kana = kana_util.to_hiragana(kana)
+            # 読み索引に載せてよいのは、見出し語の読みと「全部かなで書かれた表記」だけ。
+            # 漢字交じりの傍題から kana_only() でかなだけ抜くと読みではなく断片になる。
+            # 例:「ぼたん雪」→「ぼたん」となり、「牡丹」の読みに誤って一致する。
+            kana_forms = {k.kana}
+            kana_forms |= {s for s in k.surfaces if not kana_util.contains_kanji(s)}
+            for kana in kana_forms:
+                kana = kana_util.kana_only(kana)
                 if kana and kana_util.count_mora(kana) >= MIN_KANA_MATCH_LEN:
                     self._kana_index.setdefault(kana, []).append(k)
         self._max_surface = max((len(s) for s in self._surface_index), default=1)
@@ -95,14 +100,45 @@ class SaijikiMatcher:
 
     # ------------------------------------------------------------------ 検出
 
-    def find(self, text: str, reading_kana: str = "") -> list[KigoHit]:
-        """本文（漢字仮名交じり）と読みの両方から季語を最長一致で拾う。"""
+    @staticmethod
+    def kana_runs(tokens) -> list[str]:
+        """本文がかなで書かれている連続部分だけを取り出す。
+
+        読み一致は「作者がかなで書いた季語」を拾うための経路なので、漢字の読みまで
+        含めた一続きの読み文字列を走査すると語をまたいだ誤検出が起きる。
+        例:「この道や…」の読み「このみち」から「木の実（このみ）」を拾ってしまう。
+        漢字のトークンで区切ることでこれを防ぐ。
+        """
+        runs: list[str] = []
+        current = ""
+        for tok in tokens:
+            surface = tok.surface
+            if surface and not kana_util.contains_kanji(surface) and tok.kana:
+                current += tok.kana
+            else:
+                if current:
+                    runs.append(current)
+                current = ""
+        if current:
+            runs.append(current)
+        return runs
+
+    def find(self, text: str, reading_kana: str = "", tokens=None) -> list[KigoHit]:
+        """本文（漢字仮名交じり）と読みの両方から季語を最長一致で拾う。
+
+        `tokens` を渡すと、読み一致の走査をかな表記の部分に限定して精度を上げる。
+        """
         hits = self._scan(kana_util.normalize(text), self._surface_index, self._max_surface, "surface")
         found_ids = {h.kigo.id for h in hits}
 
-        if reading_kana:
-            kana_text = kana_util.to_hiragana(reading_kana)
-            for hit in self._scan(kana_text, self._kana_index, self._max_kana, "kana"):
+        targets = self.kana_runs(tokens) if tokens else []
+        if not targets and reading_kana:
+            # 読みをユーザーが与えた場合はトークンが 1 個で語境界が取れない。
+            # その場合だけ読み全体を走査対象にする（誤検出より取り逃しを避ける）。
+            targets = [kana_util.to_hiragana(reading_kana)]
+
+        for target in targets:
+            for hit in self._scan(target, self._kana_index, self._max_kana, "kana"):
                 if hit.kigo.id not in found_ids:
                     hits.append(hit)
                     found_ids.add(hit.kigo.id)
@@ -145,8 +181,9 @@ class SaijikiMatcher:
         reading_kana: str = "",
         target_season: str | None = None,
         submission_date: date | None = None,
+        tokens=None,
     ) -> SaijikiReport:
-        hits = self.find(text, reading_kana)
+        hits = self.find(text, reading_kana, tokens=tokens)
         report = SaijikiReport(hits=hits)
 
         if target_season is None and submission_date is not None:

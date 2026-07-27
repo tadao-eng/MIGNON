@@ -71,3 +71,39 @@ def test_note_surfaced_for_counterintuitive_kigo(matcher):
     report = matcher.analyze("朝顔の蔓の先まで日の当たる")
     assert any(h.kigo.word == "朝顔" for h in report.hits)
     assert any("朝顔" in n for n in report.notes)
+
+
+def test_kana_match_does_not_cross_word_boundaries(matcher):
+    """漢字の読みをまたいだ誤検出を起こさないこと。
+
+    「この道や…」の読みは「このみち…」で、そこには「木の実（このみ）」が
+    部分文字列として含まれる。かな表記の部分だけを走査対象にすることで防ぐ。
+    """
+    from haiku_checker import db
+    from haiku_checker.reading import get_reader, read_with_override
+
+    data = db.load_json()
+    reader = get_reader(extra_dictionary=data.reading_dictionary())
+    reading = read_with_override("この道や行く人なしに秋の暮", None, reader)
+
+    hits = matcher.find("この道や行く人なしに秋の暮", reading.kana, tokens=reading.tokens)
+    words = {h.kigo.word for h in hits}
+    assert "秋の暮" in words
+    assert "木の実" not in words, "語をまたいだかな一致を拾っている"
+
+
+def test_kana_written_kigo_still_detected(matcher):
+    """かなで書かれた季語は引き続き拾えること（上の修正で失われていないか）。"""
+    from haiku_checker import db
+    from haiku_checker.reading import get_reader, read_with_override
+
+    data = db.load_json()
+    reader = get_reader(extra_dictionary=data.reading_dictionary())
+    for haiku, expected in [
+        ("ふるいけや かわずとびこむ みずのおと", "蛙"),
+        ("うしろすがたのしぐれてゆくか", "時雨"),
+        ("たんぽぽや ひはいつまでも おおぞらに", "蒲公英"),
+    ]:
+        reading = read_with_override(haiku, None, reader)
+        hits = matcher.find(haiku, reading.kana, tokens=reading.tokens)
+        assert expected in {h.kigo.word for h in hits}, f"{haiku} で {expected} を取り逃がした"

@@ -32,14 +32,13 @@ def build_payload(data_dir: Path | None = None) -> dict:
     readings = {**BUILTIN_READINGS, **data.reading_dictionary()}
 
     return {
+        # 空の傍題・備考は落とす。季語数が増えると無視できない差になる。
+        # 読み出し側（テンプレート）が欠落を空とみなして補う。
         "kigo": [
             {
-                "w": k.word,
-                "k": k.kana,
-                "s": k.season,
-                "c": k.category,
-                "a": list(k.aliases),
-                "n": k.note,
+                "w": k.word, "k": k.kana, "s": k.season, "c": k.category,
+                **({"a": list(k.aliases)} if k.aliases else {}),
+                **({"n": k.note} if k.note else {}),
             }
             for k in data.kigo
         ],

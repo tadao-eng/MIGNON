@@ -56,7 +56,9 @@ JS = """
 def _python_result(haiku, yomi, season, data, reader, matcher):
     reading = read_with_override(haiku, yomi, reader)
     st = structure.analyze(haiku, reading, reader=reader, user_yomi=yomi)
-    sj = matcher.analyze(haiku, reading_kana=reading.kana, target_season=season)
+    sj = matcher.analyze(
+        haiku, reading_kana=reading.kana, target_season=season, tokens=reading.tokens
+    )
     sm = similarity.check(haiku, reading.kana, data.famous, use_web=False)
     return {
         "kana": reading.kana,
