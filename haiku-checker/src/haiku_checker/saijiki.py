@@ -86,8 +86,13 @@ class SaijikiMatcher:
         for k in saijiki.kigo:
             for surface in k.surfaces:
                 self._surface_index.setdefault(kana_util.normalize(surface), []).append(k)
-            for kana in {k.kana, *(kana_util.kana_only(a) for a in k.surfaces)}:
-                kana = kana_util.to_hiragana(kana)
+            # 読み索引に載せてよいのは、見出し語の読みと「全部かなで書かれた表記」だけ。
+            # 漢字交じりの傍題から kana_only() でかなだけ抜くと読みではなく断片になる。
+            # 例:「ぼたん雪」→「ぼたん」となり、「牡丹」の読みに誤って一致する。
+            kana_forms = {k.kana}
+            kana_forms |= {s for s in k.surfaces if not kana_util.contains_kanji(s)}
+            for kana in kana_forms:
+                kana = kana_util.kana_only(kana)
                 if kana and kana_util.count_mora(kana) >= MIN_KANA_MATCH_LEN:
                     self._kana_index.setdefault(kana, []).append(k)
         self._max_surface = max((len(s) for s in self._surface_index), default=1)

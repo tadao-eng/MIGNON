@@ -386,9 +386,12 @@ DATA.kigo.forEach((k, id) => {
     if (!surfaceIndex.has(key)) surfaceIndex.set(key, []);
     surfaceIndex.get(key).push(k);
   }
-  const kanas = new Set([k.k, ...[k.w, ...k.a].map(kanaOnly)]);
+  // 読み索引に載せてよいのは、見出し語の読みと「全部かなで書かれた表記」だけ。
+  // 漢字交じりの傍題から kanaOnly() でかなだけ抜くと読みではなく断片になる。
+  // 例:「ぼたん雪」→「ぼたん」となり、「牡丹」の読みに誤って一致する。
+  const kanas = new Set([k.k, ...[k.w, ...k.a].filter(s => !containsKanji(s))]);
   for (let kn of kanas) {
-    kn = toHiragana(kn);
+    kn = kanaOnly(kn);
     if (kn && countMora(kn) >= MIN_KANA_MATCH) {
       if (!kanaIndex.has(kn)) kanaIndex.set(kn, []);
       kanaIndex.get(kn).push(k);
