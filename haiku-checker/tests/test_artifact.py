@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import json
 import pathlib
 
 import pytest
@@ -81,8 +82,14 @@ def test_build_produces_self_contained_html(tmp_path):
     out = artifact.build(tmp_path / "a.html")
     html = out.read_text(encoding="utf-8")
     assert artifact.PLACEHOLDER not in html, "データが埋め込まれていない"
-    # 外部リソースを読まないこと（CSP でブロックされ、静かに壊れるため）
-    assert "http://" not in html and "https://" not in html.replace('xmlns="http', "")
+    # 外部リソースを読まないこと（CSP でブロックされ、静かに壊れるため）。
+    # 唯一の例外は AI評価が使う Gemini のエンドポイントで、これは利用者の
+    # 明示操作（キー入力＋ボタン押下）でのみ発火する意図的な通信。
+    stripped = (
+        html.replace('xmlns="http', "")
+        .replace("https://generativelanguage.googleapis.com/", "")
+    )
+    assert "http://" not in stripped and "https://" not in stripped
     assert "季語" in html
 
 
@@ -129,3 +136,238 @@ def test_js_matches_python(tmp_path):
         browser.close()
 
     assert not mismatches, "JS 移植が Python と一致しません:\n" + "\n".join(mismatches)
+
+
+# ══ AI評価（Gemini） ══════════════════════════════════════════
+# window.fetch をスタブして、公開ページから Gemini を叩くフローを検証する。
+# 実キー・実通信は使わない。ダミーキーは明らかな偽物にする。
+DUMMY_KEY = "dummy-key-for-test"
+
+SAMPLE_EVALUATION = {
+    "total_score": 78,
+    "structure": {"score": 24, "max_score": 30, "comment": "破調が効いている。", "issues": []},
+    "originality": {"score": 27, "max_score": 35, "comment": "類想がやや強い。", "issues": ["類想の懸念"]},
+    "imagery": {"score": 27, "max_score": 35, "comment": "像は鮮明。", "issues": []},
+    "traditional": {
+        "verdict": "有季定型としては十分に整っている。",
+        "strengths": ["季語の斡旋が的確"],
+        "concerns": [],
+        "estimated_grade": "予選通過圏",
+    },
+    "modern": {
+        "verdict": "破調の必然性がやや薄い。",
+        "strengths": [],
+        "concerns": ["説明的になっている部分がある"],
+        "estimated_grade": "要推敲",
+    },
+    "revisions": [
+        {
+            "haiku": "テスト 添削の 一句かな",
+            "changed": "中七を言い換えた。",
+            "intent": "具体性を上げるため。",
+            "tradeoff": "字余りになる。",
+        }
+    ],
+    "summary": "推敲の余地はあるが、投句可能な水準にある。",
+}
+
+
+@pytest.fixture(scope="module")
+def sync_playwright_module():
+    return pytest.importorskip(
+        "playwright.sync_api", reason="Playwright 未インストール"
+    ).sync_playwright
+
+
+@pytest.fixture(scope="module")
+def ai_browser(sync_playwright_module):
+    with sync_playwright_module() as p:
+        browser = p.chromium.launch(executable_path="/opt/pw-browsers/chromium")
+        yield browser
+        browser.close()
+
+
+@pytest.fixture(scope="module")
+def ai_html_uri(tmp_path_factory):
+    out = artifact.build(tmp_path_factory.mktemp("ai-artifact") / "a.html")
+    return pathlib.Path(out).resolve().as_uri()
+
+
+def _open_with_fetch_stub(ai_browser, ai_html_uri, stub_js):
+    """window.fetch を stub_js のスクリプトで差し替えたページを開いて返す。"""
+    page = ai_browser.new_page()
+    page.add_init_script(stub_js)
+    errors = []
+    page.on("pageerror", lambda e: errors.append(str(e)))
+    page.goto(ai_html_uri)
+    assert not errors, f"ページ読み込みで JS エラー: {errors}"
+    return page
+
+
+def _run_ai_eval(page, haiku="古池や 蛙飛びこむ 水の音", key=DUMMY_KEY):
+    page.fill("#haiku", haiku)
+    page.fill("#geminiKey", key)
+    page.click("#geminiRun")
+
+
+def test_ai_success_shows_score_and_perspectives(ai_browser, ai_html_uri):
+    """1. 成功系: スキーマ通りのJSONを返すスタブ → 総合スコア・両派の講評・添削案が画面に出ること。"""
+    stub = f"""
+    window.fetch = async (url, init) => {{
+      window.__capturedInit = init;
+      const body = {json.dumps(json.dumps({
+          "candidates": [{
+              "content": {"parts": [{"text": json.dumps(SAMPLE_EVALUATION, ensure_ascii=False)}]},
+              "finishReason": "STOP",
+          }]
+      }))};
+      return new Response(body, {{ status: 200, headers: {{ "Content-Type": "application/json" }} }});
+    }};
+    """
+    page = _open_with_fetch_stub(ai_browser, ai_html_uri, stub)
+    try:
+        _run_ai_eval(page)
+        page.wait_for_selector("#aiOut .ai-score")
+        text = page.inner_text("#aiOut")
+        assert "78 / 100" in text
+        assert "総合スコア" in text
+        assert SAMPLE_EVALUATION["traditional"]["verdict"] in text
+        assert SAMPLE_EVALUATION["modern"]["verdict"] in text
+        assert SAMPLE_EVALUATION["revisions"][0]["haiku"] in text
+        assert SAMPLE_EVALUATION["summary"] in text
+    finally:
+        page.close()
+
+
+def test_ai_network_failure(ai_browser, ai_html_uri):
+    """2. 通信断: fetch が reject → 「通信できませんでした」が出ること。"""
+    stub = """
+    window.fetch = async () => { throw new TypeError("Failed to fetch"); };
+    """
+    page = _open_with_fetch_stub(ai_browser, ai_html_uri, stub)
+    try:
+        _run_ai_eval(page)
+        page.wait_for_selector("#aiOut .alert")
+        text = page.inner_text("#aiOut")
+        assert "通信できませんでした" in text
+    finally:
+        page.close()
+
+
+def test_ai_invalid_key(ai_browser, ai_html_uri):
+    """3. キー不正: 400 + API_KEY_INVALID → キーの文言が出ること。"""
+    error_body = {
+        "error": {
+            "code": 400,
+            "message": "API key not valid. Please pass a valid API key. [API_KEY_INVALID]",
+        }
+    }
+    stub = f"""
+    window.fetch = async () => new Response({json.dumps(json.dumps(error_body))}, {{ status: 400 }});
+    """
+    page = _open_with_fetch_stub(ai_browser, ai_html_uri, stub)
+    try:
+        _run_ai_eval(page)
+        page.wait_for_selector("#aiOut .alert")
+        text = page.inner_text("#aiOut")
+        assert "APIキーが正しくありません" in text
+    finally:
+        page.close()
+
+
+def test_ai_quota_exceeded(ai_browser, ai_html_uri):
+    """4. 無料枠超過: 429 → 上限の文言が出ること、かつ「課金は発生しません」が含まれること。"""
+    error_body = {"error": {"code": 429, "message": "Resource has been exhausted."}}
+    stub = f"""
+    window.fetch = async () => new Response({json.dumps(json.dumps(error_body))}, {{ status: 429 }});
+    """
+    page = _open_with_fetch_stub(ai_browser, ai_html_uri, stub)
+    try:
+        _run_ai_eval(page)
+        page.wait_for_selector("#aiOut .alert")
+        text = page.inner_text("#aiOut")
+        assert "無料枠の上限に達しました" in text
+        assert "課金は発生しません" in text
+    finally:
+        page.close()
+
+
+def test_ai_broken_json(ai_browser, ai_html_uri):
+    """5. 壊れたJSON: 200 だが本文が "{{{" → 読み取れない旨が出ること。"""
+    envelope = {
+        "candidates": [{"content": {"parts": [{"text": "{{{"}]}, "finishReason": "STOP"}]
+    }
+    stub = f"""
+    window.fetch = async () => new Response({json.dumps(json.dumps(envelope))}, {{ status: 200 }});
+    """
+    page = _open_with_fetch_stub(ai_browser, ai_html_uri, stub)
+    try:
+        _run_ai_eval(page)
+        page.wait_for_selector("#aiOut .alert")
+        text = page.inner_text("#aiOut")
+        assert "評価結果を読み取れませんでした" in text
+    finally:
+        page.close()
+
+
+def test_ai_key_sent_in_header(ai_browser, ai_html_uri):
+    """6. キーが送信ヘッダに載ること — スタブが受け取った x-goog-api-key が入力値と一致すること。"""
+    stub = f"""
+    window.fetch = async (url, init) => {{
+      window.__capturedUrl = url;
+      window.__capturedInit = init;
+      const body = {json.dumps(json.dumps({
+          "candidates": [{
+              "content": {"parts": [{"text": json.dumps(SAMPLE_EVALUATION, ensure_ascii=False)}]},
+              "finishReason": "STOP",
+          }]
+      }))};
+      return new Response(body, {{ status: 200, headers: {{ "Content-Type": "application/json" }} }});
+    }};
+    """
+    page = _open_with_fetch_stub(ai_browser, ai_html_uri, stub)
+    try:
+        _run_ai_eval(page)
+        page.wait_for_selector("#aiOut .ai-score")
+        sent_key = page.evaluate("window.__capturedInit.headers['x-goog-api-key']")
+        assert sent_key == DUMMY_KEY
+        sent_url = page.evaluate("window.__capturedUrl")
+        assert "key=" not in sent_url  # クエリパラメータ ?key= は使わない
+    finally:
+        page.close()
+
+
+def test_ai_key_not_embedded_in_generated_html(tmp_path):
+    """7. キーがHTMLに埋まっていないこと — 生成後の index.html に実キーらしき文字列が無いこと。"""
+    out = artifact.build(tmp_path / "index.html")
+    html = out.read_text(encoding="utf-8")
+    assert "AIza" not in html
+    assert "x-goog-api-key: " not in html
+    assert DUMMY_KEY not in html
+
+
+def test_ai_section_absent_in_bare_build(ai_browser, tmp_path):
+    """8. bare ではセクションが出ないこと — build(bare=True) に AI評価セクションが生成されないこと。
+
+    bare の出力は文書骨格(<html>/<body>)を持たない断片なので、検証用に最小限の
+    シェルで包んでから読み込む。JS 本体は bare/非bare で共通なので、raw な文字列
+    検索では判定できない（`if (DATA.ai) {...}` の中身自体はソースとして残るため）。
+    DATA.ai=False では「その中身が実行されずセクションが DOM に生成されない」ことが
+    検証すべき点なので、実ブラウザで DOM を確認する。
+    """
+    fragment = artifact.build(tmp_path / "bare.html", bare=True).read_text(encoding="utf-8")
+    assert 'id="aiSection"' not in fragment  # 静的マークアップとしては最初から存在しない
+    wrapped_path = tmp_path / "bare_wrapped.html"
+    wrapped_path.write_text(f"<!doctype html><html><body>{fragment}</body></html>", encoding="utf-8")
+
+    page = ai_browser.new_page()
+    errors = []
+    page.on("pageerror", lambda e: errors.append(str(e)))
+    page.goto(wrapped_path.resolve().as_uri())
+    assert not errors, f"ページ読み込みで JS エラー: {errors}"
+    try:
+        assert page.query_selector("#aiSection") is None
+        assert page.query_selector("#geminiKey") is None
+        assert page.query_selector("#geminiRun") is None
+    finally:
+        page.close()
