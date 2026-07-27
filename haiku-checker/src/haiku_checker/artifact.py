@@ -14,6 +14,7 @@ from pathlib import Path
 
 from . import db
 
+from .evaluator import SYSTEM_PROMPT
 from .reading import BUILTIN_READINGS
 
 TEMPLATE = Path(__file__).parent / "web" / "static" / "artifact_template.html"
@@ -44,6 +45,12 @@ def build_payload(data_dir: Path | None = None) -> dict:
         ],
         "famous": [{"t": f.text, "k": f.kana, "a": f.author} for f in data.famous],
         "readings": readings,
+        # AI評価（Gemini をブラウザから直接叩く）はページ自身が外部通信するため、
+        # CSP で外部通信が禁止される claude.ai の Artifact（--bare）では出さない。
+        # プロンプトは evaluator.py の SYSTEM_PROMPT を import して同期する
+        # （手で書き写すと片方だけ直されて食い違うため）。
+        "ai": True,
+        "prompt": SYSTEM_PROMPT,
     }
 
 
@@ -73,7 +80,13 @@ def build(output: Path, data_dir: Path | None = None, bare: bool = False) -> Pat
     if PLACEHOLDER not in template:
         raise RuntimeError(f"テンプレートに {PLACEHOLDER} がありません: {TEMPLATE}")
 
-    payload = json.dumps(build_payload(data_dir), ensure_ascii=False, separators=(",", ":"))
+    payload_dict = build_payload(data_dir)
+    if bare:
+        # claude.ai の Artifact は CSP で外部通信が禁止され、Gemini 呼び出しは
+        # 必ず失敗する。DATA.ai を False にしてテンプレート側にセクション自体を
+        # 生成させない（display:none ではなく、DOM に載せない）。
+        payload_dict = {**payload_dict, "ai": False}
+    payload = json.dumps(payload_dict, ensure_ascii=False, separators=(",", ":"))
     html = template.replace(PLACEHOLDER, payload)
     if bare:
         html = _strip_document_wrapper(html)

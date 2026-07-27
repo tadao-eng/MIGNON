@@ -190,7 +190,14 @@ def cmd_build_artifact(args, console: Console) -> int:
     path = artifact.build(args.output, args.data_dir, bare=args.bare)
     size = path.stat().st_size / 1024
     console.print(f"[green]生成しました:[/green] {path} ({size:.0f} KB)")
-    console.print("[dim]外部通信なしで単体で開けます。AI 評価と Web 検索は含まれません。[/dim]")
+    if args.bare:
+        console.print("[dim]外部通信なしで単体で開けます。AI 評価と Web 検索は含まれません。[/dim]")
+    else:
+        console.print(
+            "[dim]季語照合・定型判定・類句チェックは外部通信なしで動きます。"
+            "AI 評価は利用者が自分の Gemini キーを入れたときだけ Google へ送信します"
+            "（キーは埋め込まれていません）。Web 検索は含まれません。[/dim]"
+        )
     return 0
 
 

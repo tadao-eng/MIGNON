@@ -18,7 +18,7 @@
   --paper:  #f7f7f5;
   --panel:  #ffffff;
   --ink:    #1c1c1c;
-  --muted:  #9a9a98;
+  --muted:  #70706e;
   --rule:   #e3e3df;
   --accent: #00757f;
   --warn:   #9a6a12;
@@ -55,7 +55,7 @@
 }
 :root[data-theme="light"] {
   --asagi: #00a3af;
-  --paper: #f7f7f5; --panel: #ffffff; --ink: #1c1c1c; --muted: #9a9a98;
+  --paper: #f7f7f5; --panel: #ffffff; --ink: #1c1c1c; --muted: #70706e;
   --rule: #e3e3df; --accent: #00757f; --warn: #9a6a12; --bad: #b4453c;
   --haru: #b25a73; --natsu: #2c7663; --aki: #955c14; --fuyu: #3e6086; --shin: #93262d;
 }
@@ -211,6 +211,16 @@ td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align:
 .lookup .controls { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; }
 @media (max-width: 520px) { .lookup .controls { grid-template-columns: 1fr; } }
 #kigoResults { max-height: 330px; overflow-y: auto; }
+
+/* ── AI評価（Gemini） ───────────────────────────────────── */
+.ai-score { font-family: var(--mono); font-size: 2.2rem; font-weight: 300; font-variant-numeric: tabular-nums; }
+.ai-axes { display: grid; gap: 18px; margin: 14px 0; }
+.ai-axis { display: grid; gap: 6px; }
+.ai-axis .pts { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); }
+.ai-cards { display: grid; gap: 12px; margin-top: 10px; }
+.ai-card { border: 1px solid var(--rule); border-radius: 6px; padding: 12px 14px; display: grid; gap: 6px; }
+.keyrow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 6px; }
+.keyrow .chk { display: flex; align-items: center; gap: 6px; font-size: .78rem; color: var(--muted); letter-spacing: .04em; }
 
 footer {
   border-top: 1px solid var(--rule); margin-top: 40px; padding-top: 18px;
@@ -904,6 +914,405 @@ function renderKigo() {
   }
   t.appendChild(tb); box.appendChild(t);
   if (rows.length > 120) box.appendChild(el("p", "hint", `… 他 ${rows.length - 120} 件`));
+}
+
+/* ══ AI評価（Gemini） ═══════════════════════════════════════
+   claude.ai の Artifact は CSP で外部通信が禁止され、Gemini 呼び出しは
+   必ず失敗する。DATA.ai が偽のときはこのブロックのセクション生成自体を
+   丸ごとスキップする（display:none ではなく、DOM に載せない）。
+   キーは利用者のブラウザにだけ残る。保存チェックが入っている間だけ
+   localStorage に書き、外したら保存済みの分も含めて消す。          */
+if (DATA.ai) {
+
+const GEMINI_KEY_STORAGE = "haiku.gemini.key";
+const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/";
+const GEMINI_TIMEOUT_MS = 120000;
+
+// evaluator.py の Evaluation と同じ構造・同じ日本語 description にする。
+// Gemini の responseSchema は OpenAPI のサブセットで、使えるのは
+// type/properties/required/items/description/enum/propertyOrdering のみ。
+const AXIS_PROPS = {
+  score: { type: "INTEGER", description: "この観点の獲得点数" },
+  max_score: { type: "INTEGER", description: "この観点の満点" },
+  comment: { type: "STRING", description: "採点根拠を句の語句に即して述べる。2〜4文。" },
+  issues: { type: "ARRAY", items: { type: "STRING" }, description: "具体的な問題点。無ければ空配列。" },
+};
+const AXIS_REQUIRED = ["score", "max_score", "comment", "issues"];
+const PERSPECTIVE_PROPS = {
+  verdict: { type: "STRING", description: "この立場からの総評。2〜4文。" },
+  strengths: { type: "ARRAY", items: { type: "STRING" } },
+  concerns: { type: "ARRAY", items: { type: "STRING" } },
+  estimated_grade: { type: "STRING", description: "この立場での見込み（例: 予選通過圏／入選圏／要推敲）。" },
+};
+const PERSPECTIVE_REQUIRED = ["verdict", "strengths", "concerns", "estimated_grade"];
+
+const AI_SCHEMA = {
+  type: "OBJECT",
+  properties: {
+    total_score: { type: "INTEGER", description: "100点満点の総合スコア。各観点の合計と一致させる。" },
+    structure: {
+      type: "OBJECT", properties: AXIS_PROPS, required: AXIS_REQUIRED,
+      propertyOrdering: AXIS_REQUIRED,
+      description: "構造（30点満点）：五七五の定型、字余り字足らずの妥当性、切字・句またがりの処理。",
+    },
+    originality: {
+      type: "OBJECT", properties: AXIS_PROPS, required: AXIS_REQUIRED,
+      propertyOrdering: AXIS_REQUIRED,
+      description: "表現のオリジナリティ（35点満点）：類想・陳腐な措辞・説明過多を含む。",
+    },
+    imagery: {
+      type: "OBJECT", properties: AXIS_PROPS, required: AXIS_REQUIRED,
+      propertyOrdering: AXIS_REQUIRED,
+      description: "情景の具体性と余韻（35点満点）：像の鮮明さ、感情の直叙を避けているか、読後の広がり。",
+    },
+    traditional: {
+      type: "OBJECT", properties: PERSPECTIVE_PROPS, required: PERSPECTIVE_REQUIRED,
+      propertyOrdering: PERSPECTIVE_REQUIRED,
+      description: "伝統派（有季定型）の視点からの評価。",
+    },
+    modern: {
+      type: "OBJECT", properties: PERSPECTIVE_PROPS, required: PERSPECTIVE_REQUIRED,
+      propertyOrdering: PERSPECTIVE_REQUIRED,
+      description: "現代派（自由律・新興俳句を含む現代的視点）からの評価。",
+    },
+    revisions: {
+      type: "ARRAY",
+      description: "添削案を2〜3案。方向性を変えて提示する。",
+      items: {
+        type: "OBJECT",
+        properties: {
+          haiku: { type: "STRING", description: "添削後の句。上五/中七/下五を半角スペースで区切る。" },
+          changed: { type: "STRING", description: "どこをどう変えたかの要約。1文。" },
+          intent: { type: "STRING", description: "その改変が何を改善するのか。1〜2文。" },
+          tradeoff: { type: "STRING", description: "この案で失われるもの・注意点。1文。" },
+        },
+        required: ["haiku", "changed", "intent", "tradeoff"],
+        propertyOrdering: ["haiku", "changed", "intent", "tradeoff"],
+      },
+    },
+    summary: { type: "STRING", description: "投句してよいかの結論を含む総括。3〜5文。" },
+  },
+  required: ["total_score", "structure", "originality", "imagery", "traditional", "modern", "revisions", "summary"],
+  propertyOrdering: ["total_score", "structure", "originality", "imagery", "traditional", "modern", "revisions", "summary"],
+};
+
+// evaluator.py の analyzer.py が作る「事前解析の結果」と同じ構成を、
+// ページが既に持っている定型判定・歳時記照合・類句チェックの結果から組み立てる。
+function buildStructureSummary(s) {
+  const lines = [`音数: ${s.pattern}（計 ${s.totalMora} 音）/ 定型: ${s.isTeikei ? "○" : "×"}`];
+  for (const seg of s.segments) lines.push(`- ${seg.name}「${seg.text}」${seg.mora}音 [${seg.label}]`);
+  if (s.kireji.length) lines.push("切字: " + s.kireji.join("、"));
+  for (const w of s.warnings) lines.push(`! ${w.text}`);
+  return lines.join("\n");
+}
+function buildSaijikiSummary(k) {
+  if (k.muki) return "季語: 検出されず（無季の可能性）";
+  const lines = ["季語:"];
+  for (const h of k.hits) lines.push(`- ${h.kigo.w}（${h.kigo.k}／${h.kigo.s}・${h.kigo.c}）`);
+  lines.push(`主たる季節: ${k.primarySeason}`);
+  if (k.kigasanari) lines.push("季重なりあり");
+  if (k.kichigai) lines.push("季違いあり（異なる季節の季語が同居）");
+  for (const w of k.warnings) lines.push(`! ${w.text}`);
+  for (const n of k.notes) lines.push(`* ${n}`);
+  return lines.join("\n");
+}
+function buildSimilaritySummary(sm) {
+  const lines = [`類句リスク: ${sm.risk}`];
+  for (const r of sm.reasons) lines.push(`- ${r}`);
+  for (const m of sm.matches.slice(0, 3)) lines.push(`- 近い既存句: 「${m.text}」（${m.author}）類似度 ${Math.round(m.score * 100)}%`);
+  return lines.join("\n");
+}
+// evaluator.py の build_user_prompt() と同じ構成（句 / 読み / 事前解析 / 依頼）。
+function buildAiUserPrompt(haiku, structureSummary, saijikiSummary, similaritySummary, reading) {
+  const parts = [`# 評価対象の句\n${haiku}`];
+  if (reading) parts.push(`読み: ${reading}`);
+  parts.push(
+    "# 事前解析の結果\n" +
+    "以下は本ツールが機械的に解析した結果です。誤りがあれば指摘のうえ、あなたの判断を優先してください。\n\n" +
+    `## 定型の解析\n${structureSummary}\n\n` +
+    `## 歳時記照合\n${saijikiSummary}\n\n` +
+    `## 類句チェック\n${similaritySummary}`
+  );
+  parts.push(
+    "# 依頼\n" +
+    "上記を踏まえ、構造・オリジナリティ・情景と余韻の3観点で採点し、" +
+    "伝統派と現代派それぞれの視点からの講評、および添削案を提示してください。"
+  );
+  return parts.join("\n\n");
+}
+
+class AiError extends Error {
+  constructor(kind, meta) { super(kind); this.kind = kind; this.meta = meta || {}; }
+}
+function aiErrorMessage(err) {
+  switch (err.kind) {
+    case "nokey": return "APIキーを入力してください。";
+    case "network": return "通信できませんでした。ネットワーク接続を確認してください。";
+    case "timeout": return "応答がありませんでした（120秒）。時間をおいて試してください。";
+    case "keyinvalid": return "APIキーが正しくありません。入力を確認してください。";
+    case "forbidden": return "このキーではAPIを利用できません。リファラ制限やAPIの有効化を確認してください。";
+    case "quota": return "無料枠の上限に達しました。時間をおいて試してください（課金は発生しません）。";
+    case "notfound": return `モデル「${err.meta.model}」が見つかりません。別のモデルを選んでください。`;
+    case "httperror": return `サーバーがエラーを返しました（HTTP ${err.meta.code}）。Googleからの説明: ${err.meta.message || "（説明なし）"}`;
+    case "empty": return "モデルが回答を返しませんでした。";
+    case "badjson": return "評価結果を読み取れませんでした。";
+    default: return "評価に失敗しました。";
+  }
+}
+
+async function callGemini(apiKey, model, userPrompt) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
+  let res;
+  try {
+    res = await fetch(GEMINI_ENDPOINT + encodeURIComponent(model) + ":generateContent", {
+      method: "POST",
+      // クエリパラメータ ?key= は使わない（URL がログや Referer に残るため）。
+      headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: DATA.prompt }] },
+        contents: [{ role: "user", parts: [{ text: userPrompt }] }],
+        generationConfig: { responseMimeType: "application/json", responseSchema: AI_SCHEMA, temperature: 0.4 },
+      }),
+      signal: controller.signal,
+    });
+  } catch (err) {
+    if (err && err.name === "AbortError") throw new AiError("timeout");
+    throw new AiError("network");
+  } finally {
+    clearTimeout(timer);
+  }
+
+  if (!res.ok) {
+    let bodyText = "";
+    try { bodyText = await res.text(); } catch (e) { /* 無視 */ }
+    let message = "";
+    try { message = JSON.parse(bodyText).error.message; } catch (e) { /* 無視 */ }
+    if (res.status === 400 && bodyText.includes("API_KEY_INVALID")) throw new AiError("keyinvalid");
+    if (res.status === 403) throw new AiError("forbidden");
+    if (res.status === 429) throw new AiError("quota");
+    if (res.status === 404) throw new AiError("notfound", { model });
+    throw new AiError("httperror", { code: res.status, message });
+  }
+
+  let data;
+  try { data = await res.json(); } catch (e) { throw new AiError("badjson"); }
+
+  const cand = data.candidates && data.candidates[0];
+  if (!cand || cand.finishReason === "SAFETY") throw new AiError("empty");
+  const text = cand.content && cand.content.parts && cand.content.parts[0] && cand.content.parts[0].text;
+  if (!text) throw new AiError("empty");
+
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    throw new AiError("badjson");
+  }
+}
+
+function renderAiAxis(name, axis) {
+  const box = el("div", "ai-axis");
+  const head = el("div", "verdict");
+  head.appendChild(el("span", null, name));
+  head.appendChild(el("span", "pts", `${axis.score} / ${axis.max_score}`));
+  box.appendChild(head);
+  box.appendChild(el("p", null, axis.comment));
+  if (axis.issues && axis.issues.length) {
+    const ul = el("ul", "reasons");
+    for (const i of axis.issues) ul.appendChild(el("li", null, i));
+    box.appendChild(ul);
+  }
+  return box;
+}
+function renderAiPerspective(name, p) {
+  const box = el("div", "ai-card");
+  const head = el("div", "verdict");
+  head.appendChild(el("span", null, name));
+  head.appendChild(chip("plain", p.estimated_grade));
+  box.appendChild(head);
+  box.appendChild(el("p", null, p.verdict));
+  if (p.strengths && p.strengths.length) {
+    const ul = el("ul", "reasons");
+    for (const s of p.strengths) ul.appendChild(el("li", null, "＋ " + s));
+    box.appendChild(ul);
+  }
+  if (p.concerns && p.concerns.length) {
+    const ul = el("ul", "reasons");
+    for (const c of p.concerns) ul.appendChild(el("li", null, "－ " + c));
+    box.appendChild(ul);
+  }
+  return box;
+}
+function renderAiResult(out, ev) {
+  const total = el("div", "verdict");
+  total.appendChild(el("span", "ai-score", `${ev.total_score} / 100`));
+  total.appendChild(el("span", null, "総合スコア"));
+  out.appendChild(total);
+
+  const axes = el("div", "ai-axes");
+  axes.appendChild(renderAiAxis("構造（30点）", ev.structure));
+  axes.appendChild(renderAiAxis("オリジナリティ（35点）", ev.originality));
+  axes.appendChild(renderAiAxis("情景と余韻（35点）", ev.imagery));
+  out.appendChild(axes);
+
+  const pair = el("div", "pair");
+  pair.appendChild(renderAiPerspective("伝統派", ev.traditional));
+  pair.appendChild(renderAiPerspective("現代派", ev.modern));
+  out.appendChild(pair);
+
+  if (ev.revisions && ev.revisions.length) {
+    out.appendChild(el("h2", null, "添削案"));
+    const cards = el("div", "ai-cards");
+    for (const rev of ev.revisions) {
+      const card = el("div", "ai-card");
+      card.appendChild(el("div", "headline", rev.haiku));
+      card.appendChild(el("p", null, rev.changed));
+      card.appendChild(el("p", "hint", rev.intent));
+      card.appendChild(el("p", "hint", rev.tradeoff));
+      cards.appendChild(card);
+    }
+    out.appendChild(cards);
+  }
+
+  out.appendChild(el("h2", null, "総括"));
+  out.appendChild(el("p", null, ev.summary));
+}
+function renderAiError(out, err) {
+  const a = el("div", "alert");
+  a.appendChild(el("strong", null, "AI評価に失敗しました"));
+  a.appendChild(el("span", null, aiErrorMessage(err)));
+  out.appendChild(a);
+}
+
+async function runAiEvaluation(keyInput, modelSelect, runBtn, out) {
+  out.textContent = "";
+  const apiKey = keyInput.value.trim();
+  if (!apiKey) { renderAiError(out, new AiError("nokey")); return; }
+
+  const haiku = $("haiku").value.trim();
+  if (!haiku) { $("haiku").focus(); return; }
+  const yomi = $("yomi").value.trim();
+  const season = $("season").value;
+  const r = judge(haiku, yomi, season);
+
+  const userPrompt = buildAiUserPrompt(
+    haiku,
+    buildStructureSummary(r.structure),
+    buildSaijikiSummary(r.saijiki),
+    buildSimilaritySummary(r.similarity),
+    r.reading.kana
+  );
+
+  runBtn.disabled = true;
+  const originalLabel = runBtn.textContent;
+  runBtn.textContent = "評価中…";
+  out.appendChild(el("p", "hint", "Gemini に問い合わせています…"));
+
+  try {
+    const evaluation = await callGemini(apiKey, modelSelect.value, userPrompt);
+    out.textContent = "";
+    renderAiResult(out, evaluation);
+  } catch (err) {
+    out.textContent = "";
+    renderAiError(out, err instanceof AiError ? err : new AiError("network"));
+  } finally {
+    runBtn.disabled = false;
+    runBtn.textContent = originalLabel;
+  }
+}
+
+function renderAiSection() {
+  const sec = el("section");
+  sec.id = "aiSection";
+  sec.appendChild(el("h2", null, "AI評価（Gemini）"));
+
+  const alert = el("div", "alert");
+  alert.appendChild(el("strong", null, "句が Google に送信されます"));
+  alert.appendChild(el("span", null,
+    "判定を押すと、入力した句・読み・機械解析の結果が Google のサーバーへ送られます。" +
+    "Gemini の無料枠は入力が Google のサービス改善に利用される場合があります。" +
+    "俳句大会の多くは未発表句が条件です。投句予定の句をここにかけないでください。"));
+  sec.appendChild(alert);
+  sec.appendChild(el("p", "hint",
+    "キーは Google AI Studio で無料で取得できます。" +
+    "キーには HTTP リファラ制限（このページのドメインのみ許可）をかけることを勧めます。"));
+
+  const keyField = el("div", "field");
+  const keyLabel = el("label", null, "Gemini APIキー");
+  keyLabel.htmlFor = "geminiKey";
+  keyField.appendChild(keyLabel);
+  const keyInput = document.createElement("input");
+  keyInput.type = "password";
+  keyInput.id = "geminiKey";
+  keyInput.autocomplete = "off";
+  keyInput.placeholder = "APIキーを貼り付け";
+  keyField.appendChild(keyInput);
+
+  const keyRow = el("div", "keyrow");
+  const saveLabel = el("label", "chk");
+  const saveCheckbox = document.createElement("input");
+  saveCheckbox.type = "checkbox";
+  saveCheckbox.id = "geminiSaveKey";
+  saveLabel.appendChild(saveCheckbox);
+  saveLabel.appendChild(document.createTextNode("このブラウザに保存する"));
+  keyRow.appendChild(saveLabel);
+  const clearBtn = el("button", "themetoggle", "消去");
+  clearBtn.type = "button";
+  clearBtn.id = "geminiClearBtn";
+  keyRow.appendChild(clearBtn);
+  keyField.appendChild(keyRow);
+  sec.appendChild(keyField);
+
+  const modelField = el("div", "field");
+  const modelLabel = el("label", null, "モデル");
+  modelLabel.htmlFor = "geminiModel";
+  modelField.appendChild(modelLabel);
+  const modelSelect = document.createElement("select");
+  modelSelect.id = "geminiModel";
+  for (const [value, label] of [
+    ["gemini-2.5-flash", "gemini-2.5-flash（既定）"],
+    ["gemini-2.5-pro", "gemini-2.5-pro"],
+  ]) {
+    const opt = document.createElement("option");
+    opt.value = value;
+    opt.textContent = label;
+    modelSelect.appendChild(opt);
+  }
+  modelField.appendChild(modelSelect);
+  sec.appendChild(modelField);
+
+  const runBtn = el("button", "go", "AI評価する");
+  runBtn.type = "button";
+  runBtn.id = "geminiRun";
+  sec.appendChild(runBtn);
+
+  const out = el("div");
+  out.id = "aiOut";
+  sec.appendChild(out);
+
+  const stored = localStorage.getItem(GEMINI_KEY_STORAGE);
+  if (stored) { keyInput.value = stored; saveCheckbox.checked = true; }
+
+  function syncStorage() {
+    if (saveCheckbox.checked) localStorage.setItem(GEMINI_KEY_STORAGE, keyInput.value);
+    else localStorage.removeItem(GEMINI_KEY_STORAGE);
+  }
+  keyInput.addEventListener("input", syncStorage);
+  saveCheckbox.addEventListener("change", syncStorage);
+  clearBtn.addEventListener("click", () => {
+    localStorage.removeItem(GEMINI_KEY_STORAGE);
+    keyInput.value = "";
+    // 保存の意思も一緒に降ろす。チェックが残っていると、次に貼った瞬間に
+    // また保存されてしまい「消した」つもりが裏切られる。
+    saveCheckbox.checked = false;
+  });
+  runBtn.addEventListener("click", () => runAiEvaluation(keyInput, modelSelect, runBtn, out));
+
+  return sec;
+}
+
+$("out").insertAdjacentElement("afterend", renderAiSection());
+
 }
 
 /* ══ 起動 ═══════════════════════════════════════════════════ */
