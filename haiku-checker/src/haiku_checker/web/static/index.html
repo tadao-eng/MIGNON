@@ -7,33 +7,41 @@
 <title>俳句チェッカー</title>
 <style>
 :root {
-  --bg: #faf8f4;
+  /* 浅葱色。--asagi は面・線に使う純色、--accent は文字にも載せられる濃色。
+     純色をそのまま文字にすると淡地でコントラストが足りない。 */
+  --asagi: #00a3af;
+  --bg: #f7f7f5;
   --panel: #ffffff;
-  --ink: #1f2328;
-  --muted: #6b7280;
-  --line: #e5e0d8;
-  --accent: #7a5c3e;
-  --ok: #217a4b;
-  --warn: #a86a00;
-  --bad: #b3261e;
-  --serif: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
-  --sans: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", system-ui, sans-serif;
+  --ink: #1c1c1c;
+  --muted: #9a9a98;
+  --line: #e3e3df;
+  --accent: #00757f;
+  --ok: #00757f;
+  --warn: #9a6a12;
+  --bad: #b4453c;
+  --sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", -apple-system,
+          BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", "Yu Gothic", sans-serif;
+  /* 以前は俳句本文を明朝にしていたが、細身・字間広めの一書体で通す指定に
+     変えた。明朝へ戻すなら --display だけ差し替える。 */
+  --display: var(--sans);
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #16181c; --panel: #1e2126; --ink: #e8e6e3; --muted: #9aa0a6;
-    --line: #333840; --accent: #c9a37a; --ok: #4ec27f; --warn: #e0a63c; --bad: #f0736a;
+    --asagi: #4fc3cc;
+    --bg: #14181a; --panel: #1b2124; --ink: #e8eaea; --muted: #868d90;
+    --line: #2b3235; --accent: #5cc9d1; --ok: #5cc9d1; --warn: #d6a94a; --bad: #e28078;
   }
 }
 * { box-sizing: border-box; }
 body {
   margin: 0; background: var(--bg); color: var(--ink);
-  font-family: var(--sans); line-height: 1.7;
+  font-family: var(--sans); line-height: 1.8;
+  font-weight: 300; letter-spacing: .04em;
   -webkit-font-smoothing: antialiased;
 }
 .wrap { max-width: 860px; margin: 0 auto; padding: 24px 16px 80px; }
 header { padding: 24px 0 8px; }
-h1 { font-family: var(--serif); font-size: 1.6rem; margin: 0 0 4px; letter-spacing: .06em; }
+h1 { font-family: var(--display); font-size: 1.5rem; font-weight: 300; margin: 0 0 6px; letter-spacing: .34em; }
 .sub { color: var(--muted); font-size: .85rem; margin: 0; }
 
 .card {
@@ -46,7 +54,7 @@ h1 { font-family: var(--serif); font-size: 1.6rem; margin: 0 0 4px; letter-spaci
 }
 .card > h2 .num {
   background: var(--accent); color: #fff; border-radius: 4px;
-  font-size: .7rem; padding: 2px 7px; font-weight: 600;
+  font-size: .7rem; padding: 2px 7px; font-weight: 400;
 }
 
 label { display: block; font-size: .8rem; color: var(--muted); margin-bottom: 5px; }
@@ -55,16 +63,16 @@ input[type=text], input[type=date], select {
   border-radius: 7px; background: var(--bg); color: var(--ink);
   font-family: inherit; font-size: 1rem;
 }
-#haiku { font-family: var(--serif); font-size: 1.25rem; letter-spacing: .08em; }
+#haiku { font-family: var(--display); font-size: 1.25rem; letter-spacing: .08em; }
 .row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
 .row > div { flex: 1 1 150px; }
 .hint { font-size: .74rem; color: var(--muted); margin-top: 5px; }
 
 .actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; align-items: center; }
 button {
-  font-family: inherit; font-size: .9rem; padding: 10px 20px; border-radius: 7px;
+  font-family: inherit; font-size: .9rem; padding: 10px 20px; border-radius: 999px;
   border: 1px solid var(--accent); background: var(--accent); color: #fff;
-  cursor: pointer; font-weight: 600;
+  cursor: pointer; font-weight: 400; letter-spacing: .14em;
 }
 button.ghost { background: transparent; color: var(--accent); }
 button:disabled { opacity: .45; cursor: not-allowed; }
@@ -72,19 +80,19 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .checkbox input { width: auto; }
 
 .haiku-display {
-  font-family: var(--serif); font-size: 1.45rem; letter-spacing: .12em;
+  font-family: var(--display); font-size: 1.45rem; letter-spacing: .12em;
   text-align: center; padding: 8px 0 4px;
 }
 .haiku-yomi { text-align: center; color: var(--muted); font-size: .8rem; margin-bottom: 4px; }
 
 table { width: 100%; border-collapse: collapse; font-size: .88rem; }
-th { text-align: left; font-weight: 600; color: var(--muted); font-size: .76rem;
+th { text-align: left; font-weight: 400; color: var(--muted); font-size: .76rem;
      border-bottom: 1px solid var(--line); padding: 6px 8px; }
 td { padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
 tr:last-child td { border-bottom: none; }
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 
-.tag { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: .74rem; font-weight: 600; }
+.tag { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: .74rem; font-weight: 400; }
 .tag.ok   { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
 .tag.warn { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
 .tag.bad  { background: color-mix(in srgb, var(--bad) 15%, transparent); color: var(--bad); }
@@ -98,10 +106,10 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .note.info { color: var(--muted); }
 
 .summary-line { margin-top: 10px; font-size: .88rem; }
-.summary-line b { font-family: var(--serif); letter-spacing: .06em; }
+.summary-line b { font-family: var(--display); letter-spacing: .06em; }
 
 .risk { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
-.risk .level { font-size: 1.5rem; font-weight: 700; font-family: var(--serif); }
+.risk .level { font-size: 1.5rem; font-weight: 300; font-family: var(--display); }
 .risk-高 .level { color: var(--bad); }
 .risk-中 .level { color: var(--warn); }
 .risk-低 .level { color: var(--ok); }
@@ -110,27 +118,27 @@ ul.reasons { margin: 8px 0 0; padding-left: 1.1em; font-size: .86rem; }
 ul.reasons li { margin-bottom: 4px; }
 
 .score-total { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
-.score-total .n { font-size: 2.4rem; font-weight: 700; font-family: var(--serif); line-height: 1; }
+.score-total .n { font-size: 2.4rem; font-weight: 300; font-family: var(--display); line-height: 1; }
 .axis { margin-bottom: 14px; }
 .axis-head { display: flex; justify-content: space-between; align-items: baseline; font-size: .86rem; }
-.axis-head .label { font-weight: 600; }
+.axis-head .label { font-weight: 400; }
 .bar { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin: 5px 0 6px; }
 .bar > span { display: block; height: 100%; border-radius: 3px; background: var(--accent); }
 .axis p { margin: 0; font-size: .85rem; color: var(--muted); }
 .axis ul { margin: 6px 0 0; padding-left: 1.1em; font-size: .82rem; color: var(--warn); }
 
 .persp { border-left: 3px solid var(--accent); padding-left: 14px; margin-bottom: 18px; }
-.persp h3 { font-size: .9rem; margin: 0 0 6px; font-family: var(--serif); letter-spacing: .05em; }
+.persp h3 { font-size: .9rem; margin: 0 0 6px; font-family: var(--display); letter-spacing: .05em; }
 .persp p { margin: 0 0 8px; font-size: .88rem; }
 .persp .lists { display: flex; gap: 18px; flex-wrap: wrap; font-size: .82rem; }
 .persp .lists > div { flex: 1 1 200px; }
 .persp .lists h4 { margin: 0 0 3px; font-size: .76rem; color: var(--muted); }
 .persp .lists ul { margin: 0; padding-left: 1.1em; }
-.grade { font-size: .82rem; font-weight: 600; margin-top: 8px; }
+.grade { font-size: .82rem; font-weight: 400; margin-top: 8px; }
 
 .revision { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
 .revision .h {
-  font-family: var(--serif); font-size: 1.15rem; letter-spacing: .1em;
+  font-family: var(--display); font-size: 1.15rem; letter-spacing: .1em;
   margin-bottom: 8px; color: var(--accent);
 }
 .revision dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; font-size: .82rem; }
@@ -305,7 +313,7 @@ function renderStructure(s) {
   s.segments.forEach(seg => {
     const tr = el('tr');
     tr.appendChild(el('td', null, seg.name));
-    const td = el('td'); td.style.fontFamily = 'var(--serif)'; td.textContent = seg.text;
+    const td = el('td'); td.style.fontFamily = 'var(--display)'; td.textContent = seg.text;
     tr.appendChild(td);
     tr.appendChild(el('td', 'num', String(seg.mora)));
     const cls = seg.delta === 0 ? 'ok' : (Math.abs(seg.delta) === 1 ? 'warn' : 'bad');
@@ -337,7 +345,7 @@ function renderSaijiki(k) {
     const tb = el('tbody');
     k.kigo.forEach(g => {
       const tr = el('tr');
-      const w = el('td'); w.style.fontFamily = 'var(--serif)'; w.textContent = g.word;
+      const w = el('td'); w.style.fontFamily = 'var(--display)'; w.textContent = g.word;
       tr.appendChild(w);
       tr.appendChild(el('td', null, g.kana));
       const sc = (k.kichigai && g.season !== k.primary_season) ? 'bad' : 'mute';
@@ -381,7 +389,7 @@ function renderSimilarity(s) {
     const tb = el('tbody');
     s.local_matches.forEach(m => {
       const tr = el('tr');
-      const h = el('td'); h.style.fontFamily = 'var(--serif)'; h.textContent = m.text;
+      const h = el('td'); h.style.fontFamily = 'var(--display)'; h.textContent = m.text;
       tr.appendChild(h);
       tr.appendChild(el('td', null, m.author));
       const cls = m.score >= 0.85 ? 'bad' : (m.score >= 0.7 ? 'warn' : 'mute');
