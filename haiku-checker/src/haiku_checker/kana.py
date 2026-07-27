@@ -48,6 +48,28 @@ def kana_only(text: str) -> str:
     return "".join(_KANA_RE.findall(to_hiragana(text)))
 
 
+def kana_runs(text: str) -> list[str]:
+    """本文の中で、かなが続いている部分だけを取り出す。
+
+    読み一致で季語を拾うときの走査範囲を決めるのに使う。漢字の読みまで繋いだ
+    一続きの読み文字列を走査すると、語をまたいだ偶然の並びを拾ってしまう。
+    例:「連山影を」の読み「れんざんかげを」から「残花（ざんか）」を拾う。
+    漢字を区切りとして扱うことでこれを防ぐ。
+    """
+    runs: list[str] = []
+    current = ""
+    for ch in to_hiragana(normalize(text)):
+        if is_kana(ch):
+            current += ch
+        else:
+            if current:
+                runs.append(current)
+            current = ""
+    if current:
+        runs.append(current)
+    return runs
+
+
 def is_kana(ch: str) -> bool:
     code = ord(ch)
     return (

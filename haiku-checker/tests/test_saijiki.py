@@ -86,7 +86,7 @@ def test_kana_match_does_not_cross_word_boundaries(matcher):
     reader = get_reader(extra_dictionary=data.reading_dictionary())
     reading = read_with_override("この道や行く人なしに秋の暮", None, reader)
 
-    hits = matcher.find("この道や行く人なしに秋の暮", reading.kana, tokens=reading.tokens)
+    hits = matcher.find("この道や行く人なしに秋の暮", reading.kana)
     words = {h.kigo.word for h in hits}
     assert "秋の暮" in words
     assert "木の実" not in words, "語をまたいだかな一致を拾っている"
@@ -105,5 +105,5 @@ def test_kana_written_kigo_still_detected(matcher):
         ("たんぽぽや ひはいつまでも おおぞらに", "蒲公英"),
     ]:
         reading = read_with_override(haiku, None, reader)
-        hits = matcher.find(haiku, reading.kana, tokens=reading.tokens)
+        hits = matcher.find(haiku, reading.kana)
         assert expected in {h.kigo.word for h in hits}, f"{haiku} で {expected} を取り逃がした"
