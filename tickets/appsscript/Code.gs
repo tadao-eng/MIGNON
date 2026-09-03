@@ -15,6 +15,7 @@ var DATES = [
 var PER_DATE = 4;
 var STORE_KEY = 'slots.v1';
 var LOCK_WAIT_MS = 10000;
+var NAME_MAX = 30;
 
 /** ウェブアプリの入口。 */
 function doGet() {
@@ -51,8 +52,17 @@ function getState() {
   return readState_();
 }
 
-/** 画面から呼ぶ: 1 枠を付ける / 外す。戻り値は更新後の全体。 */
-function setSlot(id, held) {
+/** 名前は誰でも書けるので、長さと空白をここで整える。 */
+function cleanName_(name) {
+  if (name == null) return '';
+  return String(name).replace(/\s+/g, ' ').trim().slice(0, NAME_MAX);
+}
+
+/**
+ * 画面から呼ぶ: 1 枠を付ける / 外す / 名前を直す。戻り値は更新後の全体。
+ * すでに付いている枠に held=true で呼ぶと、付けた時刻は保ったまま名前だけ変わる。
+ */
+function setSlot(id, held, name) {
   if (validIds_().indexOf(id) === -1) {
     throw new Error('その枠は存在しません。ページを開き直してください。');
   }
@@ -67,7 +77,12 @@ function setSlot(id, held) {
   try {
     var state = readState_();
     if (held) {
-      state[id] = { held: true, at: new Date().toISOString() };
+      var before = state[id];
+      state[id] = {
+        held: true,
+        at: (before && before.at) ? before.at : new Date().toISOString(),
+        name: cleanName_(name)
+      };
     } else {
       delete state[id];
     }

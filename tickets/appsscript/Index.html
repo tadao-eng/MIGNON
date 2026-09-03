@@ -243,8 +243,16 @@
   .row[aria-pressed="true"] .box { background: var(--held); border-color: var(--held); }
   .row[aria-pressed="true"] .box svg { opacity: 1; transform: scale(1); }
 
+  .row-main { display: flex; flex-direction: column; min-width: 0; flex: 1; }
   .row-name { font-size: 14px; font-weight: 500; }
   .row[aria-pressed="true"] .row-name { color: var(--held-ink); }
+  .row-who {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--held-ink);
+    overflow-wrap: anywhere;
+  }
+  .row-who:empty { display: none; }
   .row-state {
     margin-left: auto;
     font-size: 12px;
@@ -282,7 +290,7 @@
   .sheet {
     background: var(--paper);
     border: 1px solid var(--edge);
-    border-top: 3px solid var(--warn);
+    border-top: 3px solid var(--held);
     border-radius: 3px;
     box-shadow: 0 24px 60px -20px rgba(0, 0, 0, .5);
     max-width: 400px;
@@ -297,17 +305,9 @@
     font-family: var(--display);
     font-size: 19px;
     font-weight: 700;
-    color: var(--warn);
+    color: var(--ink);
   }
   .sheet p { margin: 0; font-size: 14px; color: var(--ink-soft); }
-  .sheet .target {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--ink);
-    background: var(--warn-wash);
-    padding: 8px 11px;
-    border-radius: 2px;
-  }
   .sheet-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px; }
   .btn {
     font: inherit;
@@ -322,6 +322,38 @@
   }
   .btn:focus-visible { outline: 2px solid var(--held); outline-offset: 1px; }
   .btn-danger { background: var(--warn); border-color: var(--warn); color: #fff; }
+
+  /* ---- form bits ---- */
+  [hidden] { display: none !important; }
+  .row-state { flex: none; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 12px; font-weight: 500; color: var(--ink-soft); }
+  .field input {
+    font: inherit;
+    font-size: 15px;
+    padding: 9px 11px;
+    border: 1px solid var(--edge-strong);
+    border-radius: 3px;
+    background: var(--ground);
+    color: var(--ink);
+  }
+  .field input:focus-visible {
+    outline: 2px solid var(--held);
+    outline-offset: 1px;
+    border-color: var(--held);
+  }
+  .hint { font-size: 12px; line-height: 1.5; color: var(--ink-faint); }
+  .btn-primary { background: var(--held); border-color: var(--held); color: #fff; }
+  .danger-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 6px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--edge-strong);
+  }
+  .danger-zone p { color: var(--warn); }
 
   /* ---- toast ---- */
   .toast {
@@ -347,8 +379,8 @@
     <div class="eyebrow">2026年10月・ヨーロッパ企画</div>
     <h1>チケット受け渡し表</h1>
     <p class="lede">
-      渡し先が決まった枚数にチェックをつけてください。同じ枠が二重にならないように、
-      この表がみんなの「決まった / まだ」を持っています。
+      渡し先が決まった枚数にチェックをつけて、誰の分かを書いてください。
+      同じ枠が二重にならないように、この表がみんなの「決まった / まだ」を持っています。
     </p>
   </header>
 
@@ -369,6 +401,7 @@
     <b>チェックを外すときは確認が出ます。</b>
     外すとその枠は「まだ」に戻り、ほかの人が新しく取れる状態になります。
     渡す約束をしたあとで外すと、二重に渡してしまうことがあるので気をつけてください。
+    名前はこの表を開いた人みんなに見えるので、気になるならニックネームで。
   </p>
 </div>
 
@@ -442,7 +475,10 @@
         row.setAttribute("data-slot", id);
         row.innerHTML =
           '<span class="box">' + CHECK_SVG + '</span>' +
-          '<span class="row-name">' + n + '枚目</span>' +
+          '<span class="row-main">' +
+            '<span class="row-name">' + n + '枚目</span>' +
+            '<span class="row-who"></span>' +
+          '</span>' +
           '<span class="row-state">まだ</span>';
         row.addEventListener("click", function () {
           onRowClick(this.getAttribute("data-slot"));
@@ -469,6 +505,7 @@
         var held = !!(slot && slot.held);
         var row = rowEls[id];
         row.setAttribute("aria-pressed", held ? "true" : "false");
+        row.querySelector(".row-who").textContent = held && slot.name ? slot.name : "";
         row.querySelector(".row-state").textContent =
           held ? (slot.at ? "決まり " + fmt(slot.at) : "決まり") : "まだ";
         if (held) { dateDone++; done++; }
@@ -518,10 +555,17 @@
       .getState();
   }
 
-  function commit(id, held) {
+  function commit(id, held, name) {
     var previous = state[id];
-    state[id] = held ? { held: true, at: new Date().toISOString() } : undefined;
-    if (!held) delete state[id];
+    if (held) {
+      state[id] = {
+        held: true,
+        at: (previous && previous.at) ? previous.at : new Date().toISOString(),
+        name: cleanName(name)
+      };
+    } else {
+      delete state[id];
+    }
     render();
 
     pending++;
@@ -542,7 +586,7 @@
         render();
         toast(message(err));
       })
-      .setSlot(id, held);
+      .setSlot(id, held, cleanName(name));
   }
 
   function message(err) {
@@ -554,35 +598,51 @@
   /* ---------- interaction ---------- */
 
   function onRowClick(id) {
-    var held = !!(state[id] && state[id].held);
-    if (held) { askRelease(id); } else { commit(id, true); }
+    openSlotDialog(id);
   }
 
   var openDialog = null;
 
-  function askRelease(id) {
+  function openSlotDialog(id) {
     if (openDialog) return;
 
     var row = rowEls[id];
-    var label = row.getAttribute("aria-label");
+    var slot = state[id];
+    var held = !!(slot && slot.held);
 
     var scrim = document.createElement("div");
     scrim.className = "scrim";
     scrim.innerHTML =
       '<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">' +
-        '<h2 id="sheetTitle">チェックを外しますか?</h2>' +
-        '<p class="target">' + label + '</p>' +
-        '<p>外すと「まだ」に戻り、ほかの人がこの枠を取れるようになります。' +
-        'もう渡す約束をしているなら、外さないでください。二重に渡してしまいます。</p>' +
+        '<h2 id="sheetTitle"></h2>' +
+        '<div class="field">' +
+          '<label for="whoInput">誰の分?(渡す相手でも、押さえた人でもいい)</label>' +
+          '<input id="whoInput" type="text" maxlength="30" autocomplete="off" ' +
+            'placeholder="例: たなか / 妹 / 会社の佐藤さん">' +
+          '<span class="hint">この表を開いた人みんなに見えます。' +
+          '気になるならニックネームで。空のままでもチェックできます。</span>' +
+        '</div>' +
         '<div class="sheet-actions">' +
-          '<button type="button" class="btn" data-act="cancel">やめておく</button>' +
-          '<button type="button" class="btn btn-danger" data-act="release">外す</button>' +
+          '<button type="button" class="btn" data-act="cancel">やめる</button>' +
+          '<button type="button" class="btn btn-primary" data-act="save"></button>' +
+        '</div>' +
+        '<div class="danger-zone" hidden>' +
+          '<p>チェックを外すと「まだ」に戻り、ほかの人がこの枠を取れるようになります。' +
+          'もう渡す約束をしているなら外さないでください。二重に渡してしまいます。</p>' +
+          '<button type="button" class="btn btn-danger" data-act="release">チェックを外す</button>' +
         '</div>' +
       '</div>';
 
+    var sheet = scrim.querySelector(".sheet");
+    var input = sheet.querySelector("#whoInput");
+    sheet.querySelector("#sheetTitle").textContent = row.getAttribute("aria-label");
+    sheet.querySelector('[data-act="save"]').textContent = held ? "名前を保存" : "チェックする";
+    input.value = (held && slot.name) ? slot.name : "";
+    if (held) sheet.querySelector(".danger-zone").hidden = false;
+
     function close() {
       document.removeEventListener("keydown", onKey, true);
-      scrim.parentNode.removeChild(scrim);
+      if (scrim.parentNode) scrim.parentNode.removeChild(scrim);
       openDialog = null;
       row.focus();
     }
@@ -591,16 +651,28 @@
       if (e.key === "Escape") { e.preventDefault(); close(); }
     }
 
+    function save() { close(); commit(id, true, input.value); }
+
     scrim.addEventListener("click", function (e) {
       var act = e.target ? e.target.getAttribute("data-act") : null;
       if (e.target === scrim || act === "cancel") { close(); return; }
-      if (act === "release") { close(); commit(id, false); }
+      if (act === "save") { save(); return; }
+      if (act === "release") { close(); commit(id, false, ""); }
+    });
+
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); save(); }
     });
 
     document.addEventListener("keydown", onKey, true);
     document.body.appendChild(scrim);
     openDialog = scrim;
-    scrim.querySelector('[data-act="cancel"]').focus();
+    input.focus();
+    input.select();
+  }
+
+  function cleanName(name) {
+    return String(name == null ? "" : name).replace(/\s+/g, " ").trim().slice(0, 30);
   }
 
   var toastTimer = null;
