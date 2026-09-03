@@ -1,0 +1,648 @@
+<title>ヨーロッパ企画 チケット受け渡し表</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --ground: #eff0ea;
+    --paper: #ffffff;
+    --edge: #dcdfd4;
+    --edge-strong: #c3c8b8;
+    --ink: #1a1d19;
+    --ink-soft: #565b52;
+    --ink-faint: #878d81;
+    --held: #2e6b4e;
+    --held-ink: #24583f;
+    --held-wash: #e6f0e8;
+    --warn: #a93a26;
+    --warn-wash: #f7e8e4;
+    --shadow: 0 1px 2px rgba(26, 29, 25, .06), 0 8px 24px -16px rgba(26, 29, 25, .3);
+    --display: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
+    --body: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
+    --mono: "Roboto Mono", ui-monospace, "SFMono-Regular", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #151714;
+      --paper: #1f2320;
+      --edge: #333831;
+      --edge-strong: #454b42;
+      --ink: #e9ebe5;
+      --ink-soft: #a5aba0;
+      --ink-faint: #797f75;
+      --held: #6fbf92;
+      --held-ink: #8ad0a9;
+      --held-wash: #1d3629;
+      --warn: #e8836b;
+      --warn-wash: #3a231c;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -16px rgba(0, 0, 0, .8);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #151714;
+    --paper: #1f2320;
+    --edge: #333831;
+    --edge-strong: #454b42;
+    --ink: #e9ebe5;
+    --ink-soft: #a5aba0;
+    --ink-faint: #797f75;
+    --held: #6fbf92;
+    --held-ink: #8ad0a9;
+    --held-wash: #1d3629;
+    --warn: #e8836b;
+    --warn-wash: #3a231c;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -16px rgba(0, 0, 0, .8);
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  * { box-sizing: border-box; }
+
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 20px 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  /* ---- header ---- */
+  .masthead { display: flex; flex-direction: column; gap: 10px; }
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: .18em;
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(26px, 5vw, 36px);
+    line-height: 1.35;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .lede {
+    margin: 0;
+    max-width: 34em;
+    color: var(--ink-soft);
+    font-size: 15px;
+  }
+
+  /* ---- tally ---- */
+  .tally {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    padding: 16px 18px;
+    background: var(--paper);
+    border: 1px solid var(--edge);
+    border-radius: 3px;
+    box-shadow: var(--shadow);
+  }
+  .tally-figure {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--held-ink);
+    letter-spacing: -.01em;
+  }
+  .tally-figure .of { color: var(--ink-faint); font-size: 17px; }
+  .tally-label { font-size: 13px; color: var(--ink-soft); }
+  .tally-rest { margin-left: auto; font-size: 13px; color: var(--ink-soft); }
+  .tally-rest b {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  /* ---- sync notice ---- */
+  .sync {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    padding: 10px 14px;
+    border-radius: 3px;
+    border: 1px dashed var(--edge-strong);
+  }
+  .sync .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--ink-faint);
+    margin-top: 9px;
+    flex: none;
+  }
+  .sync[data-mode="shared"] .dot { background: var(--held); }
+  .sync[data-mode="local"] { border-color: var(--warn); color: var(--warn); }
+  .sync[data-mode="local"] .dot { background: var(--warn); }
+
+  /* ---- stubs ---- */
+  .stubs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+  @media (max-width: 700px) { .stubs { grid-template-columns: minmax(0, 1fr); } }
+
+  .stub {
+    background: var(--paper);
+    border: 1px solid var(--edge);
+    border-radius: 3px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+  }
+  .stub-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 16px 18px 14px;
+  }
+  .stub-date {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: .01em;
+  }
+  .stub-date .month { font-size: 15px; font-weight: 500; color: var(--ink-soft); }
+  .dow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    padding: 2px 7px;
+    border-radius: 2px;
+    border: 1px solid var(--edge-strong);
+    color: var(--ink-soft);
+  }
+  .dow[data-dow="日"] { color: var(--warn); border-color: var(--warn); }
+  .stub-count {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+    color: var(--ink-faint);
+  }
+  .stub-count[data-full="yes"] { color: var(--held-ink); font-weight: 500; }
+
+  .perf {
+    border-top: 1px dashed var(--edge-strong);
+    margin: 0 12px;
+  }
+
+  .rows { display: flex; flex-direction: column; padding: 8px; gap: 4px; }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 11px 10px;
+    background: none;
+    border: 0;
+    border-radius: 3px;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color .14s ease;
+  }
+  .row:hover { background: color-mix(in srgb, var(--ink) 5%, transparent); }
+  .row:focus-visible { outline: 2px solid var(--held); outline-offset: 1px; }
+  .row[aria-pressed="true"] { background: var(--held-wash); }
+  .row[aria-pressed="true"]:hover { background: color-mix(in srgb, var(--held) 18%, var(--held-wash)); }
+
+  .box {
+    width: 22px; height: 22px;
+    flex: none;
+    border: 1.5px solid var(--edge-strong);
+    border-radius: 3px;
+    background: var(--paper);
+    display: grid;
+    place-items: center;
+    transition: background-color .14s ease, border-color .14s ease;
+  }
+  .box svg { width: 14px; height: 14px; opacity: 0; transform: scale(.7); transition: opacity .14s ease, transform .14s ease; }
+  .row[aria-pressed="true"] .box { background: var(--held); border-color: var(--held); }
+  .row[aria-pressed="true"] .box svg { opacity: 1; transform: scale(1); }
+
+  .row-name { font-size: 14px; font-weight: 500; }
+  .row[aria-pressed="true"] .row-name { color: var(--held-ink); }
+  .row-state {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+  .row[aria-pressed="true"] .row-state { color: var(--held-ink); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+
+  /* ---- footnote ---- */
+  .note {
+    font-size: 13px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--edge);
+    padding-top: 18px;
+    margin: 0;
+  }
+  .note b { color: var(--ink); font-weight: 500; }
+
+  /* ---- dialog ---- */
+  .scrim {
+    position: fixed;
+    inset: 0;
+    background: rgba(12, 14, 11, .5);
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    z-index: 10;
+  }
+  .sheet {
+    background: var(--paper);
+    border: 1px solid var(--edge);
+    border-top: 3px solid var(--warn);
+    border-radius: 3px;
+    box-shadow: 0 24px 60px -20px rgba(0, 0, 0, .5);
+    max-width: 400px;
+    width: 100%;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .sheet h2 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--warn);
+  }
+  .sheet p { margin: 0; font-size: 14px; color: var(--ink-soft); }
+  .sheet .target {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--warn-wash);
+    padding: 8px 11px;
+    border-radius: 2px;
+  }
+  .sheet-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px; }
+  .btn {
+    font: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 9px 16px;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 1px solid var(--edge-strong);
+    background: none;
+    color: var(--ink);
+  }
+  .btn:focus-visible { outline: 2px solid var(--held); outline-offset: 1px; }
+  .btn-danger { background: var(--warn); border-color: var(--warn); color: #fff; }
+  :root[data-theme="dark"] .btn-danger { color: #2a1611; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .btn-danger { color: #2a1611; }
+  }
+
+  /* ---- toast ---- */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    background: var(--warn);
+    color: #fff;
+    font-size: 13px;
+    padding: 9px 16px;
+    border-radius: 3px;
+    box-shadow: var(--shadow);
+    z-index: 20;
+  }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">2026年10月・ヨーロッパ企画</div>
+    <h1>チケット受け渡し表</h1>
+    <p class="lede">
+      渡し先が決まった枚数にチェックをつけてください。同じ枠が二重にならないように、
+      この表がみんなの「決まった / まだ」を持っています。
+    </p>
+  </header>
+
+  <div class="tally">
+    <span class="tally-figure"><span id="doneCount">0</span><span class="of"> / 16</span></span>
+    <span class="tally-label">決まった枚数</span>
+    <span class="tally-rest">まだ渡せる枚数 <b id="restCount">16</b></span>
+  </div>
+
+  <div class="sync" id="sync" data-mode="pending">
+    <span class="dot"></span>
+    <span id="syncText">共有の状態を確認しています…</span>
+  </div>
+
+  <div class="stubs" id="stubs"></div>
+
+  <p class="note">
+    <b>チェックを外すときは確認が出ます。</b>
+    外すとその枠は「まだ」に戻り、ほかの人が新しく取れる状態になります。
+    渡す約束をしたあとで外すと、二重に渡してしまうことがあるので気をつけてください。
+  </p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var DATES = [
+    { id: "d1017", month: 10, day: 17, dow: "土" },
+    { id: "d1018", month: 10, day: 18, dow: "日" },
+    { id: "d1024", month: 10, day: 24, dow: "土" },
+    { id: "d1025", month: 10, day: 25, dow: "日" }
+  ];
+  var PER_DATE = 4;
+  var TOTAL = DATES.length * PER_DATE;
+  var STORE_KEY = "mignon.tickets.v1";
+
+  var CHECK_SVG =
+    '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.4 6.3 11.6 13 4.6" ' +
+    'fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  // slotId -> { held: bool, at: iso|null }
+  var state = Object.create(null);
+  var rowEls = Object.create(null);
+  var db = null;
+  var mode = "pending";
+
+  var timeFmt = new Intl.DateTimeFormat("ja-JP", {
+    month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit",
+    timeZone: "Asia/Tokyo"
+  });
+
+  function slotId(date, n) { return date.id + "-" + n; }
+
+  function slotLabel(date, n) {
+    return date.month + "月" + date.day + "日(" + date.dow + ")の" + n + "枚目";
+  }
+
+  /* ---------- rendering ---------- */
+
+  function buildStubs() {
+    var frag = document.createDocumentFragment();
+
+    DATES.forEach(function (date) {
+      var stub = document.createElement("section");
+      stub.className = "stub";
+
+      var head = document.createElement("div");
+      head.className = "stub-head";
+      head.innerHTML =
+        '<span class="stub-date"><span class="month">' + date.month + '月</span>' +
+        date.day + '日</span>' +
+        '<span class="dow" data-dow="' + date.dow + '">' + date.dow + '</span>' +
+        '<span class="stub-count" data-count="' + date.id + '">0 / 4</span>';
+      stub.appendChild(head);
+
+      var perf = document.createElement("div");
+      perf.className = "perf";
+      stub.appendChild(perf);
+
+      var rows = document.createElement("div");
+      rows.className = "rows";
+
+      for (var n = 1; n <= PER_DATE; n++) {
+        var id = slotId(date, n);
+        var row = document.createElement("button");
+        row.type = "button";
+        row.className = "row";
+        row.setAttribute("aria-pressed", "false");
+        row.setAttribute("aria-label", slotLabel(date, n));
+        row.dataset.slot = id;
+        row.innerHTML =
+          '<span class="box">' + CHECK_SVG + '</span>' +
+          '<span class="row-name">' + n + '枚目</span>' +
+          '<span class="row-state">まだ</span>';
+        row.addEventListener("click", function () { onRowClick(this.dataset.slot); });
+        rows.appendChild(row);
+        rowEls[id] = row;
+      }
+
+      stub.appendChild(rows);
+      frag.appendChild(stub);
+    });
+
+    document.getElementById("stubs").appendChild(frag);
+  }
+
+  function render() {
+    var done = 0;
+
+    DATES.forEach(function (date) {
+      var dateDone = 0;
+      for (var n = 1; n <= PER_DATE; n++) {
+        var id = slotId(date, n);
+        var slot = state[id];
+        var held = !!(slot && slot.held);
+        var row = rowEls[id];
+        row.setAttribute("aria-pressed", held ? "true" : "false");
+        row.querySelector(".row-state").textContent =
+          held ? (slot.at ? "決まり " + fmt(slot.at) : "決まり") : "まだ";
+        if (held) { dateDone++; done++; }
+      }
+      var counter = document.querySelector('[data-count="' + date.id + '"]');
+      counter.textContent = dateDone + " / " + PER_DATE;
+      counter.dataset.full = dateDone === PER_DATE ? "yes" : "no";
+    });
+
+    document.getElementById("doneCount").textContent = done;
+    document.getElementById("restCount").textContent = TOTAL - done;
+  }
+
+  function fmt(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return "";
+    return timeFmt.format(d);
+  }
+
+  function setSync(kind, text) {
+    mode = kind;
+    var el = document.getElementById("sync");
+    el.dataset.mode = kind;
+    document.getElementById("syncText").textContent = text;
+  }
+
+  /* ---------- local fallback ---------- */
+
+  function loadLocal() {
+    try {
+      var raw = window.localStorage.getItem(STORE_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === "object") {
+          Object.keys(parsed).forEach(function (k) {
+            if (rowEls[k]) state[k] = parsed[k];
+          });
+        }
+      }
+    } catch (e) { /* storage unavailable — start empty */ }
+  }
+
+  function saveLocal() {
+    try { window.localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+    catch (e) { /* nothing to do; the page still works this session */ }
+  }
+
+  /* ---------- writing ---------- */
+
+  function onRowClick(id) {
+    var held = !!(state[id] && state[id].held);
+    if (held) { askRelease(id); } else { commit(id, true); }
+  }
+
+  function commit(id, held) {
+    var previous = state[id];
+    state[id] = { held: held, at: held ? new Date().toISOString() : null };
+    render();
+
+    if (db) {
+      db.doc("slots/" + id).set(state[id]).catch(function (err) {
+        state[id] = previous;
+        render();
+        toast(errorText(err));
+      });
+    } else {
+      saveLocal();
+    }
+  }
+
+  function errorText(err) {
+    var code = err && err.code;
+    if (code === "revoked" || code === "not_granted") {
+      return "共有の権限がなくなりました。ページを開き直してください。";
+    }
+    if (code === "resource_exhausted" || code === "unavailable") {
+      return "混み合っています。少し待ってもう一度どうぞ。";
+    }
+    return "保存できませんでした。もう一度どうぞ。";
+  }
+
+  /* ---------- release dialog ---------- */
+
+  var openDialog = null;
+
+  function askRelease(id) {
+    if (openDialog) return;
+
+    var row = rowEls[id];
+    var label = row.getAttribute("aria-label");
+
+    var scrim = document.createElement("div");
+    scrim.className = "scrim";
+    scrim.innerHTML =
+      '<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">' +
+        '<h2 id="sheetTitle">チェックを外しますか?</h2>' +
+        '<p class="target">' + label + '</p>' +
+        '<p>外すと「まだ」に戻り、ほかの人がこの枠を取れるようになります。' +
+        'もう渡す約束をしているなら、外さないでください。二重に渡してしまいます。</p>' +
+        '<div class="sheet-actions">' +
+          '<button type="button" class="btn" data-act="cancel">やめておく</button>' +
+          '<button type="button" class="btn btn-danger" data-act="release">外す</button>' +
+        '</div>' +
+      '</div>';
+
+    function close() {
+      document.removeEventListener("keydown", onKey, true);
+      scrim.remove();
+      openDialog = null;
+      row.focus();
+    }
+
+    function onKey(e) {
+      if (e.key === "Escape") { e.preventDefault(); close(); }
+    }
+
+    scrim.addEventListener("click", function (e) {
+      var act = e.target && e.target.dataset ? e.target.dataset.act : null;
+      if (e.target === scrim || act === "cancel") { close(); return; }
+      if (act === "release") { close(); commit(id, false); }
+    });
+
+    document.addEventListener("keydown", onKey, true);
+    document.body.appendChild(scrim);
+    openDialog = scrim;
+    scrim.querySelector('[data-act="cancel"]').focus();
+  }
+
+  /* ---------- toast ---------- */
+
+  var toastTimer = null;
+  function toast(text) {
+    var old = document.querySelector(".toast");
+    if (old) old.remove();
+    var el = document.createElement("div");
+    el.className = "toast";
+    el.setAttribute("role", "status");
+    el.textContent = text;
+    document.body.appendChild(el);
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.remove(); }, 4200);
+  }
+
+  /* ---------- start ---------- */
+
+  buildStubs();
+  render();
+
+  var claude = window.claude;
+  if (!claude || typeof claude.use !== "function") {
+    loadLocal();
+    render();
+    setSync("local", "このブラウザの中だけに保存しています。ほかの人の画面には反映されません。");
+    return;
+  }
+
+  claude.use("db").then(function (store) {
+    if (!store) {
+      loadLocal();
+      render();
+      setSync("local", "このブラウザの中だけに保存しています。ほかの人の画面には反映されません。");
+      return;
+    }
+    db = store;
+    setSync("shared", "みんなで共有中。ほかの人のチェックもそのまま出ます。");
+
+    db.collection("slots").onSnapshot(function (snap) {
+      var next = Object.create(null);
+      snap.docs.forEach(function (doc) {
+        if (!rowEls[doc.id]) return;
+        var body = doc.data() || {};
+        next[doc.id] = { held: !!body.held, at: body.at || null };
+      });
+      state = next;
+      render();
+    }, function (err) {
+      setSync("local", errorText(err) + " 表示が止まっている可能性があります。");
+    });
+  }, function () {
+    loadLocal();
+    render();
+    setSync("local", "このブラウザの中だけに保存しています。ほかの人の画面には反映されません。");
+  });
+})();
+</script>
