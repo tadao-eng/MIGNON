@@ -152,6 +152,15 @@
           <button type="button" id="proxy-clear" class="ghost-btn" hidden>削除</button>
         </div>
         <label class="field">
+          <span class="field-label">中継サーバトークン</span>
+          <input type="password" id="proxy-token" placeholder="Worker に設定した合言葉" autocomplete="off">
+        </label>
+        <div class="ai-settings-actions">
+          <button type="button" id="proxy-token-save" class="ghost-btn">保存</button>
+          <button type="button" id="proxy-token-clear" class="ghost-btn" hidden>削除</button>
+        </div>
+        <p class="muted">この合言葉は Worker 側の MONO_TOKEN と同じ値にします。この端末にのみ保存され、Gemini APIキーそのものではありません。</p>
+        <label class="field">
           <span class="field-label">Gemini APIキー</span>
           <input type="password" id="gemini-key" placeholder="AIza… を貼り付け" autocomplete="off">
         </label>

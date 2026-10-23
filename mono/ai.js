@@ -50,6 +50,10 @@ function proxyUrl() {
   return (localStorage.getItem('mono.proxyUrl') || '').trim();
 }
 
+function proxyToken() {
+  return (localStorage.getItem('mono.proxyToken') || '').trim();
+}
+
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -117,7 +121,7 @@ const PROXY_TIMEOUT_MS = 25000;
  * Gemini APIキーは端末に置かず、Worker側にのみ保存される構成のための経路。
  * @param {Blob} photoBlob
  * @returns {Promise<{ result: {name: string|null, category: string|null} | null } | { error: 'proxy-config' | 'quota' }>}
- *   中継サーバの設定不備(403/400/no-key相当の500)は 'proxy-config'、利用上限超過は 'quota' として
+ *   中継サーバの設定不備(403/400/no-key相当の500、トークン不一致の401、トークン未設定の503)は 'proxy-config'、利用上限超過は 'quota' として
  *   返す。それ以外の失敗(通信エラー・タイムアウト・想定外のレスポンス等)は例外を投げる。
  */
 async function classifyViaProxy(photoBlob) {
@@ -129,7 +133,7 @@ async function classifyViaProxy(photoBlob) {
   try {
     res = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-Mono-Token': proxyToken() },
       body: JSON.stringify({
         image: base64,
         mime: photoBlob.type || 'image/jpeg',
@@ -143,7 +147,8 @@ async function classifyViaProxy(photoBlob) {
 
   if (!res.ok) {
     if (res.status === 429) return { error: 'quota' };
-    if (res.status === 403 || res.status === 400 || res.status === 500) return { error: 'proxy-config' };
+    if (res.status === 403 || res.status === 400 || res.status === 500 ||
+        res.status === 401 || res.status === 503) return { error: 'proxy-config' };
     throw new Error(`中継サーバエラー: ${res.status}`);
   }
 

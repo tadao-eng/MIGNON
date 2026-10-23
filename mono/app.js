@@ -227,7 +227,7 @@ function renderHistory() {
     name.textContent = item.name;
     const sub = document.createElement('div');
     sub.className = 'history-sub';
-    sub.innerHTML = `${fmtDate(item.releasedAt)} <span class="method">${item.releaseMethod || ''}</span>` +
+    sub.innerHTML = `${fmtDate(item.releasedAt)} <span class="method">${escapeHTML(item.releaseMethod || '')}</span>` +
       (item.releaseReason ? ` — ${escapeHTML(item.releaseReason)}` : '');
     body.appendChild(name);
     body.appendChild(sub);
@@ -355,21 +355,24 @@ function renderCategoryBars() {
   }
 }
 
-// ---------- AI設定(中継サーバURL / Gemini APIキー) ----------
+// ---------- AI設定(中継サーバURL / 中継サーバトークン / Gemini APIキー) ----------
 
 const GEMINI_KEY_STORAGE = 'mono.geminiKey';
 const PROXY_URL_STORAGE = 'mono.proxyUrl';
+const PROXY_TOKEN_STORAGE = 'mono.proxyToken';
 
 function renderGeminiStatus() {
   const hasProxy = !!(localStorage.getItem(PROXY_URL_STORAGE) || '').trim();
+  const hasToken = !!(localStorage.getItem(PROXY_TOKEN_STORAGE) || '').trim();
   const hasKey = !!(localStorage.getItem(GEMINI_KEY_STORAGE) || '').trim();
   $('#gemini-status').textContent = hasProxy
-    ? '中継サーバ使用中(APIキーはサーバ側)'
+    ? (hasToken ? '中継サーバ使用中(APIキーはサーバ側)' : '中継サーバ: トークン未設定')
     : hasKey
       ? 'Gemini 使用中(高精度判別が有効)'
       : '未設定(端末内AIで判別します)';
   $('#gemini-clear').hidden = !hasKey;
   $('#proxy-clear').hidden = !hasProxy;
+  $('#proxy-token-clear').hidden = !hasToken;
 }
 
 $('#proxy-save').addEventListener('click', () => {
@@ -389,6 +392,21 @@ $('#proxy-clear').addEventListener('click', () => {
   localStorage.removeItem(PROXY_URL_STORAGE);
   renderGeminiStatus();
   toast('中継サーバの設定を解除しました');
+});
+
+$('#proxy-token-save').addEventListener('click', () => {
+  const value = $('#proxy-token').value.trim();
+  if (!value) return;
+  localStorage.setItem(PROXY_TOKEN_STORAGE, value);
+  $('#proxy-token').value = '';
+  renderGeminiStatus();
+  toast('中継サーバトークンを保存しました');
+});
+
+$('#proxy-token-clear').addEventListener('click', () => {
+  localStorage.removeItem(PROXY_TOKEN_STORAGE);
+  renderGeminiStatus();
+  toast('中継サーバトークンを削除しました');
 });
 
 $('#gemini-save').addEventListener('click', () => {

@@ -5,6 +5,11 @@
 // のみで、プロンプトは常にこの Worker 側で固定生成する(呼び出し側が任意の文章を注入すること
 // はできない)。
 //
+// 認証: Origin ヘッダはブラウザ以外(curl 等)からは偽装できるため、それだけでは URL を知って
+// いる人の利用を防げない。そこで共有トークン(Secret `MONO_TOKEN` と、リクエストの
+// `X-Mono-Token` ヘッダの一致)を必須にし、URL を知っているだけでは叩けないようにする。
+// MONO_TOKEN が未設定のときは無認証で動かさず、503 を返して止まる(フェイルクローズ)。
+//
 // 設置手順は README.md を参照。ALLOWED_ORIGINS は自分の公開先に合わせて編集してください。
 
 const ALLOWED_ORIGINS = ['https://tadao-eng.github.io', 'http://localhost:8000'];
@@ -107,9 +112,26 @@ export function corsHeaders(origin) {
   if (origin && ALLOWED_ORIGINS.includes(origin)) {
     headers['Access-Control-Allow-Origin'] = origin;
     headers['Access-Control-Allow-Methods'] = 'POST';
-    headers['Access-Control-Allow-Headers'] = 'Content-Type';
+    headers['Access-Control-Allow-Headers'] = 'Content-Type, X-Mono-Token';
   }
   return headers;
+}
+
+/**
+ * 文字列の定数時間寄りの比較。長さが違っても早期 return せず、全文字を走査して結果を畳み込む。
+ * @param {*} a
+ * @param {*} b
+ * @returns {boolean}
+ */
+export function timingSafeEqual(a, b) {
+  const sa = typeof a === 'string' ? a : '';
+  const sb = typeof b === 'string' ? b : '';
+  const len = Math.max(sa.length, sb.length);
+  let diff = sa.length ^ sb.length;
+  for (let i = 0; i < len; i++) {
+    diff |= (sa.charCodeAt(i) || 0) ^ (sb.charCodeAt(i) || 0);
+  }
+  return diff === 0;
 }
 
 function json(obj, status, headers) {
@@ -121,7 +143,7 @@ function json(obj, status, headers) {
 export default {
   /**
    * @param {Request} request
-   * @param {{ GEMINI_API_KEY?: string }} env
+   * @param {{ GEMINI_API_KEY?: string, MONO_TOKEN?: string }} env
    */
   async fetch(request, env) {
     const origin = request.headers.get('Origin');
@@ -135,6 +157,14 @@ export default {
     }
     if (!origin || !ALLOWED_ORIGINS.includes(origin)) {
       return json({ error: 'forbidden' }, 403, headers);
+    }
+
+    // トークン確認(ボディを読む前・Gemini を呼ぶ前に必ず行う)。未設定ならフェイルクローズ。
+    if (!env.MONO_TOKEN) {
+      return json({ error: 'token-not-configured' }, 503, headers);
+    }
+    if (!timingSafeEqual(request.headers.get('X-Mono-Token') || '', env.MONO_TOKEN)) {
+      return json({ error: 'unauthorized' }, 401, headers);
     }
 
     let body;
