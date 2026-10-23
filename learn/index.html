@@ -3748,10 +3748,84 @@ function freshState() {
     settings: { newPerDay: 8, cardsGoal: 40, vocabLang: 'mix', rate: 0.95 },
   };
 }
+/* 信用できない state（バックアップの貼り付け・壊れた保存データ）を安全な形に正規化する。
+   カードIDは onclick="speak('${c.id}')" のように HTML 属性内の JS 文字列へ直接埋め込まれるため、
+   ここで ID の形（/^c\d+$/ 等）を保証することが XSS 対策の本体になる。 */
+function sanitizeState(raw) {
+  const s = freshState();
+  const r = (raw && typeof raw === 'object' && !Array.isArray(raw)) ? raw : {};
+  const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
+  const num = v => (typeof v === 'number' && isFinite(v)) ? v : 0;
+  const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+  const dateOr = (v, d) => (typeof v === 'string' && DATE_RE.test(v)) ? v : d;
+  const today = todayStr();
+
+  s.startDate = dateOr(r.startDate, today);
+  s.xp = num(r.xp);
+  s.streak = num(r.streak);
+  s.bestStreak = num(r.bestStreak);
+  s.lastGoalDate = dateOr(r.lastGoalDate, null);
+
+  // カスタム単語: 形が正しいものだけ残す
+  const seen = new Set();
+  let maxSeq = 0;
+  if (Array.isArray(r.custom)) {
+    r.custom.forEach(c => {
+      if (!Array.isArray(c) || c.length < 4) return;
+      if (typeof c[0] !== 'string' || !/^c\d+$/.test(c[0])) return;
+      if (c[1] !== 'en' && c[1] !== 'id') return;
+      if (typeof c[2] !== 'string' || typeof c[3] !== 'string') return;
+      const w = c[2].trim().slice(0, 200).trim();
+      const m = c[3].trim().slice(0, 200).trim();
+      if (!w || !m) return;
+      if (seen.has(c[0])) return;
+      seen.add(c[0]);
+      s.custom.push([c[0], c[1], w, m]);
+      const n = Number(c[0].slice(1));
+      if (isFinite(n) && n > maxSeq) maxSeq = n;
+    });
+  }
+  let seq = (typeof r.customSeq === 'number' && Number.isInteger(r.customSeq) && r.customSeq >= 0) ? r.customSeq : 0;
+  s.customSeq = Math.max(seq, maxSeq);
+
+  // SRS: キーの形が正しいものだけ残す
+  if (isObj(r.srs)) {
+    Object.keys(r.srs).forEach(k => {
+      if (!/^[eic]\d+$/.test(k)) return;
+      const v = r.srs[k];
+      if (!isObj(v)) return;
+      s.srs[k] = { box: num(v.box), due: dateOr(v.due, today), reps: num(v.reps), lapses: num(v.lapses) };
+    });
+  }
+
+  // 学習ログ: 日付キーのものだけ残す（中身は数値/真偽値に整える）
+  if (isObj(r.log)) {
+    Object.keys(r.log).forEach(d => {
+      const l = r.log[d];
+      if (!DATE_RE.test(d) || !isObj(l)) return;
+      s.log[d] = { cards: num(l.cards), newEn: num(l.newEn), newId: num(l.newId), g: l.g === true, r: l.r === true, s: l.s === true };
+    });
+  }
+
+  // 残りは既定値と同じ型のときだけ採用（深い検証はしない）
+  ['en', 'id'].forEach(k => {
+    if (isObj(r.gram) && isObj(r.gram[k]) && typeof r.gram[k].next === 'number' && isFinite(r.gram[k].next)) s.gram[k].next = r.gram[k].next;
+    if (isObj(r.read) && typeof r.read[k] === 'number' && isFinite(r.read[k])) s.read[k] = r.read[k];
+    if (isObj(r.dlg) && typeof r.dlg[k] === 'number' && isFinite(r.dlg[k])) s.dlg[k] = r.dlg[k];
+  });
+  if (isObj(r.settings)) {
+    Object.keys(s.settings).forEach(k => {
+      const v = r.settings[k];
+      if (typeof v === typeof s.settings[k] && (typeof v !== 'number' || isFinite(v))) s.settings[k] = v;
+    });
+    if (!['mix', 'en', 'id'].includes(s.settings.vocabLang)) s.settings.vocabLang = 'mix';
+  }
+  return s;
+}
 function load() {
   try {
     const s = JSON.parse(localStorage.getItem(KEY));
-    if (s && s.startDate) return s;
+    if (s && s.startDate) return sanitizeState(s);
   } catch (e) {}
   // v1からの引き継ぎ
   try {
@@ -3769,7 +3843,7 @@ function load() {
       Object.keys(old.log || {}).forEach(d => {
         s.log[d] = { cards: old.log[d].done || 0, newEn: old.log[d].newEn || 0, newId: old.log[d].newId || 0, g: false, r: false, s: false };
       });
-      return s;
+      return sanitizeState(s);
     }
   } catch (e) {}
   return freshState();
@@ -3855,8 +3929,11 @@ function showStudyView() {
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('on'));
   window.scrollTo(0, 0);
 }
+/* HTML のテキストと属性値のための関数。onclick="f('…')" のような属性内 JS 文字列の安全性は
+   この関数では守れない（属性値は HTML デコード後に JS として解釈されるため）。
+   そこは sanitizeState() が保証する id・カテゴリの形（英数字のみ等）に依存している。 */
 function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/`/g,'&#96;');
 }
 
 /* =====================================================
@@ -4563,7 +4640,7 @@ function importData() {
     const s = JSON.parse(t);
     if (!s.startDate || !s.srs) throw new Error('invalid');
     if (!confirm('現在のデータを上書きして復元します。よろしいですか？')) return;
-    localStorage.setItem(KEY, JSON.stringify(s));
+    localStorage.setItem(KEY, JSON.stringify(sanitizeState(s)));
     location.reload();
   } catch (e) {
     toast('データの形式が正しくありません');
